@@ -253,7 +253,7 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                           const Text('Enquiry Type', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 6),
                           DropdownButtonFormField<String>(
-                            value: _enquiryType,
+                            initialValue: _enquiryType,
                             items: AppConstants.enquiryTypes
                                 .map((t) => DropdownMenuItem(value: t, child: Text(t)))
                                 .toList(),
@@ -270,7 +270,7 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                           const Text('Service Category', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 6),
                           DropdownButtonFormField<int>(
-                            value: _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : null),
+                            initialValue: _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : null),
                             items: dir.categories
                                 .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
                                 .toList(),
@@ -323,7 +323,7 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                           const Text('State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 6),
                           DropdownButtonFormField<String>(
-                            value: _selectedState,
+                            initialValue: _selectedState,
                             items: AppConstants.nigerianStates
                                 .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                                 .toList(),
@@ -346,7 +346,7 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                           const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 6),
                           DropdownButtonFormField<String>(
-                            value: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                            initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
                             items: cities
                                 .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                                 .toList(),
@@ -364,7 +364,7 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                 const Text('Preferred Contact Method', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
-                  value: _preferredContact,
+                  initialValue: _preferredContact,
                   items: AppConstants.contactMethods
                       .map((m) => DropdownMenuItem(value: m, child: Text(m)))
                       .toList(),

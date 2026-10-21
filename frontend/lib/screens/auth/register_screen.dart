@@ -345,7 +345,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const Text('Primary Service Category', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 6),
                             DropdownButtonFormField<int>(
-                              value: _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : null),
+                              initialValue: _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : null),
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.category_outlined, size: 18),
                               ),
@@ -400,7 +400,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const Text('Nigerian State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                                 const SizedBox(height: 6),
                                 DropdownButtonFormField<String>(
-                                  value: _selectedState,
+                                  initialValue: _selectedState,
                                   decoration: const InputDecoration(
                                     prefixIcon: Icon(Icons.map_outlined, size: 18),
                                   ),
@@ -424,7 +424,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                                 const SizedBox(height: 6),
                                 DropdownButtonFormField<String>(
-                                  value: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                                  initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
                                   decoration: const InputDecoration(
                                     prefixIcon: Icon(Icons.location_city_outlined, size: 18),
                                   ),
@@ -445,7 +445,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       const Text('Nigerian State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                                       const SizedBox(height: 6),
                                       DropdownButtonFormField<String>(
-                                        value: _selectedState,
+                                        initialValue: _selectedState,
                                         decoration: const InputDecoration(
                                           prefixIcon: Icon(Icons.map_outlined, size: 18),
                                         ),
@@ -471,7 +471,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                                       const SizedBox(height: 6),
                                       DropdownButtonFormField<String>(
-                                        value: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                                        initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
                                         decoration: const InputDecoration(
                                           prefixIcon: Icon(Icons.location_city_outlined, size: 18),
                                         ),
@@ -491,7 +491,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const Text('Preferred Contact Method', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 6),
                             DropdownButtonFormField<String>(
-                              value: _contactPreference,
+                              initialValue: _contactPreference,
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.contact_phone_outlined, size: 18),
                               ),

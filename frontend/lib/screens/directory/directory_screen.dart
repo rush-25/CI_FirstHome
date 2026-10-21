@@ -168,7 +168,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                 SizedBox(
                                   width: 220,
                                   child: DropdownButtonFormField<int?>(
-                                    value: dir.selectedCategoryId,
+                                    initialValue: dir.selectedCategoryId,
                                     decoration: const InputDecoration(
                                       labelText: 'Service Category',
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -184,7 +184,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                 SizedBox(
                                   width: 180,
                                   child: DropdownButtonFormField<String?>(
-                                    value: dir.selectedState,
+                                    initialValue: dir.selectedState,
                                     decoration: const InputDecoration(
                                       labelText: 'State',
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -201,7 +201,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                   SizedBox(
                                     width: 180,
                                     child: DropdownButtonFormField<String?>(
-                                      value: dir.selectedCity,
+                                      initialValue: dir.selectedCity,
                                       decoration: const InputDecoration(
                                         labelText: 'City / District',
                                         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -218,7 +218,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                 SizedBox(
                                   width: 170,
                                   child: DropdownButtonFormField<String>(
-                                    value: dir.sortBy,
+                                    initialValue: dir.sortBy,
                                     decoration: const InputDecoration(
                                       labelText: 'Sort By',
                                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),

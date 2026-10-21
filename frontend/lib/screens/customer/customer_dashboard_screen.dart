@@ -336,7 +336,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
             SizedBox(
               width: 160,
               child: DropdownButtonFormField<String?>(
-                value: leadProv.statusFilter,
+                initialValue: leadProv.statusFilter,
                 decoration: const InputDecoration(
                   contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 ),
@@ -483,7 +483,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                       const Text('State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<String>(
-                        value: _selectedState,
+                        initialValue: _selectedState,
                         items: AppConstants.nigerianStates
                             .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                             .toList(),
@@ -505,7 +505,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                       const Text('City', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<String>(
-                        value: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                        initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
                         items: cities.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                         onChanged: (v) => setState(() => _selectedCity = v),
                       ),
@@ -521,7 +521,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                 const Text('Preferred Contact Method', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
-                  value: _contactPref,
+                  initialValue: _contactPref,
                   items: AppConstants.contactMethods
                       .map((m) => DropdownMenuItem(value: m, child: Text(m)))
                       .toList(),

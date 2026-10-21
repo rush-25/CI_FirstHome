@@ -113,7 +113,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
               const Text('Select New Valid Status:', style: TextStyle(fontSize: 13)),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
-                value: selectedNewStatus,
+                initialValue: selectedNewStatus,
                 items: validNextStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
                 onChanged: (v) => setModalState(() => selectedNewStatus = v),
               ),
@@ -184,7 +184,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
               const Text('Select Simulated Status:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
-                value: selectedStatus,
+                initialValue: selectedStatus,
                 items: const [
                   DropdownMenuItem(value: 'Pending', child: Text('Pending (Mock)')),
                   DropdownMenuItem(value: 'Verified', child: Text('Verified (Mock)')),
@@ -487,7 +487,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
             SizedBox(
               width: 160,
               child: DropdownButtonFormField<String?>(
-                value: admin.leadStatusFilter,
+                initialValue: admin.leadStatusFilter,
                 decoration: const InputDecoration(
                   contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 ),

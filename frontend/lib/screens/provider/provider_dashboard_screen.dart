@@ -474,7 +474,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                       const Text('Primary Category', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<int>(
-                        value: _selectedCategoryId,
+                        initialValue: _selectedCategoryId,
                         items: dir.categories
                             .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
                             .toList(),
@@ -491,7 +491,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                       const Text('State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<String>(
-                        value: _selectedState,
+                        initialValue: _selectedState,
                         items: AppConstants.nigerianStates
                             .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                             .toList(),
@@ -513,7 +513,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                       const Text('City', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<String>(
-                        value: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                        initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
                         items: cities.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                         onChanged: (v) => setState(() => _selectedCity = v),
                       ),
