@@ -7,8 +7,12 @@ class AppConstants {
   static const String conceptDisclaimer =
       'Concept Prototype — Subject to Final Scope & Agreement. Synthetic data only. No real BVN/NIN verification.';
 
-  // Default API Base URL for local ASP.NET Core backend
-  static const String apiBaseUrl = 'http://localhost:5277/api';
+  // Default API Base URL for backend.
+  // Can be overridden at build/deploy time via: --dart-define=API_BASE_URL=https://your-api.com/api
+  static const String apiBaseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:5277/api',
+  );
 
   static const List<String> nigerianStates = [
     'Lagos',

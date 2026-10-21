@@ -1,0 +1,9 @@
+{
+  "name": "firsthome-nigeria",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FirstHome Nigeria - Trusted Home Services and Housing Network",
+  "scripts": {
+    "build": "bash vercel-build.sh"
+  }
+}

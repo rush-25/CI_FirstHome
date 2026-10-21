@@ -16,4 +16,6 @@ frontend/.packages
 # OS / IDE
 .DS_Store
 Thumbs.db
-.idea/
+# Vercel & Node
+.vercel
+node_modules/
