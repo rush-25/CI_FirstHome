@@ -73,11 +73,10 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Header
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Column(
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isNarrow = constraints.maxWidth < 650;
+                          final titleCol = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
@@ -94,20 +93,44 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                 style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
                               ),
                             ],
-                          ),
-                          if (dir.selectedCategoryId != null ||
-                              dir.selectedState != null ||
-                              dir.searchQuery.isNotEmpty) ...[
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                _searchController.clear();
-                                dir.clearFilters();
-                              },
-                              icon: const Icon(Icons.clear_all, size: 16),
-                              label: const Text('Reset Filters'),
-                            ),
-                          ],
-                        ],
+                          );
+
+                          final resetBtn = (dir.selectedCategoryId != null ||
+                                  dir.selectedState != null ||
+                                  dir.searchQuery.isNotEmpty)
+                              ? OutlinedButton.icon(
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    dir.clearFilters();
+                                  },
+                                  icon: const Icon(Icons.clear_all, size: 16),
+                                  label: const Text('Reset Filters'),
+                                )
+                              : null;
+
+                          return isNarrow
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    titleCol,
+                                    if (resetBtn != null) ...[
+                                      const SizedBox(height: 12),
+                                      resetBtn,
+                                    ],
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Expanded(child: titleCol),
+                                    if (resetBtn != null) ...[
+                                      const SizedBox(width: 16),
+                                      resetBtn,
+                                    ],
+                                  ],
+                                );
+                        },
                       ),
 
                       const SizedBox(height: 24),
@@ -257,19 +280,37 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                           ),
                         ),
                       ] else ...[
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: isMobile ? 1 : 3,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 20,
-                            childAspectRatio: isMobile ? 1.4 : 1.05,
-                          ),
-                          itemCount: dir.providers.length,
-                          itemBuilder: (ctx, i) {
-                            final p = dir.providers[i];
-                            return _buildProviderCard(p);
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final width = constraints.maxWidth;
+                            int cols = 1;
+                            double ratio = 1.25;
+                            if (width < 640) {
+                              cols = 1;
+                              ratio = 1.25;
+                            } else if (width < 1050) {
+                              cols = 2;
+                              ratio = 1.15;
+                            } else {
+                              cols = 3;
+                              ratio = 1.08;
+                            }
+
+                            return GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: cols,
+                                mainAxisSpacing: 20,
+                                crossAxisSpacing: 20,
+                                childAspectRatio: ratio,
+                              ),
+                              itemCount: dir.providers.length,
+                              itemBuilder: (ctx, i) {
+                                final p = dir.providers[i];
+                                return _buildProviderCard(p);
+                              },
+                            );
                           },
                         ),
 
@@ -368,11 +409,15 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                       children: [
                         const Icon(Icons.location_on, size: 12, color: AppColors.textSecondary),
                         const SizedBox(width: 2),
-                        Text(
-                          '${p.city}, ${p.state}',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: AppColors.textSecondary,
+                        Expanded(
+                          child: Text(
+                            '${p.city}, ${p.state}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                         ),
                       ],

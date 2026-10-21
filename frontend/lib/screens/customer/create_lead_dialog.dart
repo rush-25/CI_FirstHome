@@ -177,22 +177,27 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: AppColors.sage,
-                            borderRadius: BorderRadius.circular(8),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.sage,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(Icons.send_rounded, color: AppColors.primary, size: 20),
                           ),
-                          child: const Icon(Icons.send_rounded, color: AppColors.primary, size: 20),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Create New Enquiry',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                        ),
-                      ],
+                          const SizedBox(width: 12),
+                          const Flexible(
+                            child: Text(
+                              'Create New Enquiry',
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close),

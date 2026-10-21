@@ -126,10 +126,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Header & Action
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isNarrow = constraints.maxWidth < 650;
+                          final infoCol = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -146,13 +146,32 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                                 style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
                               ),
                             ],
-                          ),
-                          ElevatedButton.icon(
+                          );
+
+                          final actionBtn = ElevatedButton.icon(
                             onPressed: _openCreateEnquiry,
                             icon: const Icon(Icons.add, size: 18),
                             label: const Text('New Enquiry'),
-                          ),
-                        ],
+                          );
+
+                          return isNarrow
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    infoCol,
+                                    const SizedBox(height: 12),
+                                    actionBtn,
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(child: infoCol),
+                                    const SizedBox(width: 16),
+                                    actionBtn,
+                                  ],
+                                );
+                        },
                       ),
 
                       const SizedBox(height: 28),
@@ -358,44 +377,49 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                     )
                   : ListView.separated(
                       itemCount: leadProv.myLeads.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      separatorBuilder: (_, _) => const Divider(height: 1),
                       itemBuilder: (ctx, i) {
                         final l = leadProv.myLeads[i];
-                        return ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          leading: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: AppColors.sage,
-                              borderRadius: BorderRadius.circular(8),
+                        return Material(
+                          color: Colors.transparent,
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.sage,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(Icons.build_outlined, color: AppColors.primary, size: 20),
                             ),
-                            child: const Icon(Icons.build_outlined, color: AppColors.primary, size: 20),
-                          ),
-                          title: Row(
-                            children: [
-                              Text(
-                                l.reference,
-                                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
-                              ),
-                              const SizedBox(width: 8),
-                              StatusBadge(status: l.status, compact: true),
-                            ],
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
-                              const SizedBox(height: 2),
-                              Text(
-                                '${l.categoryName ?? 'Service'} • Provider: ${l.providerName ?? 'Open Request'} • ${dateFormat.format(l.createdAt.toLocal())}',
-                                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                              ),
-                            ],
-                          ),
-                          trailing: OutlinedButton(
-                            onPressed: () => _openLeadDetail(l),
-                            child: const Text('View Timeline', style: TextStyle(fontSize: 12)),
+                            title: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: [
+                                Text(
+                                  l.reference,
+                                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
+                                ),
+                                StatusBadge(status: l.status, compact: true),
+                              ],
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 4),
+                                Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${l.categoryName ?? 'Service'} • Provider: ${l.providerName ?? 'Open Request'} • ${dateFormat.format(l.createdAt.toLocal())}',
+                                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                ),
+                              ],
+                            ),
+                            trailing: OutlinedButton(
+                              onPressed: () => _openLeadDetail(l),
+                              child: const Text('View Timeline', style: TextStyle(fontSize: 12)),
+                            ),
                           ),
                         );
                       },
@@ -524,12 +548,29 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Identity Verification Preview (MOCK)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-              VerificationBadge(status: status),
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isNarrow = constraints.maxWidth < 500;
+              final label = const Text('Identity Verification Preview (MOCK)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700));
+              final badge = VerificationBadge(status: status);
+
+              return isNarrow
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        label,
+                        const SizedBox(height: 8),
+                        badge,
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        label,
+                        badge,
+                      ],
+                    );
+            },
           ),
           const SizedBox(height: 8),
           Container(

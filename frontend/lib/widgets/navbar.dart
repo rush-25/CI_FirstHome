@@ -17,7 +17,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 1024;
+        final isMobile = constraints.maxWidth < 900;
 
         return Container(
           height: 72,
@@ -106,7 +106,6 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _NavLink(label: 'Find Professionals', onTap: () => onNavigate?.call('directory')),
-                        _NavLink(label: 'Browse Services', onTap: () => onNavigate?.call('categories')),
                         _NavLink(label: 'How It Works', onTap: () => onNavigate?.call('how-it-works')),
                         _NavLink(label: 'Become a Provider', onTap: () => onNavigate?.call('register-provider')),
                       ],

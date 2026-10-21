@@ -11,14 +11,89 @@ import 'screens/landing/landing_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/directory/directory_screen.dart';
+import 'screens/directory/provider_detail_dialog.dart';
 import 'screens/customer/customer_dashboard_screen.dart';
 import 'screens/customer/create_lead_dialog.dart';
 import 'screens/provider/provider_dashboard_screen.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
 
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const FirstHomeApp());
+}
+
+void navigateTo(String route, {dynamic args}) {
+  final navContext = rootNavigatorKey.currentContext;
+
+  if (route == 'create-lead') {
+    if (navContext != null) {
+      final auth = navContext.read<AuthProvider>();
+      if (!auth.isAuthenticated) {
+        rootNavigatorKey.currentState?.pushNamed('/login');
+        return;
+      }
+      showDialog(
+        context: navContext,
+        builder: (ctx) => CreateLeadDialog(
+          preselectedProvider: args is ProviderModel ? args : null,
+          onNavigate: navigateTo,
+        ),
+      );
+    }
+    return;
+  }
+
+  if (route == 'provider-detail') {
+    if (navContext != null) {
+      ProviderModel? provider;
+      if (args is ProviderModel) {
+        provider = args;
+      } else if (args is int) {
+        final dir = navContext.read<DirectoryProvider>();
+        try {
+          provider = dir.providers.firstWhere((p) => p.id == args);
+        } catch (_) {}
+      }
+      if (provider != null) {
+        showDialog(
+          context: navContext,
+          builder: (ctx) => ProviderDetailDialog(
+            provider: provider!,
+            onEnquire: (p) => navigateTo('create-lead', args: p),
+          ),
+        );
+        return;
+      }
+    }
+    navigateTo('directory');
+    return;
+  }
+
+  if (route == 'categories') {
+    navigateTo('directory');
+    return;
+  }
+
+  if (route == 'how-it-works') {
+    navigateTo('home');
+    return;
+  }
+
+  final normalized = route.startsWith('/') ? route : '/$route';
+
+  if (normalized == '/' || normalized == '/home') {
+    if (rootNavigatorKey.currentState?.canPop() == true) {
+      rootNavigatorKey.currentState?.popUntil((r) => r.isFirst);
+    } else {
+      rootNavigatorKey.currentState?.pushReplacementNamed('/');
+    }
+    return;
+  }
+
+  // Push new named route so browser history and back button work natively
+  rootNavigatorKey.currentState?.pushNamed(normalized);
 }
 
 class FirstHomeApp extends StatelessWidget {
@@ -34,88 +109,66 @@ class FirstHomeApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AdminProvider()),
       ],
       child: MaterialApp(
+        navigatorKey: rootNavigatorKey,
         title: AppConstants.appName,
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
-        home: const AppRootNavigator(),
+        initialRoute: '/',
+        onGenerateRoute: (settings) {
+          final uri = Uri.parse(settings.name ?? '/');
+          final path = uri.path.isEmpty ? '/' : uri.path;
+
+          switch (path) {
+            case '/':
+            case '/home':
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/'),
+                builder: (_) => LandingScreen(onNavigate: navigateTo),
+              );
+            case '/directory':
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/directory'),
+                builder: (_) => DirectoryScreen(onNavigate: navigateTo),
+              );
+            case '/login':
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/login'),
+                builder: (_) => LoginScreen(onNavigate: navigateTo),
+              );
+            case '/register':
+            case '/register-customer':
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/register-customer'),
+                builder: (_) => const RegisterScreen(initialRole: 'Customer', onNavigate: navigateTo),
+              );
+            case '/register-provider':
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/register-provider'),
+                builder: (_) => const RegisterScreen(initialRole: 'Provider', onNavigate: navigateTo),
+              );
+            case '/customer-dashboard':
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/customer-dashboard'),
+                builder: (_) => CustomerDashboardScreen(onNavigate: navigateTo),
+              );
+            case '/provider-dashboard':
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/provider-dashboard'),
+                builder: (_) => ProviderDashboardScreen(onNavigate: navigateTo),
+              );
+            case '/admin-dashboard':
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/admin-dashboard'),
+                builder: (_) => AdminDashboardScreen(onNavigate: navigateTo),
+              );
+            default:
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/'),
+                builder: (_) => LandingScreen(onNavigate: navigateTo),
+              );
+          }
+        },
       ),
     );
-  }
-}
-
-class AppRootNavigator extends StatefulWidget {
-  const AppRootNavigator({super.key});
-
-  @override
-  State<AppRootNavigator> createState() => _AppRootNavigatorState();
-}
-
-class _AppRootNavigatorState extends State<AppRootNavigator> {
-  String _currentRoute = 'home';
-  dynamic _routeArgs;
-
-  void _navigateTo(String route, {dynamic args}) {
-    if (route == 'create-lead') {
-      final auth = context.read<AuthProvider>();
-      if (!auth.isAuthenticated) {
-        setState(() {
-          _currentRoute = 'login';
-          _routeArgs = null;
-        });
-        return;
-      }
-      showDialog(
-        context: context,
-        builder: (ctx) => CreateLeadDialog(
-          preselectedProvider: args is ProviderModel ? args : null,
-          onNavigate: _navigateTo,
-        ),
-      );
-      return;
-    }
-
-    if (route == 'categories') {
-      setState(() {
-        _currentRoute = 'directory';
-        _routeArgs = null;
-      });
-      return;
-    }
-
-    if (route == 'how-it-works') {
-      setState(() {
-        _currentRoute = 'home';
-        _routeArgs = null;
-      });
-      return;
-    }
-
-    setState(() {
-      _currentRoute = route;
-      _routeArgs = args;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    switch (_currentRoute) {
-      case 'directory':
-        return DirectoryScreen(onNavigate: _navigateTo);
-      case 'login':
-        return LoginScreen(onNavigate: _navigateTo);
-      case 'register-customer':
-        return RegisterScreen(initialRole: 'Customer', onNavigate: _navigateTo);
-      case 'register-provider':
-        return RegisterScreen(initialRole: 'Provider', onNavigate: _navigateTo);
-      case 'customer-dashboard':
-        return CustomerDashboardScreen(onNavigate: _navigateTo);
-      case 'provider-dashboard':
-        return ProviderDashboardScreen(onNavigate: _navigateTo);
-      case 'admin-dashboard':
-        return AdminDashboardScreen(onNavigate: _navigateTo);
-      case 'home':
-      default:
-        return LandingScreen(onNavigate: _navigateTo);
-    }
   }
 }

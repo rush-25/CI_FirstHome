@@ -61,14 +61,19 @@ class ProviderDetailDialog extends StatelessWidget {
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Row(
                             children: [
                               const Icon(Icons.location_on, color: AppColors.gold, size: 14),
                               const SizedBox(width: 4),
-                              Text(
-                                '${provider.city}, ${provider.state}',
-                                style: const TextStyle(color: Colors.white70, fontSize: 13),
+                              Expanded(
+                                child: Text(
+                                  '${provider.city}, ${provider.state}',
+                                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
@@ -225,12 +230,19 @@ class _DetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 18, color: AppColors.textSecondary),
         const SizedBox(width: 10),
         Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-        const Spacer(),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
+          ),
+        ),
       ],
     );
   }

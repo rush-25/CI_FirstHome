@@ -145,10 +145,10 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Header
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isNarrow = constraints.maxWidth < 700;
+                          final infoCol = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -160,20 +160,23 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Row(
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 8,
+                                runSpacing: 4,
                                 children: [
                                   Text(
                                     '${_myProfile?.categoryName ?? 'Services'} • ${_myProfile?.city ?? ''}, ${_myProfile?.state ?? ''}',
                                     style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
                                   ),
-                                  const SizedBox(width: 8),
                                   if (_myProfile != null)
                                     VerificationBadge(status: _myProfile!.verificationStatus, compact: true),
                                 ],
                               ),
                             ],
-                          ),
-                          Container(
+                          );
+
+                          final badge = Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               color: (_myProfile?.isActive ?? true) ? AppColors.statusQualifiedBg : AppColors.verifRejectedBg,
@@ -183,6 +186,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                               ),
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
                                   Icons.circle,
@@ -200,8 +204,26 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                          );
+
+                          return isNarrow
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    infoCol,
+                                    const SizedBox(height: 12),
+                                    badge,
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(child: infoCol),
+                                    const SizedBox(width: 16),
+                                    badge,
+                                  ],
+                                );
+                        },
                       ),
 
                       const SizedBox(height: 28),
@@ -348,47 +370,52 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
 
     return ListView.separated(
       itemCount: _myLeads.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
+      separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (ctx, i) {
         final l = _myLeads[i];
-        return ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          leading: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.sage,
-              borderRadius: BorderRadius.circular(8),
+        return Material(
+          color: Colors.transparent,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.sage,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.handyman_outlined, color: AppColors.primary, size: 20),
             ),
-            child: const Icon(Icons.handyman_outlined, color: AppColors.primary, size: 20),
-          ),
-          title: Row(
-            children: [
-              Text(
-                l.reference,
-                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
-              ),
-              const SizedBox(width: 8),
-              StatusBadge(status: l.status, compact: true),
-            ],
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 4),
-              Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
-              const SizedBox(height: 2),
-              Text(
-                'Customer: ${l.customerName} • Contact: ${l.preferredContact} • ${dateFormat.format(l.createdAt.toLocal())}',
-                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                l.description,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-              ),
-            ],
+            title: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                Text(
+                  l.reference,
+                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
+                ),
+                StatusBadge(status: l.status, compact: true),
+              ],
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 4),
+                Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+                const SizedBox(height: 2),
+                Text(
+                  'Customer: ${l.customerName} • Contact: ${l.preferredContact} • ${dateFormat.format(l.createdAt.toLocal())}',
+                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -382,7 +382,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   crossAxisCount: isMobile ? 2 : 4,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
-                  childAspectRatio: isMobile ? 1.2 : 1.4,
+                  childAspectRatio: isMobile ? 1.05 : 1.15,
                 ),
                 itemCount: dir.categories.length,
                 itemBuilder: (ctx, i) {
@@ -396,7 +396,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                       decoration: BoxDecoration(
                         color: AppColors.background,
                         borderRadius: BorderRadius.circular(12),
@@ -406,21 +406,25 @@ class _LandingScreenState extends State<LandingScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: AppColors.sage,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Icon(icon, color: AppColors.primary, size: 26),
+                            child: Icon(icon, color: AppColors.primary, size: 24),
                           ),
-                          const SizedBox(height: 12),
-                          Text(
-                            cat.name,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                          const SizedBox(height: 10),
+                          Flexible(
+                            child: Text(
+                              cat.name,
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
                             ),
                           ),
                         ],
@@ -437,8 +441,6 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Widget _buildHowItWorks(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 900;
-
     final steps = [
       {
         'num': '01',
@@ -460,56 +462,66 @@ class _LandingScreenState extends State<LandingScreen> {
       },
     ];
 
-    return Container(
-      color: AppColors.background,
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 48 : 72),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: Column(
-            children: [
-              const Text(
-                'How FirstHome Works',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Transparent, reliable connection between homeowners and vetted providers.',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 15),
-              ),
-              const SizedBox(height: 48),
-              isMobile
-                  ? Column(
-                      children: steps.map((s) => _buildStepCard(s)).toList(),
-                    )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: steps
-                          .map(
-                            (s) => Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                child: _buildStepCard(s),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-            ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isNarrow = constraints.maxWidth < 850;
+
+        return Container(
+          color: AppColors.background,
+          padding: EdgeInsets.symmetric(
+            horizontal: isNarrow ? 16 : 24,
+            vertical: isNarrow ? 36 : 64,
           ),
-        ),
-      ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: Column(
+                children: [
+                  Text(
+                    'How FirstHome Works',
+                    style: TextStyle(
+                      fontSize: isNarrow ? 24 : 28,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Transparent, reliable connection between homeowners and vetted providers.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                  ),
+                  const SizedBox(height: 36),
+                  isNarrow
+                      ? Column(
+                          children: steps.map((s) => _buildStepCard(s, isNarrow: true)).toList(),
+                        )
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: steps
+                              .map(
+                                (s) => Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: _buildStepCard(s, isNarrow: false),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildStepCard(Map<String, dynamic> s) {
+  Widget _buildStepCard(Map<String, dynamic> s, {bool isNarrow = false}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(28),
+      padding: EdgeInsets.all(isNarrow ? 18 : 24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -527,7 +539,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   color: AppColors.sage,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(s['icon'] as IconData, color: AppColors.primary, size: 24),
+                child: Icon(s['icon'] as IconData, color: AppColors.primary, size: 22),
               ),
               Text(
                 s['num'] as String,
@@ -539,20 +551,20 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Text(
             s['title'] as String,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 17,
               fontWeight: FontWeight.w700,
               color: AppColors.textPrimary,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Text(
             s['desc'] as String,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               color: AppColors.textSecondary,
               height: 1.5,
             ),
@@ -564,112 +576,120 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget _buildFeaturedProviders(BuildContext context) {
     final dir = context.watch<DirectoryProvider>();
-    final isMobile = MediaQuery.of(context).size.width < 900;
     final featured = dir.providers.take(3).toList();
 
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 48 : 72),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isMobile)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Featured Service Professionals',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    const Text(
-                      'Verified providers active in your state with proven customer track records.',
-                      style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton.icon(
-                      onPressed: () => widget.onNavigate('directory'),
-                      icon: const Icon(Icons.arrow_forward, size: 16),
-                      label: const Text('Browse All Providers'),
-                    ),
-                  ],
-                )
-              else
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Featured Service Professionals',
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isNarrow = constraints.maxWidth < 850;
+
+        return Container(
+          color: Colors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: isNarrow ? 16 : 24,
+            vertical: isNarrow ? 36 : 64,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isNarrow)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Featured Service Professionals',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
                           ),
-                          SizedBox(height: 6),
-                          Text(
-                            'Verified providers active in your state with proven customer track records.',
-                            style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    TextButton.icon(
-                      onPressed: () => widget.onNavigate('directory'),
-                      icon: const Icon(Icons.arrow_forward, size: 16),
-                      label: const Text('Browse All Providers'),
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 32),
-              if (dir.isLoading)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(40),
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              else if (featured.isEmpty)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(40),
-                    child: Text('No providers found in this category.'),
-                  ),
-                )
-              else
-                isMobile
-                    ? Column(
-                        children: featured.map((p) => _buildProviderCard(p)).toList(),
-                      )
-                    : Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: featured
-                            .map(
-                              (p) => Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                                  child: _buildProviderCard(p),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Verified providers active in your state with proven customer track records.',
+                          style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                        ),
+                        const SizedBox(height: 8),
+                        TextButton.icon(
+                          onPressed: () => widget.onNavigate('directory'),
+                          icon: const Icon(Icons.arrow_forward, size: 16),
+                          label: const Text('Browse All Providers'),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'Featured Service Professionals',
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textPrimary,
                                 ),
                               ),
-                            )
-                            .toList(),
+                              SizedBox(height: 6),
+                              Text(
+                                'Verified providers active in your state with proven customer track records.',
+                                style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        TextButton.icon(
+                          onPressed: () => widget.onNavigate('directory'),
+                          icon: const Icon(Icons.arrow_forward, size: 16),
+                          label: const Text('Browse All Providers'),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 24),
+                  if (dir.isLoading)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(40),
+                        child: CircularProgressIndicator(),
                       ),
-            ],
+                    )
+                  else if (featured.isEmpty)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(40),
+                        child: Text('No providers found in this category.'),
+                      ),
+                    )
+                  else
+                    isNarrow
+                        ? Column(
+                            children: featured.map((p) => _buildProviderCard(p)).toList(),
+                          )
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: featured
+                                .map(
+                                  (p) => Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      child: _buildProviderCard(p),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -783,11 +803,11 @@ class _LandingScreenState extends State<LandingScreen> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () => widget.onNavigate('provider-detail', args: p.id),
+                  onPressed: () => widget.onNavigate('provider-detail', args: p),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
-                  child: const Text('View Profile', style: TextStyle(fontSize: 13)),
+                  child: const Text('View Profile', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12)),
                 ),
               ),
               const SizedBox(width: 8),
@@ -797,7 +817,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
-                  child: const Text('Enquire', style: TextStyle(fontSize: 13)),
+                  child: const Text('Enquire', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12)),
                 ),
               ),
             ],
@@ -808,45 +828,60 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Widget _buildTrustSection(BuildContext context) {
-    return Container(
-      color: AppColors.sage.withValues(alpha: 0.4),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
-          child: Column(
-            children: [
-              const Icon(Icons.verified_user_outlined, size: 40, color: AppColors.primary),
-              const SizedBox(height: 16),
-              const Text(
-                'Consent-Based Verification & Trust Architecture',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'FirstHome Nigeria employs a simulated KYC readiness preview designed for Nigerian regulatory environments (such as BVN and NIN adapters). In this prototype, all identity evaluations are simulated with mock reference identifiers. No real personal identity documents are collected or stored.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                  height: 1.6,
-                ),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton.icon(
-                onPressed: () => widget.onNavigate('register-provider'),
-                icon: const Icon(Icons.arrow_forward, size: 16),
-                label: const Text('Register as a Service Provider'),
-              ),
-            ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isNarrow = constraints.maxWidth < 600;
+
+        return Container(
+          color: AppColors.sage.withValues(alpha: 0.4),
+          padding: EdgeInsets.symmetric(
+            horizontal: isNarrow ? 16 : 24,
+            vertical: isNarrow ? 40 : 60,
           ),
-        ),
-      ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 860),
+              child: Column(
+                children: [
+                  const Icon(Icons.verified_user_outlined, size: 38, color: AppColors.primary),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Consent-Based Verification & Trust Architecture',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: isNarrow ? 20 : 24,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'FirstHome Nigeria employs a simulated KYC readiness preview designed for Nigerian regulatory environments (such as BVN and NIN adapters). In this prototype, all identity evaluations are simulated with mock reference identifiers. No real personal identity documents are collected or stored.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                      height: 1.6,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: isNarrow ? double.infinity : null,
+                    child: ElevatedButton.icon(
+                      onPressed: () => widget.onNavigate('register-provider'),
+                      icon: const Icon(Icons.arrow_forward, size: 16),
+                      label: const Text('Register as a Service Provider'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

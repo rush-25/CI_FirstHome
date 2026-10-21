@@ -147,12 +147,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const DemoBanner(),
             Navbar(onNavigate: widget.onNavigate),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 32 : 64),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 64),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 620),
                   child: Container(
-                    padding: EdgeInsets.all(isMobile ? 24 : 40),
+                    padding: EdgeInsets.all(isMobile ? 20 : 40),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
@@ -207,12 +207,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             color: _role == 'Customer' ? AppColors.primary : AppColors.textSecondary,
                                           ),
                                           const SizedBox(width: 6),
-                                          Text(
-                                            'Customer Account',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 13,
-                                              color: _role == 'Customer' ? AppColors.primary : AppColors.textSecondary,
+                                          Flexible(
+                                            child: Text(
+                                              'Customer Account',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 13,
+                                                color: _role == 'Customer' ? AppColors.primary : AppColors.textSecondary,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -247,12 +251,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             color: _role == 'Provider' ? AppColors.primary : AppColors.textSecondary,
                                           ),
                                           const SizedBox(width: 6),
-                                          Text(
-                                            'Provider Account',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 13,
-                                              color: _role == 'Provider' ? AppColors.primary : AppColors.textSecondary,
+                                          Flexible(
+                                            child: Text(
+                                              'Provider Account',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 13,
+                                                color: _role == 'Provider' ? AppColors.primary : AppColors.textSecondary,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -384,56 +392,99 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           const SizedBox(height: 16),
 
-                          // Location Row (State and City)
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Nigerian State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                                    const SizedBox(height: 6),
-                                    DropdownButtonFormField<String>(
-                                      value: _selectedState,
-                                      decoration: const InputDecoration(
-                                        prefixIcon: Icon(Icons.map_outlined, size: 18),
-                                      ),
-                                      items: AppConstants.nigerianStates
-                                          .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                                          .toList(),
-                                      onChanged: (v) {
-                                        setState(() {
-                                          _selectedState = v;
-                                          final newCities = AppConstants.stateCities[v] ?? ['General'];
-                                          _selectedCity = newCities.first;
-                                        });
-                                      },
-                                    ),
-                                  ],
+                          // Location (State and City)
+                          if (isMobile) ...[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Nigerian State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                const SizedBox(height: 6),
+                                DropdownButtonFormField<String>(
+                                  value: _selectedState,
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.map_outlined, size: 18),
+                                  ),
+                                  items: AppConstants.nigerianStates
+                                      .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                                      .toList(),
+                                  onChanged: (v) {
+                                    setState(() {
+                                      _selectedState = v;
+                                      final newCities = AppConstants.stateCities[v] ?? ['General'];
+                                      _selectedCity = newCities.first;
+                                    });
+                                  },
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                                    const SizedBox(height: 6),
-                                    DropdownButtonFormField<String>(
-                                      value: cities.contains(_selectedCity) ? _selectedCity : cities.first,
-                                      decoration: const InputDecoration(
-                                        prefixIcon: Icon(Icons.location_city_outlined, size: 18),
-                                      ),
-                                      items: cities
-                                          .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                                          .toList(),
-                                      onChanged: (v) => setState(() => _selectedCity = v),
-                                    ),
-                                  ],
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                const SizedBox(height: 6),
+                                DropdownButtonFormField<String>(
+                                  value: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.location_city_outlined, size: 18),
+                                  ),
+                                  items: cities
+                                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                                      .toList(),
+                                  onChanged: (v) => setState(() => _selectedCity = v),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                          ] else
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Nigerian State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                      const SizedBox(height: 6),
+                                      DropdownButtonFormField<String>(
+                                        value: _selectedState,
+                                        decoration: const InputDecoration(
+                                          prefixIcon: Icon(Icons.map_outlined, size: 18),
+                                        ),
+                                        items: AppConstants.nigerianStates
+                                            .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                                            .toList(),
+                                        onChanged: (v) {
+                                          setState(() {
+                                            _selectedState = v;
+                                            final newCities = AppConstants.stateCities[v] ?? ['General'];
+                                            _selectedCity = newCities.first;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                      const SizedBox(height: 6),
+                                      DropdownButtonFormField<String>(
+                                        value: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                                        decoration: const InputDecoration(
+                                          prefixIcon: Icon(Icons.location_city_outlined, size: 18),
+                                        ),
+                                        items: cities
+                                            .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                                            .toList(),
+                                        onChanged: (v) => setState(() => _selectedCity = v),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
 
                           if (_role == 'Customer') ...[
                             const SizedBox(height: 16),
@@ -499,14 +550,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 20),
 
                           // Synthetic Consent Checkbox
-                          CheckboxListTile(
-                            value: _consent,
-                            contentPadding: EdgeInsets.zero,
-                            controlAffinity: ListTileControlAffinity.leading,
-                            onChanged: (v) => setState(() => _consent = v ?? false),
-                            title: const Text(
-                              'I understand this is a demonstration environment using synthetic data. I consent to FirstHome Nigeria storing my profile details for service matchmaking. (No real BVN/NIN collected).',
-                              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          Material(
+                            color: Colors.transparent,
+                            child: CheckboxListTile(
+                              value: _consent,
+                              contentPadding: EdgeInsets.zero,
+                              controlAffinity: ListTileControlAffinity.leading,
+                              onChanged: (v) => setState(() => _consent = v ?? false),
+                              title: const Text(
+                                'I understand this is a demonstration environment using synthetic data. I consent to FirstHome Nigeria storing my profile details for service matchmaking. (No real BVN/NIN collected).',
+                                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                              ),
                             ),
                           ),
 

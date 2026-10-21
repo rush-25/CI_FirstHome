@@ -134,9 +134,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                 Navigator.of(ctx).pop();
                 if (selectedNewStatus != null) {
                   final admin = context.read<AdminProvider>();
+                  final messenger = ScaffoldMessenger.of(context);
                   final ok = await admin.updateLeadStatus(lead.id, selectedNewStatus!);
                   if (ok && mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    messenger.showSnackBar(
                       SnackBar(
                         content: Text('Lead status updated to $selectedNewStatus!'),
                         backgroundColor: AppColors.success,
@@ -221,13 +222,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
               onPressed: () async {
                 Navigator.of(ctx).pop();
                 final admin = context.read<AdminProvider>();
+                final messenger = ScaffoldMessenger.of(context);
                 final ok = await admin.simulateMockVerification(
                   userId,
                   selectedStatus,
                   noteController.text.trim(),
                 );
                 if (ok && mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  messenger.showSnackBar(
                     SnackBar(
                       content: Text('Mock verification updated to $selectedStatus for $name!'),
                       backgroundColor: AppColors.success,
@@ -265,10 +267,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Header
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isNarrow = constraints.maxWidth < 700;
+                          final infoCol = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
                               Text(
@@ -285,8 +287,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                                 style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
                               ),
                             ],
-                          ),
-                          OutlinedButton.icon(
+                          );
+
+                          final refreshBtn = OutlinedButton.icon(
                             onPressed: () {
                               admin.fetchSummary();
                               admin.fetchLeads();
@@ -296,8 +299,26 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                             },
                             icon: const Icon(Icons.refresh, size: 16),
                             label: const Text('Refresh Data'),
-                          ),
-                        ],
+                          );
+
+                          return isNarrow
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    infoCol,
+                                    const SizedBox(height: 12),
+                                    refreshBtn,
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(child: infoCol),
+                                    const SizedBox(width: 16),
+                                    refreshBtn,
+                                  ],
+                                );
+                        },
                       ),
 
                       const SizedBox(height: 28),
@@ -489,59 +510,64 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                   ? const Center(child: Text('No leads match the specified criteria.'))
                   : ListView.separated(
                       itemCount: admin.leads.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      separatorBuilder: (_, _) => const Divider(height: 1),
                       itemBuilder: (ctx, i) {
                         final l = admin.leads[i];
-                        return ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                          title: Row(
-                            children: [
-                              Text(
-                                l.reference,
-                                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
-                              ),
-                              const SizedBox(width: 8),
-                              StatusBadge(status: l.status, compact: true),
-                              const SizedBox(width: 8),
-                              Text('•  ${l.categoryName ?? 'Category'}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                            ],
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Customer: ${l.customerName} (${l.customerEmail}) • Provider: ${l.providerName ?? 'Unassigned'} • ${dateFormat.format(l.createdAt.toLocal())}',
-                                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
-                              ),
-                            ],
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (c) => LeadDetailDialog(lead: l),
-                                  );
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        return Material(
+                          color: Colors.transparent,
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                            title: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: [
+                                Text(
+                                  l.reference,
+                                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
                                 ),
-                                child: const Text('History', style: TextStyle(fontSize: 11)),
-                              ),
-                              const SizedBox(width: 8),
-                              ElevatedButton(
-                                onPressed: () => _openStatusChangeModal(l),
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                StatusBadge(status: l.status, compact: true),
+                                Text('•  ${l.categoryName ?? 'Category'}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                              ],
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 4),
+                                Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Customer: ${l.customerName} (${l.customerEmail}) • Provider: ${l.providerName ?? 'Unassigned'} • ${dateFormat.format(l.createdAt.toLocal())}',
+                                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
                                 ),
-                                child: const Text('Change Status', style: TextStyle(fontSize: 11)),
-                              ),
-                            ],
+                              ],
+                            ),
+                            trailing: Wrap(
+                              spacing: 8,
+                              runSpacing: 4,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                OutlinedButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (c) => LeadDetailDialog(lead: l),
+                                    );
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  ),
+                                  child: const Text('History', style: TextStyle(fontSize: 11)),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => _openStatusChangeModal(l),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  ),
+                                  child: const Text('Change Status', style: TextStyle(fontSize: 11)),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -575,29 +601,34 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
               ? const Center(child: Text('No customers found.'))
               : ListView.separated(
                   itemCount: admin.customers.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (ctx, i) {
                     final c = admin.customers[i];
-                    return ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                      leading: CircleAvatar(
-                        backgroundColor: AppColors.sage,
-                        child: Text(c.fullName.isNotEmpty ? c.fullName[0] : 'C', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                      ),
-                      title: Row(
-                        children: [
-                          Text(c.fullName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                          const SizedBox(width: 8),
-                          VerificationBadge(status: c.verificationStatus, compact: true),
-                        ],
-                      ),
-                      subtitle: Text(
-                        '${c.email} • ${c.phone} • Location: ${c.city ?? ''}, ${c.state ?? ''} • Enquiries: ${c.leadCount} • Joined ${dateFormat.format(c.createdAt.toLocal())}',
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                      ),
-                      trailing: OutlinedButton(
-                        onPressed: () => _openMockVerificationModal(c.id, c.fullName, c.verificationStatus),
-                        child: const Text('Simulate KYC', style: TextStyle(fontSize: 11)),
+                    return Material(
+                      color: Colors.transparent,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        leading: CircleAvatar(
+                          backgroundColor: AppColors.sage,
+                          child: Text(c.fullName.isNotEmpty ? c.fullName[0] : 'C', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                        ),
+                        title: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: [
+                            Text(c.fullName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                            VerificationBadge(status: c.verificationStatus, compact: true),
+                          ],
+                        ),
+                        subtitle: Text(
+                          '${c.email} • ${c.phone} • Location: ${c.city ?? ''}, ${c.state ?? ''} • Enquiries: ${c.leadCount} • Joined ${dateFormat.format(c.createdAt.toLocal())}',
+                          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        ),
+                        trailing: OutlinedButton(
+                          onPressed: () => _openMockVerificationModal(c.id, c.fullName, c.verificationStatus),
+                          child: const Text('Simulate KYC', style: TextStyle(fontSize: 11)),
+                        ),
                       ),
                     );
                   },
@@ -629,53 +660,60 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
               ? const Center(child: Text('No providers found.'))
               : ListView.separated(
                   itemCount: admin.providers.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (ctx, i) {
                     final p = admin.providers[i];
-                    return ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                      leading: CircleAvatar(
-                        backgroundColor: AppColors.sage,
-                        child: Text(p.displayName.isNotEmpty ? p.displayName[0] : 'P', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                      ),
-                      title: Row(
-                        children: [
-                          Text(p.displayName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                          const SizedBox(width: 8),
-                          VerificationBadge(status: p.verificationStatus, compact: true),
-                        ],
-                      ),
-                      subtitle: Text(
-                        'Owner: ${p.ownerName} • ${p.categoryName} • ${p.city}, ${p.state} • ${p.email}',
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Active switch
-                          Row(
-                            children: [
-                              Text(
-                                p.isActive ? 'Active' : 'Hidden',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: p.isActive ? AppColors.success : AppColors.error,
-                                  fontWeight: FontWeight.bold,
+                    return Material(
+                      color: Colors.transparent,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        leading: CircleAvatar(
+                          backgroundColor: AppColors.sage,
+                          child: Text(p.displayName.isNotEmpty ? p.displayName[0] : 'P', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                        ),
+                        title: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: [
+                            Text(p.displayName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                            VerificationBadge(status: p.verificationStatus, compact: true),
+                          ],
+                        ),
+                        subtitle: Text(
+                          'Owner: ${p.ownerName} • ${p.categoryName} • ${p.city}, ${p.state} • ${p.email}',
+                          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        ),
+                        trailing: Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            // Active switch
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  p.isActive ? 'Active' : 'Hidden',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: p.isActive ? AppColors.success : AppColors.error,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Switch(
-                                value: p.isActive,
-                                activeThumbColor: AppColors.success,
-                                onChanged: (val) => admin.toggleProviderActive(p.id, p.isActive),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(width: 8),
-                          OutlinedButton(
-                            onPressed: () => _openMockVerificationModal(p.userId, p.displayName, p.verificationStatus),
-                            child: const Text('Simulate KYC', style: TextStyle(fontSize: 11)),
-                          ),
-                        ],
+                                Switch(
+                                  value: p.isActive,
+                                  activeThumbColor: AppColors.success,
+                                  onChanged: (val) => admin.toggleProviderActive(p.id, p.isActive),
+                                ),
+                              ],
+                            ),
+                            OutlinedButton(
+                              onPressed: () => _openMockVerificationModal(p.userId, p.displayName, p.verificationStatus),
+                              child: const Text('Simulate KYC', style: TextStyle(fontSize: 11)),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -691,22 +729,39 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isNarrow = constraints.maxWidth < 550;
+            final labelText = const Text(
               'Simulated Verification Audit Log',
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
-            ),
-            Container(
+            );
+            final mockBadge = Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: AppColors.sage,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: const Text('MOCK Engine • No Real BVN/NIN', style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold)),
-            ),
-          ],
+            );
+
+            return isNarrow
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      labelText,
+                      const SizedBox(height: 6),
+                      mockBadge,
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      labelText,
+                      mockBadge,
+                    ],
+                  );
+          },
         ),
         const SizedBox(height: 12),
         Expanded(
@@ -714,34 +769,38 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
               ? const Center(child: Text('No verification audit events recorded.'))
               : ListView.separated(
                   itemCount: admin.verificationEvents.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (ctx, i) {
                     final ev = admin.verificationEvents[i];
-                    return ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                      leading: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.sage,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(Icons.history, color: AppColors.primary, size: 20),
-                      ),
-                      title: Row(
-                        children: [
-                          Text(
-                            ev.simulatedReference,
-                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.primary),
+                    return Material(
+                      color: Colors.transparent,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.sage,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          const SizedBox(width: 8),
-                          VerificationBadge(status: ev.status, compact: true),
-                          const SizedBox(width: 8),
-                          Text('Target: ${ev.userName} (${ev.userRole})', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                      subtitle: Text(
-                        'Note: ${ev.note ?? 'None'} • Timestamp: ${dateFormat.format(ev.createdAt.toLocal())}',
-                        style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                          child: const Icon(Icons.history, color: AppColors.primary, size: 20),
+                        ),
+                        title: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: [
+                            Text(
+                              ev.simulatedReference,
+                              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.primary),
+                            ),
+                            VerificationBadge(status: ev.status, compact: true),
+                            Text('Target: ${ev.userName} (${ev.userRole})', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                        subtitle: Text(
+                          'Note: ${ev.note ?? 'None'} • Timestamp: ${dateFormat.format(ev.createdAt.toLocal())}',
+                          style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                        ),
                       ),
                     );
                   },
