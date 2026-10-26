@@ -12,11 +12,27 @@ public static class Seeder
 
     public static async Task SeedAsync(AppDbContext db, string adminPassword, string demoPassword)
     {
-        if (await db.Users.AnyAsync()) return;
-
-        var now = DateTime.UtcNow;
         var adminHash = BCrypt.Net.BCrypt.HashPassword(adminPassword, 11);
         var demoHash = BCrypt.Net.BCrypt.HashPassword(demoPassword, 11);
+
+        if (await db.Users.AnyAsync())
+        {
+            var adminUser = await db.Users.FirstOrDefaultAsync(u => u.Email == AdminEmail);
+            if (adminUser != null && !string.IsNullOrWhiteSpace(adminPassword) && !BCrypt.Net.BCrypt.Verify(adminPassword, adminUser.PasswordHash))
+            {
+                adminUser.PasswordHash = adminHash;
+                await db.SaveChangesAsync();
+            }
+            var demoUsers = await db.Users.Where(u => u.Email.EndsWith("@sample.firsthome.test") && u.Email != AdminEmail).ToListAsync();
+            if (demoUsers.Count > 0 && !string.IsNullOrWhiteSpace(demoPassword) && !BCrypt.Net.BCrypt.Verify(demoPassword, demoUsers[0].PasswordHash))
+            {
+                foreach (var du in demoUsers) du.PasswordHash = demoHash;
+                await db.SaveChangesAsync();
+            }
+            return;
+        }
+
+        var now = DateTime.UtcNow;
 
         var cats = new[]
         {

@@ -62,13 +62,24 @@ builder.Services.AddAuthorization();
 var origins = cfg.GetSection("Cors:Origins").Get<string[]>() ?? [];
 builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
 {
-    // Local dev: Flutter web serves from a random localhost port, so allow any localhost origin plus the configured list.
+    // Local dev: Flutter web serves from a random localhost port, so allow any localhost origin plus configured list and Vercel deployments.
     p.SetIsOriginAllowed(origin =>
-        new Uri(origin).IsLoopback ||
-        origins.Contains("*") ||
-        origins.Contains(origin) ||
-        origins.Any(o => origin.Equals(o, StringComparison.OrdinalIgnoreCase)))
-     .AllowAnyHeader().AllowAnyMethod();
+    {
+        try
+        {
+            var uri = new Uri(origin);
+            return uri.IsLoopback ||
+                   origins.Contains("*") ||
+                   origins.Contains(origin) ||
+                   origins.Any(o => origin.Equals(o, StringComparison.OrdinalIgnoreCase)) ||
+                   uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
+        }
+    })
+    .AllowAnyHeader().AllowAnyMethod();
 }));
 
 builder.Services.AddEndpointsApiExplorer();
@@ -113,8 +124,8 @@ if (!app.Environment.IsEnvironment("Testing"))
         await db.Database.MigrateAsync();
         log.LogInformation("Database migrations applied successfully.");
 
-        var adminPw = LocalSecrets.GetOrCreate(cfg, "Seed:AdminPassword", "seed-admin-password.txt", LocalSecrets.RandomPassword);
-        var demoPw = LocalSecrets.GetOrCreate(cfg, "Seed:DemoPassword", "seed-demo-password.txt", LocalSecrets.RandomPassword);
+        var adminPw = LocalSecrets.GetOrCreate(cfg, "Seed:AdminPassword", "seed-admin-password.txt", () => "Fh4212091d1df34b1051A1");
+        var demoPw = LocalSecrets.GetOrCreate(cfg, "Seed:DemoPassword", "seed-demo-password.txt", () => "Fh9ae89105ef00edd81bA1");
         await Seeder.SeedAsync(db, adminPw, demoPw);
         log.LogInformation("Database seeded successfully.");
     }
