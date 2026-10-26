@@ -120,8 +120,7 @@ if (!app.Environment.IsEnvironment("Testing"))
     }
     catch (Exception ex)
     {
-        log.LogError(ex, "Database migration or seeding failed. Verify your connection string and SQL Server accessibility.");
-        throw;
+        log.LogError(ex, "Database migration or seeding failed on startup. The API will start, but database endpoints will be unavailable until a reachable 'ConnectionStrings__Default' is configured.");
     }
 }
 
