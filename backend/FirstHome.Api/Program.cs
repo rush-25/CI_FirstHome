@@ -11,6 +11,12 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 var cfg = builder.Configuration;
 
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://+:{port}");
+}
+
 // ---- JWT (key comes from config/env; otherwise generated into git-ignored App_Data) ----
 var jwtOpts = cfg.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
 jwtOpts.Key = LocalSecrets.GetOrCreate(cfg, "Jwt:Key", "jwt.key", () => LocalSecrets.RandomToken());
@@ -57,8 +63,12 @@ var origins = cfg.GetSection("Cors:Origins").Get<string[]>() ?? [];
 builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
 {
     // Local dev: Flutter web serves from a random localhost port, so allow any localhost origin plus the configured list.
-    p.SetIsOriginAllowed(origin => new Uri(origin).IsLoopback || origins.Contains(origin))
-        .AllowAnyHeader().AllowAnyMethod();
+    p.SetIsOriginAllowed(origin =>
+        new Uri(origin).IsLoopback ||
+        origins.Contains("*") ||
+        origins.Contains(origin) ||
+        origins.Any(o => origin.Equals(o, StringComparison.OrdinalIgnoreCase)))
+     .AllowAnyHeader().AllowAnyMethod();
 }));
 
 builder.Services.AddEndpointsApiExplorer();
@@ -96,10 +106,23 @@ if (!app.Environment.IsEnvironment("Testing"))
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await db.Database.MigrateAsync();
-    var adminPw = LocalSecrets.GetOrCreate(cfg, "Seed:AdminPassword", "seed-admin-password.txt", LocalSecrets.RandomPassword);
-    var demoPw = LocalSecrets.GetOrCreate(cfg, "Seed:DemoPassword", "seed-demo-password.txt", LocalSecrets.RandomPassword);
-    await Seeder.SeedAsync(db, adminPw, demoPw);
+    var log = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        log.LogInformation("Applying database migrations...");
+        await db.Database.MigrateAsync();
+        log.LogInformation("Database migrations applied successfully.");
+
+        var adminPw = LocalSecrets.GetOrCreate(cfg, "Seed:AdminPassword", "seed-admin-password.txt", LocalSecrets.RandomPassword);
+        var demoPw = LocalSecrets.GetOrCreate(cfg, "Seed:DemoPassword", "seed-demo-password.txt", LocalSecrets.RandomPassword);
+        await Seeder.SeedAsync(db, adminPw, demoPw);
+        log.LogInformation("Database seeded successfully.");
+    }
+    catch (Exception ex)
+    {
+        log.LogError(ex, "Database migration or seeding failed. Verify your connection string and SQL Server accessibility.");
+        throw;
+    }
 }
 
 app.Run();

@@ -20,14 +20,24 @@ public static class LocalSecrets
         var fromCfg = cfg[configKey];
         if (!string.IsNullOrWhiteSpace(fromCfg)) return fromCfg;
 
-        var dir = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "App_Data");
-        dir = Path.GetFullPath(dir);
-        Directory.CreateDirectory(dir);
-        var path = Path.Combine(dir, fileName);
-        if (File.Exists(path)) return File.ReadAllText(path).Trim();
-        var value = generator();
-        File.WriteAllText(path, value);
-        return value;
+        try
+        {
+            var projectDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
+            var dir = Directory.Exists(Path.Combine(projectDir, "Properties"))
+                ? Path.Combine(projectDir, "App_Data")
+                : Path.Combine(AppContext.BaseDirectory, "App_Data");
+
+            Directory.CreateDirectory(dir);
+            var path = Path.Combine(dir, fileName);
+            if (File.Exists(path)) return File.ReadAllText(path).Trim();
+            var value = generator();
+            File.WriteAllText(path, value);
+            return value;
+        }
+        catch
+        {
+            return generator();
+        }
     }
 
     public static string RandomToken(int bytes = 48) => Convert.ToBase64String(RandomNumberGenerator.GetBytes(bytes));
