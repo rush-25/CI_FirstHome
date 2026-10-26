@@ -20,12 +20,15 @@ echo "Navigating to frontend directory..."
 cd frontend
 
 echo "Building Flutter Web release..."
-if [ -n "$API_BASE_URL" ]; then
-    echo "Using custom API_BASE_URL: $API_BASE_URL"
-    flutter build web --release --dart-define=API_BASE_URL="$API_BASE_URL"
+# Sanitize API_BASE_URL (strip any accidental newlines, returns, or spaces)
+CLEAN_API_URL=$(echo "$API_BASE_URL" | tr -d '\r\n[:space:]')
+
+if [ -n "$CLEAN_API_URL" ]; then
+    echo "Using sanitized API_BASE_URL: $CLEAN_API_URL"
+    flutter build web --release -t lib/main.dart --dart-define=API_BASE_URL="$CLEAN_API_URL"
 else
     echo "No API_BASE_URL provided. Using default / environment fallback."
-    flutter build web --release
+    flutter build web --release -t lib/main.dart
 fi
 
 echo "=== Build finished successfully. Output in frontend/build/web ==="
