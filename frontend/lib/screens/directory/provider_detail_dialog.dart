@@ -15,7 +15,10 @@ class ProviderDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 580),
@@ -26,25 +29,25 @@ class ProviderDetailDialog extends StatelessWidget {
             children: [
               // Header Cover Banner
               Container(
-                height: 120,
+                height: isMobile ? 100 : 120,
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(isMobile ? 14 : 20),
                 alignment: Alignment.bottomLeft,
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 32,
+                      radius: isMobile ? 26 : 32,
                       backgroundColor: Colors.white,
                       child: Text(
                         provider.displayName.isNotEmpty ? provider.displayName[0] : 'P',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
-                          fontSize: 26,
+                          fontSize: isMobile ? 20 : 26,
                         ),
                       ),
                     ),
@@ -90,7 +93,7 @@ class ProviderDetailDialog extends StatelessWidget {
 
               // Body content
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(isMobile ? 16 : 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -166,6 +166,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                 SizedBox(
                                   width: 220,
                                   child: DropdownButtonFormField<int?>(
+                                    isExpanded: true,
                                     initialValue: dir.selectedCategoryId,
                                     decoration: const InputDecoration(
                                       labelText: 'Service Category',
@@ -173,7 +174,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                     ),
                                     items: [
                                       const DropdownMenuItem(value: null, child: Text('All Categories')),
-                                      ...dir.categories.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))),
+                                      ...dir.categories.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name, overflow: TextOverflow.ellipsis))),
                                     ],
                                     onChanged: (v) => dir.setCategoryFilter(v),
                                   ),
@@ -182,6 +183,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                 SizedBox(
                                   width: 180,
                                   child: DropdownButtonFormField<String?>(
+                                    isExpanded: true,
                                     initialValue: dir.selectedState,
                                     decoration: const InputDecoration(
                                       labelText: 'State',
@@ -189,7 +191,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                     ),
                                     items: [
                                       const DropdownMenuItem(value: null, child: Text('All States')),
-                                      ...AppConstants.nigerianStates.map((s) => DropdownMenuItem(value: s, child: Text(s))),
+                                      ...AppConstants.nigerianStates.map((s) => DropdownMenuItem(value: s, child: Text(s, overflow: TextOverflow.ellipsis))),
                                     ],
                                     onChanged: (v) => dir.setLocationFilter(v, null),
                                   ),
@@ -199,6 +201,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                   SizedBox(
                                     width: 180,
                                     child: DropdownButtonFormField<String?>(
+                                      isExpanded: true,
                                       initialValue: dir.selectedCity,
                                       decoration: const InputDecoration(
                                         labelText: 'City / District',
@@ -206,7 +209,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                       ),
                                       items: [
                                         const DropdownMenuItem(value: null, child: Text('All Cities')),
-                                        ...cities.map((c) => DropdownMenuItem(value: c, child: Text(c))),
+                                        ...cities.map((c) => DropdownMenuItem(value: c, child: Text(c, overflow: TextOverflow.ellipsis))),
                                       ],
                                       onChanged: (v) => dir.setLocationFilter(dir.selectedState, v),
                                     ),
@@ -216,6 +219,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                 SizedBox(
                                   width: 170,
                                   child: DropdownButtonFormField<String>(
+                                    isExpanded: true,
                                     initialValue: dir.sortBy,
                                     decoration: const InputDecoration(
                                       labelText: 'Sort By',

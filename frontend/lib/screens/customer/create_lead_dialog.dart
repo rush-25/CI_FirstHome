@@ -162,214 +162,238 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
     final leadProv = context.watch<LeadProvider>();
     final cities = AppConstants.stateCities[_selectedState] ?? ['General'];
 
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 620),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(28),
-          child: Form(
-            key: _formKey,
-            child: Column(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isNarrow = constraints.maxWidth < 520;
+
+            final enquiryTypeField = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: AppColors.sage,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(Icons.send_rounded, color: AppColors.primary, size: 20),
-                          ),
-                          const SizedBox(width: 12),
-                          const Flexible(
-                            child: Text(
-                              'Create New Enquiry',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
-                ),
+                const Text('Enquiry Type', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
-                const Text(
-                  'Submit a structured service request or housing enquiry directly to providers.',
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  initialValue: _enquiryType,
+                  items: AppConstants.enquiryTypes
+                      .map((t) => DropdownMenuItem(value: t, child: Text(t, overflow: TextOverflow.ellipsis)))
+                      .toList(),
+                  onChanged: (v) => setState(() => _enquiryType = v ?? 'Service request'),
                 ),
+              ],
+            );
 
-                const SizedBox(height: 20),
+            final categoryField = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Service Category', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 6),
+                DropdownButtonFormField<int>(
+                  isExpanded: true,
+                  initialValue: _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : null),
+                  items: dir.categories
+                      .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name, overflow: TextOverflow.ellipsis)))
+                      .toList(),
+                  onChanged: (v) => setState(() => _selectedCategoryId = v),
+                ),
+              ],
+            );
 
-                if (widget.preselectedProvider != null) ...[
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.sage.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
-                    ),
-                    child: Row(
+            final stateField = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 6),
+                DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  initialValue: _selectedState,
+                  items: AppConstants.nigerianStates
+                      .map((s) => DropdownMenuItem(value: s, child: Text(s, overflow: TextOverflow.ellipsis)))
+                      .toList(),
+                  onChanged: (v) {
+                    setState(() {
+                      _selectedState = v;
+                      final newCities = AppConstants.stateCities[v] ?? ['General'];
+                      _selectedCity = newCities.first;
+                    });
+                  },
+                ),
+              ],
+            );
+
+            final cityField = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 6),
+                DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                  items: cities
+                      .map((c) => DropdownMenuItem(value: c, child: Text(c, overflow: TextOverflow.ellipsis)))
+                      .toList(),
+                  onChanged: (v) => setState(() => _selectedCity = v),
+                ),
+              ],
+            );
+
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(isNarrow ? 18 : 28),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(Icons.business, color: AppColors.primary, size: 20),
-                        const SizedBox(width: 10),
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              const Text('Direct Enquiry To:', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                              Text(
-                                widget.preselectedProvider!.displayName,
-                                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.sage,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(Icons.send_rounded, color: AppColors.primary, size: 20),
+                              ),
+                              const SizedBox(width: 12),
+                              const Flexible(
+                                child: Text(
+                                  'Create New Enquiry',
+                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
                         ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Submit a structured service request or housing enquiry directly to providers.',
+                      style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                    ),
 
-                // Row: Enquiry Type & Category
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(height: 20),
+
+                    if (widget.preselectedProvider != null) ...[
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.sage.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.business, color: AppColors.primary, size: 20),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Direct Enquiry To:', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                  Text(
+                                    widget.preselectedProvider!.displayName,
+                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
+                    // Enquiry Type & Category
+                    if (isNarrow) ...[
+                      enquiryTypeField,
+                      const SizedBox(height: 14),
+                      categoryField,
+                    ] else ...[
+                      Row(
                         children: [
-                          const Text('Enquiry Type', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 6),
-                          DropdownButtonFormField<String>(
-                            initialValue: _enquiryType,
-                            items: AppConstants.enquiryTypes
-                                .map((t) => DropdownMenuItem(value: t, child: Text(t)))
-                                .toList(),
-                            onChanged: (v) => setState(() => _enquiryType = v ?? 'Service request'),
-                          ),
+                          Expanded(child: enquiryTypeField),
+                          const SizedBox(width: 12),
+                          Expanded(child: categoryField),
                         ],
                       ),
+                    ],
+
+                    const SizedBox(height: 16),
+
+                    // Title
+                    const Text('Enquiry Title', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(
+                        hintText: 'e.g. Repair kitchen pipe leak and install mixer tap',
+                        prefixIcon: Icon(Icons.title, size: 18),
+                      ),
+                      validator: (v) => (v == null || v.trim().length < 5) ? 'Title must be at least 5 characters' : null,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                    const SizedBox(height: 16),
+
+                    // Description
+                    const Text('Description of Work', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: _descController,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
+                        hintText: 'Describe your requirements, timing, and specific home needs in detail...',
+                      ),
+                      validator: (v) =>
+                          (v == null || v.trim().length < 10) ? 'Description must be at least 10 characters' : null,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Location
+                    if (isNarrow) ...[
+                      stateField,
+                      const SizedBox(height: 14),
+                      cityField,
+                    ] else ...[
+                      Row(
                         children: [
-                          const Text('Service Category', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 6),
-                          DropdownButtonFormField<int>(
-                            initialValue: _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : null),
-                            items: dir.categories
-                                .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
-                                .toList(),
-                            onChanged: (v) => setState(() => _selectedCategoryId = v),
-                          ),
+                          Expanded(child: stateField),
+                          const SizedBox(width: 12),
+                          Expanded(child: cityField),
                         ],
                       ),
+                    ],
+
+                    const SizedBox(height: 16),
+
+                    // Preferred Contact Method
+                    const Text('Preferred Contact Method', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 6),
+                    DropdownButtonFormField<String>(
+                      isExpanded: true,
+                      initialValue: _preferredContact,
+                      items: AppConstants.contactMethods
+                          .map((m) => DropdownMenuItem(value: m, child: Text(m)))
+                          .toList(),
+                      onChanged: (v) => setState(() => _preferredContact = v ?? 'Phone'),
                     ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Title
-                const Text('Enquiry Title', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 6),
-                TextFormField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    hintText: 'e.g. Repair kitchen pipe leak and install mixer tap',
-                    prefixIcon: Icon(Icons.title, size: 18),
-                  ),
-                  validator: (v) => (v == null || v.trim().length < 5) ? 'Title must be at least 5 characters' : null,
-                ),
-
-                const SizedBox(height: 16),
-
-                // Description
-                const Text('Description of Work', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 6),
-                TextFormField(
-                  controller: _descController,
-                  maxLines: 4,
-                  decoration: const InputDecoration(
-                    hintText: 'Describe your requirements, timing, and specific home needs in detail...',
-                  ),
-                  validator: (v) =>
-                      (v == null || v.trim().length < 10) ? 'Description must be at least 10 characters' : null,
-                ),
-
-                const SizedBox(height: 16),
-
-                // Location Row
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 6),
-                          DropdownButtonFormField<String>(
-                            initialValue: _selectedState,
-                            items: AppConstants.nigerianStates
-                                .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                                .toList(),
-                            onChanged: (v) {
-                              setState(() {
-                                _selectedState = v;
-                                final newCities = AppConstants.stateCities[v] ?? ['General'];
-                                _selectedCity = newCities.first;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 6),
-                          DropdownButtonFormField<String>(
-                            initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
-                            items: cities
-                                .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                                .toList(),
-                            onChanged: (v) => setState(() => _selectedCity = v),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Preferred Contact Method
-                const Text('Preferred Contact Method', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 6),
-                DropdownButtonFormField<String>(
-                  initialValue: _preferredContact,
-                  items: AppConstants.contactMethods
-                      .map((m) => DropdownMenuItem(value: m, child: Text(m)))
-                      .toList(),
-                  onChanged: (v) => setState(() => _preferredContact = v ?? 'Phone'),
-                ),
 
                 const SizedBox(height: 24),
 
@@ -400,8 +424,10 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
+        );
+      },
+    ),
+  ),
+);
+}
 }

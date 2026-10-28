@@ -18,10 +18,33 @@ import 'screens/provider/provider_dashboard_screen.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+final AppRouterDelegate appRouterDelegate = AppRouterDelegate(navigatorKey: rootNavigatorKey);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const FirstHomeApp());
+}
+
+String extractPathFromRouteInfo(RouteInformation info) {
+  final uri = info.uri;
+  if (uri.fragment.isNotEmpty) {
+    final frag = uri.fragment;
+    return frag.startsWith('/') ? frag : '/$frag';
+  }
+  if (uri.path.isNotEmpty) {
+    return uri.path;
+  }
+  return '/';
+}
+
+String normalizeRoute(String raw) {
+  var p = raw.trim();
+  if (p.startsWith('#')) p = p.substring(1);
+  if (!p.startsWith('/')) p = '/$p';
+  if (p.length > 1 && p.endsWith('/')) p = p.substring(0, p.length - 1);
+  if (p == '/home') return '/';
+  if (p == '/register') return '/register-customer';
+  return p;
 }
 
 void navigateTo(String route, {dynamic args}) {
@@ -31,7 +54,7 @@ void navigateTo(String route, {dynamic args}) {
     if (navContext != null) {
       final auth = navContext.read<AuthProvider>();
       if (!auth.isAuthenticated) {
-        rootNavigatorKey.currentState?.pushNamed('/login');
+        navigateTo('login');
         return;
       }
       showDialog(
@@ -81,23 +104,138 @@ void navigateTo(String route, {dynamic args}) {
     return;
   }
 
-  final normalized = route.startsWith('/') ? route : '/$route';
-
-  if (normalized == '/' || normalized == '/home') {
-    if (rootNavigatorKey.currentState?.canPop() == true) {
-      rootNavigatorKey.currentState?.popUntil((r) => r.isFirst);
-    } else {
-      rootNavigatorKey.currentState?.pushReplacementNamed('/');
-    }
-    return;
-  }
-
-  // Push new named route so browser history and back button work natively
-  rootNavigatorKey.currentState?.pushNamed(normalized);
+  appRouterDelegate.pushRoute(route);
 }
 
-class FirstHomeApp extends StatelessWidget {
+class AppRouteInformationParser extends RouteInformationParser<RouteInformation> {
+  const AppRouteInformationParser();
+
+  @override
+  Future<RouteInformation> parseRouteInformation(RouteInformation routeInformation) async {
+    return routeInformation;
+  }
+
+  @override
+  RouteInformation? restoreRouteInformation(RouteInformation configuration) {
+    return configuration;
+  }
+}
+
+class AppRouterDelegate extends RouterDelegate<RouteInformation>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteInformation> {
+  @override
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  String _currentPath = '/';
+
+  AppRouterDelegate({required this.navigatorKey});
+
+  String get currentPath => _currentPath;
+
+  void reset() {
+    _currentPath = '/';
+  }
+
+  void pushRoute(String path) {
+    final normalized = normalizeRoute(path);
+    if (_currentPath != normalized) {
+      _currentPath = normalized;
+      notifyListeners();
+    }
+  }
+
+  @override
+  RouteInformation get currentConfiguration => RouteInformation(uri: Uri.parse(_currentPath));
+
+  @override
+  Future<void> setNewRoutePath(RouteInformation configuration) async {
+    final path = extractPathFromRouteInfo(configuration);
+    final normalized = normalizeRoute(path);
+    if (_currentPath != normalized) {
+      _currentPath = normalized;
+      notifyListeners();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: navigatorKey,
+      pages: [
+        MaterialPage(
+          key: const ValueKey('landing-page'),
+          name: '/',
+          child: LandingScreen(onNavigate: navigateTo),
+        ),
+        if (_currentPath == '/directory')
+          MaterialPage(
+            key: const ValueKey('directory-page'),
+            name: '/directory',
+            child: DirectoryScreen(onNavigate: navigateTo),
+          )
+        else if (_currentPath == '/login')
+          MaterialPage(
+            key: const ValueKey('login-page'),
+            name: '/login',
+            child: LoginScreen(onNavigate: navigateTo),
+          )
+        else if (_currentPath == '/register' || _currentPath == '/register-customer')
+          const MaterialPage(
+            key: ValueKey('register-customer-page'),
+            name: '/register-customer',
+            child: RegisterScreen(initialRole: 'Customer', onNavigate: navigateTo),
+          )
+        else if (_currentPath == '/register-provider')
+          const MaterialPage(
+            key: ValueKey('register-provider-page'),
+            name: '/register-provider',
+            child: RegisterScreen(initialRole: 'Provider', onNavigate: navigateTo),
+          )
+        else if (_currentPath == '/customer-dashboard')
+          MaterialPage(
+            key: const ValueKey('customer-dashboard-page'),
+            name: '/customer-dashboard',
+            child: CustomerDashboardScreen(onNavigate: navigateTo),
+          )
+        else if (_currentPath == '/provider-dashboard')
+          MaterialPage(
+            key: const ValueKey('provider-dashboard-page'),
+            name: '/provider-dashboard',
+            child: ProviderDashboardScreen(onNavigate: navigateTo),
+          )
+        else if (_currentPath == '/admin-dashboard')
+          MaterialPage(
+            key: const ValueKey('admin-dashboard-page'),
+            name: '/admin-dashboard',
+            child: AdminDashboardScreen(onNavigate: navigateTo),
+          ),
+      ],
+      onDidRemovePage: (page) {
+        if (_currentPath != '/') {
+          _currentPath = '/';
+          notifyListeners();
+        }
+      },
+    );
+  }
+}
+
+class FirstHomeApp extends StatefulWidget {
   const FirstHomeApp({super.key});
+
+  @override
+  State<FirstHomeApp> createState() => _FirstHomeAppState();
+}
+
+class _FirstHomeAppState extends State<FirstHomeApp> {
+  late final AppRouteInformationParser _routeInformationParser;
+
+  @override
+  void initState() {
+    super.initState();
+    appRouterDelegate.reset();
+    _routeInformationParser = const AppRouteInformationParser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,66 +246,12 @@ class FirstHomeApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LeadProvider()),
         ChangeNotifierProvider(create: (_) => AdminProvider()),
       ],
-      child: MaterialApp(
-        navigatorKey: rootNavigatorKey,
+      child: MaterialApp.router(
         title: AppConstants.appName,
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
-        onGenerateRoute: (settings) {
-          final uri = Uri.parse(settings.name ?? '/');
-          final path = uri.path.isEmpty ? '/' : uri.path;
-
-          switch (path) {
-            case '/':
-            case '/home':
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/'),
-                builder: (_) => LandingScreen(onNavigate: navigateTo),
-              );
-            case '/directory':
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/directory'),
-                builder: (_) => DirectoryScreen(onNavigate: navigateTo),
-              );
-            case '/login':
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/login'),
-                builder: (_) => LoginScreen(onNavigate: navigateTo),
-              );
-            case '/register':
-            case '/register-customer':
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/register-customer'),
-                builder: (_) => const RegisterScreen(initialRole: 'Customer', onNavigate: navigateTo),
-              );
-            case '/register-provider':
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/register-provider'),
-                builder: (_) => const RegisterScreen(initialRole: 'Provider', onNavigate: navigateTo),
-              );
-            case '/customer-dashboard':
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/customer-dashboard'),
-                builder: (_) => CustomerDashboardScreen(onNavigate: navigateTo),
-              );
-            case '/provider-dashboard':
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/provider-dashboard'),
-                builder: (_) => ProviderDashboardScreen(onNavigate: navigateTo),
-              );
-            case '/admin-dashboard':
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/admin-dashboard'),
-                builder: (_) => AdminDashboardScreen(onNavigate: navigateTo),
-              );
-            default:
-              return MaterialPageRoute(
-                settings: const RouteSettings(name: '/'),
-                builder: (_) => LandingScreen(onNavigate: navigateTo),
-              );
-          }
-        },
+        routerDelegate: appRouterDelegate,
+        routeInformationParser: _routeInformationParser,
       ),
     );
   }

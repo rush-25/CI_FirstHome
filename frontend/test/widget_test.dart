@@ -82,4 +82,44 @@ void main() {
     expect(find.text('Welcome Back'), findsOneWidget);
     expect(find.text('Sign In'), findsOneWidget);
   });
+
+  testWidgets('Browser history Back and Forward navigation updates current route and page', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1440, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(const FirstHomeApp());
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+
+    // Initially at Home
+    expect(appRouterDelegate.currentPath, '/');
+
+    // Navigate to Directory
+    final dirBtn = find.text('Find Professionals');
+    expect(dirBtn, findsWidgets);
+    await tester.tap(dirBtn.first);
+    await tester.pumpAndSettle();
+
+    expect(appRouterDelegate.currentPath, '/directory');
+    expect(find.text('Find the Right Professional'), findsOneWidget);
+
+    // Simulate browser Back (←) button
+    await appRouterDelegate.setNewRoutePath(RouteInformation(uri: Uri.parse('/')));
+    await tester.pumpAndSettle();
+
+    expect(appRouterDelegate.currentPath, '/');
+    expect(find.text('Find the Right Professional'), findsNothing);
+
+    // Simulate browser Forward (→) button
+    await appRouterDelegate.setNewRoutePath(RouteInformation(uri: Uri.parse('/directory')));
+    await tester.pumpAndSettle();
+
+    expect(appRouterDelegate.currentPath, '/directory');
+    expect(find.text('Find the Right Professional'), findsOneWidget);
+  });
 }
+

@@ -313,40 +313,71 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
     return Column(
       children: [
         // Filter bar
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _searchController,
-                onSubmitted: (v) => leadProv.setSearchQuery(v),
-                decoration: InputDecoration(
-                  hintText: 'Search by reference (e.g. FH-2026-0001) or title...',
-                  prefixIcon: const Icon(Icons.search, size: 18),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.arrow_forward, size: 16),
-                    onPressed: () => leadProv.setSearchQuery(_searchController.text),
+        if (isMobile) ...[
+          TextField(
+            controller: _searchController,
+            onSubmitted: (v) => leadProv.setSearchQuery(v),
+            decoration: InputDecoration(
+              hintText: 'Search by reference or title...',
+              prefixIcon: const Icon(Icons.search, size: 18),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.arrow_forward, size: 16),
+                onPressed: () => leadProv.setSearchQuery(_searchController.text),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<String?>(
+            isExpanded: true,
+            initialValue: leadProv.statusFilter,
+            decoration: const InputDecoration(
+              labelText: 'Filter Status',
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            ),
+            items: [
+              const DropdownMenuItem(value: null, child: Text('All Statuses')),
+              ...AppConstants.leadStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s))),
+            ],
+            onChanged: (v) => leadProv.setStatusFilter(v),
+          ),
+        ] else ...[
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  onSubmitted: (v) => leadProv.setSearchQuery(v),
+                  decoration: InputDecoration(
+                    hintText: 'Search by reference (e.g. FH-2026-0001) or title...',
+                    prefixIcon: const Icon(Icons.search, size: 18),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.arrow_forward, size: 16),
+                      onPressed: () => leadProv.setSearchQuery(_searchController.text),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 160,
-              child: DropdownButtonFormField<String?>(
-                initialValue: leadProv.statusFilter,
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              const SizedBox(width: 12),
+              SizedBox(
+                width: 170,
+                child: DropdownButtonFormField<String?>(
+                  isExpanded: true,
+                  initialValue: leadProv.statusFilter,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  ),
+                  items: [
+                    const DropdownMenuItem(value: null, child: Text('All Statuses')),
+                    ...AppConstants.leadStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s))),
+                  ],
+                  onChanged: (v) => leadProv.setStatusFilter(v),
                 ),
-                items: [
-                  const DropdownMenuItem(value: null, child: Text('All Statuses')),
-                  ...AppConstants.leadStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s))),
-                ],
-                onChanged: (v) => leadProv.setStatusFilter(v),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
 
         const SizedBox(height: 16),
 
