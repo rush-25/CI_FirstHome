@@ -105,8 +105,8 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        _NavLink(label: 'Home', onTap: () => onNavigate?.call('home')),
                         _NavLink(label: 'Find Professionals', onTap: () => onNavigate?.call('directory')),
-                        _NavLink(label: 'How It Works', onTap: () => onNavigate?.call('how-it-works')),
                         _NavLink(label: 'Become a Provider', onTap: () => onNavigate?.call('register-provider')),
                       ],
                     ),
