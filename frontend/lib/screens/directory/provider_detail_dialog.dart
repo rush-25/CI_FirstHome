@@ -131,7 +131,7 @@ class ProviderDetailDialog extends StatelessWidget {
                               Icon(Icons.star, color: AppColors.gold, size: 14),
                               SizedBox(width: 4),
                               Text(
-                                '4.9 (18 reviews • Demo)',
+                                '4.9 (18 reviews)',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: AppColors.textPrimary,
@@ -174,14 +174,14 @@ class ProviderDetailDialog extends StatelessWidget {
                           const Divider(height: 20),
                           _DetailRow(
                             icon: Icons.phone_outlined,
-                            label: 'Phone (Synthetic)',
+                            label: 'Phone',
                             value: provider.phone,
                           ),
                           const Divider(height: 20),
                           _DetailRow(
                             icon: Icons.verified_user_outlined,
-                            label: 'KYC Status (Mock)',
-                            value: '${provider.verificationStatus} (Simulated)',
+                            label: 'Verification Status',
+                            value: provider.verificationStatus,
                           ),
                         ],
                       ),

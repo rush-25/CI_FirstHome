@@ -4,9 +4,6 @@ class AppConstants {
   static const String appSubtitle =
       'From everyday repairs to home improvements, connect with skilled service providers in your area.';
 
-  static const String conceptDisclaimer =
-      'Concept Prototype — Subject to Final Scope & Agreement. Synthetic data only. No real BVN/NIN verification.';
-
   // Default API Base URL for backend.
   // Can be overridden at build/deploy time via: --dart-define=API_BASE_URL=https://your-api.com/api
   static const String apiBaseUrl = String.fromEnvironment(

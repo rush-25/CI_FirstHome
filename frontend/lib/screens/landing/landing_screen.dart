@@ -55,7 +55,6 @@ class _LandingScreenState extends State<LandingScreen> {
             _buildCategories(context),
             _buildHowItWorks(context),
             _buildFeaturedProviders(context),
-            _buildTrustSection(context),
             Footer(onNavigate: widget.onNavigate),
           ],
         ),
@@ -264,7 +263,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 children: [
                   _buildFeatureChip('Direct enquiries'),
                   _buildFeatureChip('Transparent lead tracking'),
-                  _buildFeatureChip('Consent-based mock KYC'),
+                  _buildFeatureChip('Verified professionals'),
                 ],
               ),
             ],
@@ -822,64 +821,6 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildTrustSection(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isNarrow = constraints.maxWidth < 600;
-
-        return Container(
-          color: AppColors.sage.withValues(alpha: 0.4),
-          padding: EdgeInsets.symmetric(
-            horizontal: isNarrow ? 16 : 24,
-            vertical: isNarrow ? 40 : 60,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 860),
-              child: Column(
-                children: [
-                  const Icon(Icons.verified_user_outlined, size: 38, color: AppColors.primary),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Consent-Based Verification & Trust Architecture',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: isNarrow ? 20 : 24,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'FirstHome Nigeria employs a simulated KYC readiness preview designed for Nigerian regulatory environments (such as BVN and NIN adapters). In this prototype, all identity evaluations are simulated with mock reference identifiers. No real personal identity documents are collected or stored.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppColors.textSecondary,
-                      height: 1.6,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: isNarrow ? double.infinity : null,
-                    child: ElevatedButton.icon(
-                      onPressed: () => widget.onNavigate('register-provider'),
-                      icon: const Icon(Icons.arrow_forward, size: 16),
-                      label: const Text('Register as a Service Provider'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

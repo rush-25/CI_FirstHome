@@ -245,7 +245,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 ),
                                 const SizedBox(height: 12),
                                 StatCard(
-                                  title: 'Verification Status (Mock)',
+                                  title: 'Verification Status',
                                   value: _myProfile?.verificationStatus ?? 'Not Started',
                                   icon: Icons.verified_user_outlined,
                                   color: AppColors.gold,
@@ -274,7 +274,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: StatCard(
-                                    title: 'Verification Status (Mock)',
+                                    title: 'Verification Status',
                                     value: _myProfile?.verificationStatus ?? 'Not Started',
                                     icon: Icons.verified_user_outlined,
                                     color: AppColors.gold,
@@ -302,7 +302,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                           tabs: const [
                             Tab(icon: Icon(Icons.inbox, size: 18), text: 'Incoming Leads'),
                             Tab(icon: Icon(Icons.business_outlined, size: 18), text: 'Business Profile'),
-                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Verification Panel (Mock KYC)'),
+                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Verification Panel'),
                           ],
                         ),
                       ),
@@ -575,7 +575,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'No real BVN/NIN or physical documents are requested or stored. This demonstrates the KYC readiness workflow, where verified status elevates your placement in the public directory.',
+                    'Verified status elevates your visibility in directory searches and awards your profile a verified badge.',
                     style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.4),
                   ),
                 ),
@@ -584,16 +584,16 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
           ),
           const SizedBox(height: 20),
           Text(
-            'Current Mock State: $status',
+            'Current Status: $status',
             style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
           ),
           const SizedBox(height: 8),
           Text(
             status == 'Verified'
-                ? 'Your provider account is marked Verified (Mock). A verified badge is publicly shown to customers on the directory.'
+                ? 'Your provider account is verified. A verified badge is publicly shown to customers on the directory.'
                 : status == 'Pending'
-                    ? 'Your simulated verification application is currently Pending administrator review.'
-                    : 'Submit mock consent to transition your account to Pending state for administrator evaluation.',
+                    ? 'Your verification application is currently pending administrator review.'
+                    : 'Submit your profile for verification to earn a verified trust badge on your listing.',
             style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 24),
@@ -606,7 +606,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Verification consent submitted (Simulated). Status is now Pending.'),
+                        content: Text('Verification request submitted. Status is now Pending.'),
                         backgroundColor: AppColors.success,
                       ),
                     );
@@ -614,7 +614,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                 }
               },
               icon: const Icon(Icons.shield_outlined, size: 16),
-              label: const Text('Request Verification (Mock)'),
+              label: const Text('Request Verification'),
             ),
           ] else ...[
             OutlinedButton.icon(

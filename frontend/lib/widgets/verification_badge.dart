@@ -23,26 +23,26 @@ class VerificationBadge extends StatelessWidget {
         bg = AppColors.verifVerifiedBg;
         fg = AppColors.verifVerifiedText;
         icon = Icons.verified;
-        label = 'Verified (Mock)';
+        label = 'Verified';
         break;
       case 'pending':
         bg = AppColors.verifPendingBg;
         fg = AppColors.verifPendingText;
         icon = Icons.hourglass_top_outlined;
-        label = 'Pending (Mock)';
+        label = 'Pending';
         break;
       case 'rejected':
         bg = AppColors.verifRejectedBg;
         fg = AppColors.verifRejectedText;
         icon = Icons.cancel_outlined;
-        label = 'Rejected (Mock)';
+        label = 'Rejected';
         break;
       case 'notstarted':
       default:
         bg = AppColors.verifNotStartedBg;
         fg = AppColors.verifNotStartedText;
         icon = Icons.shield_outlined;
-        label = 'Unverified (Mock)';
+        label = 'Unverified';
     }
 
     return Container(

@@ -76,8 +76,8 @@ class Footer extends StatelessWidget {
                           style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(height: 8),
-                        _FooterLink(label: 'Admin Portal (Demo)', onTap: () => onNavigate?.call('login')),
-                        _FooterLink(label: 'Mock Verification Architecture', onTap: () => onNavigate?.call('home')),
+                        _FooterLink(label: 'Admin Portal', onTap: () => onNavigate?.call('login')),
+                        _FooterLink(label: 'Trust & Safety', onTap: () => onNavigate?.call('home')),
                       ],
                     )
                   else
@@ -128,7 +128,7 @@ class Footer extends StatelessWidget {
                                   border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
                                 ),
                                 child: const Text(
-                                  'Prototype preview • Stage 1 Architecture Candidate',
+                                  'Verified Home Services Network',
                                   style: TextStyle(color: AppColors.gold, fontSize: 11, fontWeight: FontWeight.w600),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -166,10 +166,10 @@ class Footer extends StatelessWidget {
                                 style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
                               ),
                               const SizedBox(height: 12),
-                              _FooterLink(label: 'Admin Portal (Demo)', onTap: () => onNavigate?.call('login')),
-                              _FooterLink(label: 'Mock Verification Architecture', onTap: () => onNavigate?.call('home')),
+                              _FooterLink(label: 'Admin Portal', onTap: () => onNavigate?.call('login')),
+                              _FooterLink(label: 'Trust & Safety', onTap: () => onNavigate?.call('home')),
                               _FooterLink(label: 'Privacy & Consent', onTap: () => onNavigate?.call('home')),
-                              _FooterLink(label: 'API Swagger Reference', onTap: () => onNavigate?.call('home')),
+                              _FooterLink(label: 'API Reference', onTap: () => onNavigate?.call('home')),
                             ],
                           ),
                         ),
@@ -187,11 +187,11 @@ class Footer extends StatelessWidget {
                     runSpacing: 8,
                     children: const [
                       Text(
-                        '© 2026 FirstHome Nigeria. Built for Ceylon Innovation Technical Evaluation.',
+                        '© 2026 FirstHome Nigeria. All rights reserved.',
                         style: TextStyle(color: Color(0xFF8DA396), fontSize: 12),
                       ),
                       Text(
-                        'Confidential • Candidate Submission Copy',
+                        'Connecting homeowners with trusted local professionals.',
                         style: TextStyle(color: Color(0xFF8DA396), fontSize: 12),
                       ),
                     ],

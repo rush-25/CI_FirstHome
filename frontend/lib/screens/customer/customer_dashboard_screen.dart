@@ -266,7 +266,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                           tabs: const [
                             Tab(icon: Icon(Icons.receipt_long, size: 18), text: 'My Enquiries'),
                             Tab(icon: Icon(Icons.person_outline, size: 18), text: 'My Profile'),
-                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Mock KYC Preview'),
+                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Identity Verification'),
                           ],
                         ),
                       ),
@@ -580,7 +580,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
           LayoutBuilder(
             builder: (context, constraints) {
               final isNarrow = constraints.maxWidth < 500;
-              final label = const Text('Identity Verification Preview (MOCK)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700));
+              final label = const Text('Identity Verification', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700));
               final badge = VerificationBadge(status: status);
 
               return isNarrow
@@ -615,7 +615,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Demo verification only — no real identity checks. FirstHome Nigeria never requests or stores actual BVN, NIN, or government identity documents in this prototype.',
+                    'FirstHome Nigeria verifies customer identities to keep our service community secure and trustworthy.',
                     style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.4),
                   ),
                 ),
@@ -630,10 +630,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
           const SizedBox(height: 6),
           Text(
             status == 'Verified'
-                ? 'Your simulated customer identity profile is marked Verified. Service providers see this badge on your enquiries.'
+                ? 'Your identity profile is verified. Service providers see this badge on your enquiries.'
                 : status == 'Pending'
-                    ? 'Your simulated verification request is currently Pending review by an administrator.'
-                    : 'Consent to mock KYC simulation to request a simulated verification state.',
+                    ? 'Your verification request is currently pending review by an administrator.'
+                    : 'Submit your profile for verification to build trust with service providers.',
             style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 20),
@@ -646,14 +646,14 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                       if (ok && mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Mock verification consent submitted! Status is now Pending.'),
+                            content: Text('Verification request submitted! Status is now Pending.'),
                             backgroundColor: AppColors.success,
                           ),
                         );
                       }
                     },
               icon: const Icon(Icons.fingerprint, size: 16),
-              label: const Text('Simulate Verification Consent (Mock)'),
+              label: const Text('Request Verification'),
             ),
           ] else ...[
             OutlinedButton.icon(

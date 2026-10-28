@@ -452,7 +452,7 @@ class ApiService {
       headers: await _headers(),
       body: jsonEncode({
         'status': status,
-        'note': note ?? 'Simulated by admin (MOCK)',
+        'note': note ?? 'Verified by admin',
       }),
     );
     final data = _handleResponse(res) as Map<String, dynamic>;

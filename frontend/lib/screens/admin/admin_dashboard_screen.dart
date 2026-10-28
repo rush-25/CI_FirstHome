@@ -153,9 +153,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
     );
   }
 
-  void _openMockVerificationModal(int userId, String name, String currentStatus) {
+  void _openVerificationModal(int userId, String name, String currentStatus) {
     String selectedStatus = currentStatus == 'Verified' ? 'Rejected' : 'Verified';
-    final noteController = TextEditingController(text: 'Admin simulated verification (MOCK).');
+    final noteController = TextEditingController(text: 'Admin verification update.');
 
     showDialog(
       context: context,
@@ -166,7 +166,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
             children: const [
               Icon(Icons.shield_outlined, color: AppColors.gold),
               SizedBox(width: 8),
-              Text('Simulate Mock Verification'),
+              Text('Update Verification Status'),
             ],
           ),
           content: Column(
@@ -180,14 +180,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
               const SizedBox(height: 4),
               Text('Current Status: $currentStatus', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
               const SizedBox(height: 16),
-              const Text('Select Simulated Status:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              const Text('Select Status:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
                 initialValue: selectedStatus,
                 items: const [
-                  DropdownMenuItem(value: 'Pending', child: Text('Pending (Mock)')),
-                  DropdownMenuItem(value: 'Verified', child: Text('Verified (Mock)')),
-                  DropdownMenuItem(value: 'Rejected', child: Text('Rejected (Mock)')),
+                  DropdownMenuItem(value: 'Pending', child: Text('Pending')),
+                  DropdownMenuItem(value: 'Verified', child: Text('Verified')),
+                  DropdownMenuItem(value: 'Rejected', child: Text('Rejected')),
                 ],
                 onChanged: (v) => setModalState(() => selectedStatus = v ?? 'Verified'),
               ),
@@ -206,7 +206,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Text(
-                  'Simulation only. No real BVN/NIN verification is triggered.',
+                  'Update user verification credential and audit state.',
                   style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
                 ),
               ),
@@ -230,7 +230,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                 if (ok && mounted) {
                   messenger.showSnackBar(
                     SnackBar(
-                      content: Text('Mock verification updated to $selectedStatus for $name!'),
+                      content: Text('Verification updated to $selectedStatus for $name!'),
                       backgroundColor: AppColors.success,
                     ),
                   );
@@ -281,7 +281,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                               ),
                               SizedBox(height: 4),
                               Text(
-                                'Database-driven metrics, lead status orchestration, and simulated KYC management.',
+                                'Database-driven metrics, lead status orchestration, and verification management.',
                                 style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
                               ),
                             ],
@@ -416,7 +416,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                             Tab(icon: Icon(Icons.receipt_long, size: 18), text: 'Leads Management'),
                             Tab(icon: Icon(Icons.people_outline, size: 18), text: 'Customers'),
                             Tab(icon: Icon(Icons.business_outlined, size: 18), text: 'Providers Directory'),
-                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Mock KYC Events'),
+                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Verification Events'),
                           ],
                         ),
                       ),
@@ -624,8 +624,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                           style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
                         ),
                         trailing: OutlinedButton(
-                          onPressed: () => _openMockVerificationModal(c.id, c.fullName, c.verificationStatus),
-                          child: const Text('Simulate KYC', style: TextStyle(fontSize: 11)),
+                          onPressed: () => _openVerificationModal(c.id, c.fullName, c.verificationStatus),
+                          child: const Text('Verify User', style: TextStyle(fontSize: 11)),
                         ),
                       ),
                     );
@@ -707,8 +707,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                               ],
                             ),
                             OutlinedButton(
-                              onPressed: () => _openMockVerificationModal(p.userId, p.displayName, p.verificationStatus),
-                              child: const Text('Simulate KYC', style: TextStyle(fontSize: 11)),
+                              onPressed: () => _openVerificationModal(p.userId, p.displayName, p.verificationStatus),
+                              child: const Text('Verify Provider', style: TextStyle(fontSize: 11)),
                             ),
                           ],
                         ),
@@ -731,16 +731,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
           builder: (context, constraints) {
             final isNarrow = constraints.maxWidth < 550;
             final labelText = const Text(
-              'Simulated Verification Audit Log',
+              'Verification Audit Log',
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
             );
-            final mockBadge = Container(
+            final auditBadge = Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: AppColors.sage,
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Text('MOCK Engine • No Real BVN/NIN', style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold)),
+              child: const Text('Verification Engine', style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold)),
             );
 
             return isNarrow
@@ -749,14 +749,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                     children: [
                       labelText,
                       const SizedBox(height: 6),
-                      mockBadge,
+                      auditBadge,
                     ],
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       labelText,
-                      mockBadge,
+                      auditBadge,
                     ],
                   );
           },
