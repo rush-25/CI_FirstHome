@@ -5,7 +5,6 @@ import '../../core/constants/app_constants.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/directory_provider.dart';
 import '../../core/services/api_service.dart';
-import '../../widgets/demo_banner.dart';
 import '../../widgets/navbar.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -144,7 +143,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const DemoBanner(),
             Navbar(onNavigate: widget.onNavigate),
             Container(
               padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 64),

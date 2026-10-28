@@ -6,7 +6,6 @@ import '../../core/constants/app_constants.dart';
 import '../../models/lead_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/admin_provider.dart';
-import '../../widgets/demo_banner.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/footer.dart';
 import '../../widgets/stat_card.dart';
@@ -255,7 +254,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const DemoBanner(),
             Navbar(onNavigate: widget.onNavigate),
             Container(
               color: AppColors.background,

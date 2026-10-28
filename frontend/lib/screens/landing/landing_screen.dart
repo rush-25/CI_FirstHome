@@ -4,7 +4,6 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../providers/directory_provider.dart';
 import '../../models/provider_model.dart';
-import '../../widgets/demo_banner.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/footer.dart';
 import '../../widgets/verification_badge.dart';
@@ -51,7 +50,6 @@ class _LandingScreenState extends State<LandingScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const DemoBanner(),
             Navbar(onNavigate: widget.onNavigate),
             _buildHero(context),
             _buildCategories(context),

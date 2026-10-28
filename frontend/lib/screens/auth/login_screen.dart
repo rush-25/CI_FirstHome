@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
-import '../../widgets/demo_banner.dart';
 import '../../widgets/navbar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -63,7 +62,6 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const DemoBanner(),
             Navbar(onNavigate: widget.onNavigate),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 32 : 64),

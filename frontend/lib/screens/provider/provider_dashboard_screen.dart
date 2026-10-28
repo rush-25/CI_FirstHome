@@ -8,7 +8,6 @@ import '../../models/provider_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/directory_provider.dart';
 import '../../core/services/api_service.dart';
-import '../../widgets/demo_banner.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/footer.dart';
 import '../../widgets/stat_card.dart';
@@ -133,7 +132,6 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const DemoBanner(),
             Navbar(onNavigate: widget.onNavigate),
             Container(
               color: AppColors.background,
