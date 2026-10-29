@@ -74,7 +74,7 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
+          constraints: const BoxConstraints(maxWidth: 1400),
           child: Column(
             children: [
               // Badge
@@ -310,7 +310,7 @@ class _LandingScreenState extends State<LandingScreen> {
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 48 : 72),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
+          constraints: const BoxConstraints(maxWidth: 1400),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -471,7 +471,7 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1200),
+              constraints: const BoxConstraints(maxWidth: 1400),
               child: Column(
                 children: [
                   Text(
@@ -573,7 +573,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget _buildFeaturedProviders(BuildContext context) {
     final dir = context.watch<DirectoryProvider>();
-    final featured = dir.providers.take(3).toList();
+    final featured = dir.providers.take(4).toList();
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -587,7 +587,7 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1200),
+              constraints: const BoxConstraints(maxWidth: 1400),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -664,23 +664,25 @@ class _LandingScreenState extends State<LandingScreen> {
                       ),
                     )
                   else
-                    isNarrow
-                        ? Column(
-                            children: featured.map((p) => _buildProviderCard(p)).toList(),
-                          )
-                        : Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: featured
-                                .map(
-                                  (p) => Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                                      child: _buildProviderCard(p),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                    LayoutBuilder(
+                      builder: (context, box) {
+                        final w = box.maxWidth;
+                        // Max 4 cards per row.
+                        final cols = w < 600 ? 1 : (w < 900 ? 2 : (w < 1250 ? 3 : 4));
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: cols,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 0,
+                            mainAxisExtent: 285,
                           ),
+                          itemCount: featured.length,
+                          itemBuilder: (ctx, i) => _buildProviderCard(featured[i]),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
