@@ -180,21 +180,27 @@ class Footer extends StatelessWidget {
                   const Divider(color: Color(0xFF285644)),
                   const SizedBox(height: 16),
 
-                  Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 16,
-                    runSpacing: 8,
-                    children: const [
-                      Text(
-                        '© 2026 FirstHome Nigeria. All rights reserved.',
-                        style: TextStyle(color: Color(0xFF8DA396), fontSize: 12),
-                      ),
-                      Text(
-                        'Connecting homeowners with trusted local professionals.',
-                        style: TextStyle(color: Color(0xFF8DA396), fontSize: 12),
-                      ),
-                    ],
+                  SizedBox(
+                    width: double.infinity,
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      runAlignment: WrapAlignment.end,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 16,
+                      runSpacing: 8,
+                      children: const [
+                        Text(
+                          '© 2026 FirstHome Nigeria. All rights reserved.',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Color(0xFF8DA396), fontSize: 12),
+                        ),
+                        Text(
+                          'Connecting homeowners with trusted local professionals.',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Color(0xFF8DA396), fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               );
