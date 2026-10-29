@@ -63,10 +63,10 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
             Navbar(onNavigate: widget.onNavigate),
             Container(
               color: AppColors.background,
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 32 : 48),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 32 : 48),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
+                  constraints: const BoxConstraints(maxWidth: 1400),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -285,17 +285,16 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                         LayoutBuilder(
                           builder: (context, constraints) {
                             final width = constraints.maxWidth;
-                            int cols = 1;
-                            double ratio = 1.25;
-                            if (width < 640) {
+                            // Max 4 cards per row; fixed card height avoids empty space.
+                            int cols;
+                            if (width < 600) {
                               cols = 1;
-                              ratio = 1.25;
-                            } else if (width < 1050) {
+                            } else if (width < 900) {
                               cols = 2;
-                              ratio = 1.15;
-                            } else {
+                            } else if (width < 1250) {
                               cols = 3;
-                              ratio = 1.08;
+                            } else {
+                              cols = 4;
                             }
 
                             return GridView.builder(
@@ -303,9 +302,9 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                               physics: const NeverScrollableScrollPhysics(),
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: cols,
-                                mainAxisSpacing: 20,
-                                crossAxisSpacing: 20,
-                                childAspectRatio: ratio,
+                                mainAxisSpacing: 16,
+                                crossAxisSpacing: 16,
+                                mainAxisExtent: 240,
                               ),
                               itemCount: dir.providers.length,
                               itemBuilder: (ctx, i) {
