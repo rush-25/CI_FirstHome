@@ -27,10 +27,13 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
               bottom: BorderSide(color: AppColors.border, width: 1),
             ),
           ),
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1400),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
               // Brand Logo
               Flexible(
                 child: InkWell(
@@ -270,9 +273,11 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                 ),
             ],
           ),
-        );
-      },
+        ),
+      ),
     );
+  },
+);
   }
 }
 

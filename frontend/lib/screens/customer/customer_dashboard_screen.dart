@@ -116,10 +116,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
             Navbar(onNavigate: widget.onNavigate),
             Container(
               color: AppColors.background,
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 24 : 40),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 40),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
+                  constraints: const BoxConstraints(maxWidth: 1400),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

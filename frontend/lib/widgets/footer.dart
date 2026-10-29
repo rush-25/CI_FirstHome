@@ -8,12 +8,14 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 700;
+
     return Container(
       color: AppColors.primaryDark,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: 48),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
+          constraints: const BoxConstraints(maxWidth: 1400),
           child: LayoutBuilder(
             builder: (context, constraints) {
               final isNarrow = constraints.maxWidth < 700;
@@ -83,10 +85,11 @@ class Footer extends StatelessWidget {
                   else
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Col 1: Brand
-                        Expanded(
-                          flex: 3,
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 460),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -139,39 +142,34 @@ class Footer extends StatelessWidget {
                         ),
                         const SizedBox(width: 32),
                         // Col 2: Quick Links
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Discover',
-                                style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
-                              ),
-                              const SizedBox(height: 12),
-                              _FooterLink(label: 'Find Professionals', onTap: () => onNavigate?.call('directory')),
-                              _FooterLink(label: 'Become a Provider', onTap: () => onNavigate?.call('register-provider')),
-                              _FooterLink(label: 'Customer Registration', onTap: () => onNavigate?.call('register-customer')),
-                            ],
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Discover',
+                              style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
+                            ),
+                            const SizedBox(height: 12),
+                            _FooterLink(label: 'Find Professionals', onTap: () => onNavigate?.call('directory')),
+                            _FooterLink(label: 'Become a Provider', onTap: () => onNavigate?.call('register-provider')),
+                            _FooterLink(label: 'Customer Registration', onTap: () => onNavigate?.call('register-customer')),
+                          ],
                         ),
+                        const SizedBox(width: 32),
                         // Col 3: Operations & Trust
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Trust & Operations',
-                                style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
-                              ),
-                              const SizedBox(height: 12),
-                              _FooterLink(label: 'Admin Portal', onTap: () => onNavigate?.call('login')),
-                              _FooterLink(label: 'Trust & Safety', onTap: () => onNavigate?.call('home')),
-                              _FooterLink(label: 'Privacy & Consent', onTap: () => onNavigate?.call('home')),
-                              _FooterLink(label: 'API Reference', onTap: () => onNavigate?.call('home')),
-                            ],
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Trust & Operations',
+                              style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
+                            ),
+                            const SizedBox(height: 12),
+                            _FooterLink(label: 'Admin Portal', onTap: () => onNavigate?.call('login')),
+                            _FooterLink(label: 'Trust & Safety', onTap: () => onNavigate?.call('home')),
+                            _FooterLink(label: 'Privacy & Consent', onTap: () => onNavigate?.call('home')),
+                            _FooterLink(label: 'API Reference', onTap: () => onNavigate?.call('home')),
+                          ],
                         ),
                       ],
                     ),
@@ -183,20 +181,17 @@ class Footer extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: Wrap(
-                      alignment: WrapAlignment.end,
-                      runAlignment: WrapAlignment.end,
+                      alignment: WrapAlignment.spaceBetween,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       spacing: 16,
                       runSpacing: 8,
                       children: const [
                         Text(
                           '© 2026 FirstHome Nigeria. All rights reserved.',
-                          textAlign: TextAlign.right,
                           style: TextStyle(color: Color(0xFF8DA396), fontSize: 12),
                         ),
                         Text(
                           'Connecting homeowners with trusted local professionals.',
-                          textAlign: TextAlign.right,
                           style: TextStyle(color: Color(0xFF8DA396), fontSize: 12),
                         ),
                       ],
