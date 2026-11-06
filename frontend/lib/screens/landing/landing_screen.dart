@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -75,13 +76,23 @@ class _LandingScreenState extends State<LandingScreen> {
 
   // 1. Hero Section
   Widget _buildHero(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+    final screenHeight = mediaQuery.size.height;
     final isMobile = screenWidth < 900;
+    final isSmallMobile = screenWidth < 420;
+
+    // Full screen hero: 100vh minus the 82px Navbar so the hero neatly occupies
+    // the entire visible screen above the fold on mobile, tablet, and desktop.
+    final minContentHeight = isSmallMobile ? 540.0 : (isMobile ? 580.0 : 640.0);
+    final targetHeroHeight = math.max(screenHeight - 82.0, minContentHeight);
 
     return Container(
       width: double.infinity,
+      constraints: BoxConstraints(minHeight: targetHeroHeight),
       color: AppColors.navy,
       child: Stack(
+        alignment: Alignment.center,
         children: [
           Positioned.fill(
             child: Image.network(
@@ -106,13 +117,14 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 20 : 40,
-              vertical: isMobile ? 60 : 100,
+              horizontal: isSmallMobile ? 18 : (isMobile ? 24 : 40),
+              vertical: isSmallMobile ? 24 : (isMobile ? 32 : 48),
             ),
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1140),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Eyebrow
@@ -125,27 +137,35 @@ class _LandingScreenState extends State<LandingScreen> {
                           color: AppColors.gold,
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          "NIGERIA'S TRUSTED HOME SERVICES NETWORK",
-                          style: GoogleFonts.manrope(
-                            color: AppColors.gold,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1.5,
+                        Flexible(
+                          child: Text(
+                            "NIGERIA'S TRUSTED HOME SERVICES NETWORK",
+                            style: GoogleFonts.manrope(
+                              color: AppColors.gold,
+                              fontSize: isSmallMobile ? 9.5 : 10.5,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: isSmallMobile ? 1.0 : 1.5,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 18),
+                    SizedBox(height: isSmallMobile ? 12 : 18),
 
                     // Display Title
                     RichText(
                       text: TextSpan(
                         style: GoogleFonts.dmSerifDisplay(
-                          fontSize: isMobile ? 38 : 62,
+                          fontSize: isSmallMobile
+                              ? 32.0
+                              : (screenWidth < 600
+                                  ? 38.0
+                                  : (screenWidth < 900 ? 46.0 : 62.0)),
                           color: Colors.white,
                           height: 1.15,
-                          letterSpacing: -1.0,
+                          letterSpacing: -0.8,
                         ),
                         children: [
                           const TextSpan(text: 'Find the right people.\n'),
@@ -159,7 +179,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: isSmallMobile ? 14 : 20),
 
                     // Subtitle
                     ConstrainedBox(
@@ -167,28 +187,30 @@ class _LandingScreenState extends State<LandingScreen> {
                       child: Text(
                         'Connect with trusted housing and professional service providers across Nigeria through one seamless platform.',
                         style: GoogleFonts.inter(
-                          fontSize: isMobile ? 15 : 17,
+                          fontSize: isSmallMobile ? 13.5 : (isMobile ? 15 : 17),
                           color: const Color(0xFFC8D1D9),
-                          height: 1.6,
+                          height: 1.55,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: isSmallMobile ? 20 : 32),
 
                     // Actions
                     Wrap(
-                      spacing: 14,
-                      runSpacing: 12,
+                      spacing: 12,
+                      runSpacing: 10,
                       children: [
                         ElevatedButton(
                           onPressed: () => widget.onNavigate('directory'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: AppColors.navy,
-                            minimumSize: const Size(160, 48),
+                            minimumSize: Size(isSmallMobile ? 140 : 160, 48),
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(3),
                             ),
+                            elevation: 0,
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -210,7 +232,8 @@ class _LandingScreenState extends State<LandingScreen> {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.white,
                             side: const BorderSide(color: Colors.white54, width: 1.2),
-                            minimumSize: const Size(130, 48),
+                            minimumSize: Size(isSmallMobile ? 115 : 130, 48),
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(3),
                             ),
@@ -225,7 +248,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 48),
+                    SizedBox(height: isSmallMobile ? 24 : (isMobile ? 32 : 48)),
 
                     // Unified Search Panel
                     _buildSearchPanel(context, isMobile),
@@ -263,6 +286,7 @@ class _LandingScreenState extends State<LandingScreen> {
               children: [
                 TextField(
                   controller: _searchController,
+                  onSubmitted: (_) => _onSearchSubmit(),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.search, color: AppColors.slate, size: 20),
                     hintText: 'What do you need? (e.g. Interior designer)',
@@ -290,6 +314,24 @@ class _LandingScreenState extends State<LandingScreen> {
                     });
                   },
                 ),
+                if (_selectedState != null && cities.isNotEmpty) ...[
+                  const Divider(height: 1),
+                  DropdownButtonFormField<String>(
+                    value: cities.contains(_selectedCity) ? _selectedCity : null,
+                    hint: const Text('Select City (Optional)'),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                    items: cities.map((c) {
+                      return DropdownMenuItem(value: c, child: Text(c));
+                    }).toList(),
+                    onChanged: (val) {
+                      setState(() => _selectedCity = val);
+                    },
+                  ),
+                ],
                 const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
@@ -303,7 +345,20 @@ class _LandingScreenState extends State<LandingScreen> {
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
-                    child: const Text('Search'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.search, size: 16),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Search',
+                          style: GoogleFonts.manrope(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
