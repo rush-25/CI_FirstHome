@@ -50,6 +50,8 @@ class LeadModel {
   final DateTime updatedAt;
   final List<HistoryModel> history;
 
+  String get referenceCode => reference;
+
   LeadModel({
     required this.id,
     required this.reference,

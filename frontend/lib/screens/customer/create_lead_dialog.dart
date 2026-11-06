@@ -90,7 +90,7 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
 
     if (lead != null && mounted) {
       Navigator.of(context).pop();
-      _showSuccessDialog(lead.referenceCode);
+      _showSuccessDialog(lead.reference);
     }
   }
 
