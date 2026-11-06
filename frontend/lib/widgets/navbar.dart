@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -31,22 +32,25 @@ class _NavbarState extends State<Navbar> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              height: 82,
-              decoration: const BoxDecoration(
-                color: Color(0xF7FFFFFF), // 97% opaque white
-                border: Border(
-                  bottom: BorderSide(color: AppColors.border, width: 1),
-                ),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 18 : 36),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
+            ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                child: Container(
+                  height: 82,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.90), // Frosted translucent white
+                    border: const Border(
+                      bottom: BorderSide(color: AppColors.border, width: 1),
+                    ),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 18 : 36),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1200),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
                       // Brand Logo
                       BrandLogo(
                         onTap: () => widget.onNavigate?.call('home'),
@@ -192,83 +196,167 @@ class _NavbarState extends State<Navbar> {
                 ),
               ),
             ),
+          ),
+        ),
 
-            // Mobile Menu Dropdown
-            if (isMobile && _mobileMenuOpen)
-              Container(
-                width: double.infinity,
-                color: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: AppColors.border),
+        // Mobile Menu Dropdown with Backdrop Blur
+        if (isMobile && _mobileMenuOpen)
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 82,
+            child: Stack(
+              children: [
+                // Blurred backdrop overlay covering the rest of the screen
+                Positioned.fill(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      setState(() => _mobileMenuOpen = false);
+                    },
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                        child: Container(
+                          color: const Color(0x660A1420), // deep navy frosted scrim
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildMobileNavItem('Home', () {
-                      setState(() => _mobileMenuOpen = false);
-                      widget.onNavigate?.call('home');
-                    }),
-                    _buildMobileNavItem('Find Providers', () {
-                      setState(() => _mobileMenuOpen = false);
-                      widget.onNavigate?.call('directory');
-                    }),
-                    _buildMobileNavItem('How It Works', () {
-                      setState(() => _mobileMenuOpen = false);
-                      widget.onNavigate?.call('how-it-works');
-                    }),
-                    _buildMobileNavItem('About', () {
-                      setState(() => _mobileMenuOpen = false);
-                      widget.onNavigate?.call('about');
-                    }),
-                    const Divider(height: 24),
-                    if (!auth.isAuthenticated) ...[
-                      OutlinedButton(
-                        onPressed: () {
-                          setState(() => _mobileMenuOpen = false);
-                          widget.onNavigate?.call('login');
-                        },
-                        child: const Text('Sign in'),
+
+                // Dropdown content with frosted blur
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.94),
+                          border: const Border(
+                            bottom: BorderSide(color: AppColors.border),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _buildMobileNavItem('Home', () {
+                              setState(() => _mobileMenuOpen = false);
+                              widget.onNavigate?.call('home');
+                            }),
+                            _buildMobileNavItem('Find Providers', () {
+                              setState(() => _mobileMenuOpen = false);
+                              widget.onNavigate?.call('directory');
+                            }),
+                            _buildMobileNavItem('How It Works', () {
+                              setState(() => _mobileMenuOpen = false);
+                              widget.onNavigate?.call('how-it-works');
+                            }),
+                            _buildMobileNavItem('About', () {
+                              setState(() => _mobileMenuOpen = false);
+                              widget.onNavigate?.call('about');
+                            }),
+                            const Divider(height: 24),
+                            if (!auth.isAuthenticated) ...[
+                              OutlinedButton(
+                                onPressed: () {
+                                  setState(() => _mobileMenuOpen = false);
+                                  widget.onNavigate?.call('login');
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  minimumSize: const Size(double.infinity, 46),
+                                  side: const BorderSide(color: AppColors.border),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                ),
+                                child: const Text('Sign in'),
+                              ),
+                              const SizedBox(height: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() => _mobileMenuOpen = false);
+                                  widget.onNavigate?.call('register-provider');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.navy,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(double.infinity, 46),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                ),
+                                child: const Text('Become a Provider'),
+                              ),
+                            ] else ...[
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() => _mobileMenuOpen = false);
+                                  if (auth.isAdmin) {
+                                    widget.onNavigate?.call('admin-dashboard');
+                                  } else if (auth.isProvider) {
+                                    widget.onNavigate?.call('provider-dashboard');
+                                  } else {
+                                    widget.onNavigate?.call('customer-dashboard');
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.navy,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(double.infinity, 46),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                ),
+                                child: const Text('Go to Dashboard'),
+                              ),
+                              const SizedBox(height: 10),
+                              OutlinedButton(
+                                onPressed: () async {
+                                  setState(() => _mobileMenuOpen = false);
+                                  await auth.logout();
+                                  widget.onNavigate?.call('home');
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  minimumSize: const Size(double.infinity, 46),
+                                  side: const BorderSide(color: AppColors.border),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Sign out',
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.slate,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() => _mobileMenuOpen = false);
-                          widget.onNavigate?.call('register-provider');
-                        },
-                        child: const Text('Become a Provider'),
-                      ),
-                    ] else ...[
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() => _mobileMenuOpen = false);
-                          if (auth.isAdmin) {
-                            widget.onNavigate?.call('admin-dashboard');
-                          } else if (auth.isProvider) {
-                            widget.onNavigate?.call('provider-dashboard');
-                          } else {
-                            widget.onNavigate?.call('customer-dashboard');
-                          }
-                        },
-                        child: const Text('Go to Dashboard'),
-                      ),
-                      const SizedBox(height: 8),
-                      TextButton(
-                        onPressed: () async {
-                          setState(() => _mobileMenuOpen = false);
-                          await auth.logout();
-                          widget.onNavigate?.call('home');
-                        },
-                        child: const Text('Sign out'),
-                      ),
-                    ],
-                  ],
+                    ),
+                  ),
                 ),
-              ),
-          ],
-        );
+              ],
+            ),
+          ),
+      ],
+    );
       },
     );
   }

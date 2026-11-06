@@ -132,11 +132,13 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
     final cities = AppConstants.stateCities[_selectedState] ?? ['General'];
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Navbar(onNavigate: widget.onNavigate),
-            Container(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 82),
+                Container(
               color: AppColors.background,
               padding: EdgeInsets.symmetric(
                 horizontal: isMobile ? 16 : 24,
@@ -414,7 +416,15 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
           ],
         ),
       ),
-    );
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        child: Navbar(onNavigate: widget.onNavigate),
+      ),
+    ],
+  ),
+);
   }
 
   Widget _buildIncomingLeadsTab() {

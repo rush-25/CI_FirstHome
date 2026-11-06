@@ -27,22 +27,32 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.ivory,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Navbar(onNavigate: widget.onNavigate),
-            _buildHero(isMobile),
-            _buildPathwaySelector(isMobile),
-            if (_activeTab == 0)
-              _buildHomeownerPathway(isMobile)
-            else
-              _buildProviderPathway(isMobile),
-            _buildTrustStandards(isMobile),
-            _buildFaqSection(isMobile),
-            _buildCta(isMobile),
-            Footer(onNavigate: widget.onNavigate),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 82),
+                _buildHero(isMobile),
+                _buildPathwaySelector(isMobile),
+                if (_activeTab == 0)
+                  _buildHomeownerPathway(isMobile)
+                else
+                  _buildProviderPathway(isMobile),
+                _buildTrustStandards(isMobile),
+                _buildFaqSection(isMobile),
+                _buildCta(isMobile),
+                Footer(onNavigate: widget.onNavigate),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Navbar(onNavigate: widget.onNavigate),
+          ),
+        ],
       ),
     );
   }

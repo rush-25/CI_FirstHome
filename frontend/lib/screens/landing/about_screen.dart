@@ -19,19 +19,29 @@ class AboutScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.ivory,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Navbar(onNavigate: onNavigate),
-            _buildHero(isMobile),
-            _buildMetricsStrip(isMobile),
-            _buildMissionStory(isMobile),
-            _buildPillars(isMobile),
-            _buildCoverageSection(isMobile),
-            _buildCta(isMobile),
-            Footer(onNavigate: onNavigate),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 82),
+                _buildHero(isMobile),
+                _buildMetricsStrip(isMobile),
+                _buildMissionStory(isMobile),
+                _buildPillars(isMobile),
+                _buildCoverageSection(isMobile),
+                _buildCta(isMobile),
+                Footer(onNavigate: onNavigate),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Navbar(onNavigate: onNavigate),
+          ),
+        ],
       ),
     );
   }

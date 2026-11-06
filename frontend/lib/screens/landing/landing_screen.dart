@@ -56,20 +56,30 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.ivory,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Navbar(onNavigate: widget.onNavigate),
-            _buildHero(context),
-            _buildTrustStrip(context),
-            _buildCategories(context),
-            _buildHowItWorks(context),
-            _buildFeaturedProviders(context),
-            _buildTestimonial(context),
-            _buildCta(context),
-            Footer(onNavigate: widget.onNavigate),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 82),
+                _buildHero(context),
+                _buildTrustStrip(context),
+                _buildCategories(context),
+                _buildHowItWorks(context),
+                _buildFeaturedProviders(context),
+                _buildTestimonial(context),
+                _buildCta(context),
+                Footer(onNavigate: widget.onNavigate),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Navbar(onNavigate: widget.onNavigate),
+          ),
+        ],
       ),
     );
   }

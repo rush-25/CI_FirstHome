@@ -59,12 +59,14 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.ivory,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Navbar(onNavigate: widget.onNavigate),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 82),
 
-            // Directory Hero Section
+                // Directory Hero Section
             Container(
               width: double.infinity,
               color: AppColors.navy,
@@ -432,7 +434,15 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
           ],
         ),
       ),
-    );
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        child: Navbar(onNavigate: widget.onNavigate),
+      ),
+    ],
+  ),
+);
   }
 
   Widget _buildProviderCard(ProviderModel p) {
