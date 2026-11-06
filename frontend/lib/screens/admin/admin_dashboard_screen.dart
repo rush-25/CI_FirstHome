@@ -530,10 +530,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                         ),
                         child: TabBar(
                           controller: _tabController,
-                          isScrollable: isMobile,
-                          tabAlignment: isMobile
-                              ? TabAlignment.start
-                              : TabAlignment.fill,
+                          isScrollable: false,
                           labelColor: AppColors.primary,
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
@@ -542,24 +539,51 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
                           ),
-                          tabs: const [
-                            Tab(
-                              icon: Icon(Icons.receipt_long, size: 18),
-                              text: 'Leads Management',
-                            ),
-                            Tab(
-                              icon: Icon(Icons.people_outline, size: 18),
-                              text: 'Customers',
-                            ),
-                            Tab(
-                              icon: Icon(Icons.business_outlined, size: 18),
-                              text: 'Providers Directory',
-                            ),
-                            Tab(
-                              icon: Icon(Icons.shield_outlined, size: 18),
-                              text: 'Verification Events',
-                            ),
-                          ],
+                          tabs: isMobile
+                              ? const [
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'Leads Management',
+                                      child: Icon(Icons.receipt_long, size: 22),
+                                    ),
+                                  ),
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'Customers',
+                                      child: Icon(Icons.people_outline, size: 22),
+                                    ),
+                                  ),
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'Providers Directory',
+                                      child: Icon(Icons.business_outlined, size: 22),
+                                    ),
+                                  ),
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'Verification Events',
+                                      child: Icon(Icons.shield_outlined, size: 22),
+                                    ),
+                                  ),
+                                ]
+                              : const [
+                                  Tab(
+                                    icon: Icon(Icons.receipt_long, size: 18),
+                                    text: 'Leads Management',
+                                  ),
+                                  Tab(
+                                    icon: Icon(Icons.people_outline, size: 18),
+                                    text: 'Customers',
+                                  ),
+                                  Tab(
+                                    icon: Icon(Icons.business_outlined, size: 18),
+                                    text: 'Providers Directory',
+                                  ),
+                                  Tab(
+                                    icon: Icon(Icons.shield_outlined, size: 18),
+                                    text: 'Verification Events',
+                                  ),
+                                ],
                         ),
                       ),
 

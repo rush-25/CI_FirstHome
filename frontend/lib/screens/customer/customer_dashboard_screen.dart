@@ -322,10 +322,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
                         ),
                         child: TabBar(
                           controller: _tabController,
-                          isScrollable: isMobile,
-                          tabAlignment: isMobile
-                              ? TabAlignment.start
-                              : TabAlignment.fill,
+                          isScrollable: false,
                           labelColor: AppColors.primary,
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
@@ -334,20 +331,41 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
                           ),
-                          tabs: const [
-                            Tab(
-                              icon: Icon(Icons.receipt_long, size: 18),
-                              text: 'My Enquiries',
-                            ),
-                            Tab(
-                              icon: Icon(Icons.person_outline, size: 18),
-                              text: 'My Profile',
-                            ),
-                            Tab(
-                              icon: Icon(Icons.shield_outlined, size: 18),
-                              text: 'Identity Verification',
-                            ),
-                          ],
+                          tabs: isMobile
+                              ? const [
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'My Enquiries',
+                                      child: Icon(Icons.receipt_long, size: 22),
+                                    ),
+                                  ),
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'My Profile',
+                                      child: Icon(Icons.person_outline, size: 22),
+                                    ),
+                                  ),
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'Identity Verification',
+                                      child: Icon(Icons.shield_outlined, size: 22),
+                                    ),
+                                  ),
+                                ]
+                              : const [
+                                  Tab(
+                                    icon: Icon(Icons.receipt_long, size: 18),
+                                    text: 'My Enquiries',
+                                  ),
+                                  Tab(
+                                    icon: Icon(Icons.person_outline, size: 18),
+                                    text: 'My Profile',
+                                  ),
+                                  Tab(
+                                    icon: Icon(Icons.shield_outlined, size: 18),
+                                    text: 'Identity Verification',
+                                  ),
+                                ],
                         ),
                       ),
 

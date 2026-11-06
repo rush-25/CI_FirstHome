@@ -365,10 +365,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
                         ),
                         child: TabBar(
                           controller: _tabController,
-                          isScrollable: isMobile,
-                          tabAlignment: isMobile
-                              ? TabAlignment.start
-                              : TabAlignment.fill,
+                          isScrollable: false,
                           labelColor: AppColors.primary,
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
@@ -377,20 +374,41 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
                           ),
-                          tabs: const [
-                            Tab(
-                              icon: Icon(Icons.inbox, size: 18),
-                              text: 'Incoming Leads',
-                            ),
-                            Tab(
-                              icon: Icon(Icons.business_outlined, size: 18),
-                              text: 'Business Profile',
-                            ),
-                            Tab(
-                              icon: Icon(Icons.shield_outlined, size: 18),
-                              text: 'Verification Panel',
-                            ),
-                          ],
+                          tabs: isMobile
+                              ? const [
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'Incoming Leads',
+                                      child: Icon(Icons.inbox, size: 22),
+                                    ),
+                                  ),
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'Business Profile',
+                                      child: Icon(Icons.business_outlined, size: 22),
+                                    ),
+                                  ),
+                                  Tab(
+                                    icon: Tooltip(
+                                      message: 'Verification Panel',
+                                      child: Icon(Icons.shield_outlined, size: 22),
+                                    ),
+                                  ),
+                                ]
+                              : const [
+                                  Tab(
+                                    icon: Icon(Icons.inbox, size: 18),
+                                    text: 'Incoming Leads',
+                                  ),
+                                  Tab(
+                                    icon: Icon(Icons.business_outlined, size: 18),
+                                    text: 'Business Profile',
+                                  ),
+                                  Tab(
+                                    icon: Icon(Icons.shield_outlined, size: 18),
+                                    text: 'Verification Panel',
+                                  ),
+                                ],
                         ),
                       ),
 
