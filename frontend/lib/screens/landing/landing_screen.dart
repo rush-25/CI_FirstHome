@@ -113,7 +113,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
     // Full screen hero: 100vh minus the 82px Navbar so the hero neatly occupies
     // the entire visible screen above the fold on mobile, tablet, and desktop.
-    final minContentHeight = isSmallMobile ? 540.0 : (isMobile ? 580.0 : 640.0);
+    final minContentHeight = isSmallMobile ? 440.0 : (isMobile ? 480.0 : 640.0);
     final targetHeroHeight = math.max(screenHeight - 82.0, minContentHeight);
 
     return SizedBox(
@@ -275,10 +275,11 @@ class _LandingScreenState extends State<LandingScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: isSmallMobile ? 16 : 22),
-
-                        // Unified Search Panel
-                        _buildSearchPanel(context, isMobile),
+                        if (!isMobile) ...[
+                          const SizedBox(height: 22),
+                          // Unified Search Panel (moved to header as an icon on mobile)
+                          _buildSearchPanel(context, false),
+                        ],
                       ],
                     ),
                   ],

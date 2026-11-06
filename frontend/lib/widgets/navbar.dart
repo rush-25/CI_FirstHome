@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../core/constants/app_colors.dart';
+import '../core/constants/app_constants.dart';
 import '../providers/auth_provider.dart';
+import '../providers/directory_provider.dart';
 import 'brand_logo.dart';
 
 class Navbar extends StatefulWidget implements PreferredSizeWidget {
@@ -20,6 +22,26 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
 
 class _NavbarState extends State<Navbar> {
   bool _mobileMenuOpen = false;
+  bool _mobileSearchOpen = false;
+  final TextEditingController _searchController = TextEditingController();
+  String? _selectedState;
+  String? _selectedCity;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _submitSearch() {
+    final dir = context.read<DirectoryProvider>();
+    dir.setLocationFilter(_selectedState, _selectedCity);
+    dir.setSearchQuery(_searchController.text.trim());
+    setState(() {
+      _mobileSearchOpen = false;
+    });
+    widget.onNavigate?.call('directory');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,17 +206,42 @@ class _NavbarState extends State<Navbar> {
                           ],
                         )
                       else
-                        IconButton(
-                          icon: Icon(
-                            _mobileMenuOpen ? Icons.close : Icons.menu,
-                            color: AppColors.navy,
-                            size: 24,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _mobileMenuOpen = !_mobileMenuOpen;
-                            });
-                          },
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                _mobileSearchOpen ? Icons.close : Icons.search,
+                                color: _mobileSearchOpen ? AppColors.gold : AppColors.navy,
+                                size: 24,
+                              ),
+                              tooltip: 'Search providers',
+                              onPressed: () {
+                                setState(() {
+                                  if (!_mobileSearchOpen) {
+                                    _mobileMenuOpen = false;
+                                  }
+                                  _mobileSearchOpen = !_mobileSearchOpen;
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                _mobileMenuOpen ? Icons.close : Icons.menu,
+                                color: AppColors.navy,
+                                size: 24,
+                              ),
+                              tooltip: 'Menu',
+                              onPressed: () {
+                                setState(() {
+                                  if (!_mobileMenuOpen) {
+                                    _mobileSearchOpen = false;
+                                  }
+                                  _mobileMenuOpen = !_mobileMenuOpen;
+                                });
+                              },
+                            ),
+                          ],
                         ),
                     ],
                   ),
@@ -351,6 +398,208 @@ class _NavbarState extends State<Navbar> {
                                 ),
                               ),
                             ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        // Mobile Search Dropdown with Backdrop Blur
+        if (isMobile && _mobileSearchOpen)
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 82,
+            child: Stack(
+              children: [
+                // Blurred backdrop overlay covering the rest of the screen
+                Positioned.fill(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      setState(() => _mobileSearchOpen = false);
+                    },
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                        child: Container(
+                          color: const Color(0x660A1420), // deep navy frosted scrim
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Dropdown search content with frosted blur
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.96),
+                          border: const Border(
+                            bottom: BorderSide(color: AppColors.border),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.12),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'SEARCH PROVIDERS',
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1.2,
+                                    color: AppColors.slate,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => setState(() => _mobileSearchOpen = false),
+                                  child: const Icon(Icons.close, size: 20, color: AppColors.slate),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+
+                            // What do you need input
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.ivory,
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                autofocus: true,
+                                onSubmitted: (_) => _submitSearch(),
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.search, color: AppColors.slate, size: 20),
+                                  hintText: 'What do you need? (e.g. Interior design)',
+                                  hintStyle: TextStyle(fontSize: 13, color: AppColors.slate),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+
+                            // State Dropdown
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14),
+                              decoration: BoxDecoration(
+                                color: AppColors.ivory,
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: _selectedState,
+                                  isExpanded: true,
+                                  hint: const Text(
+                                    'Select State',
+                                    style: TextStyle(fontSize: 13, color: AppColors.slate),
+                                  ),
+                                  items: AppConstants.nigerianStates.map((s) {
+                                    return DropdownMenuItem(
+                                      value: s,
+                                      child: Text(s, style: const TextStyle(fontSize: 13)),
+                                    );
+                                  }).toList(),
+                                  onChanged: (val) {
+                                    setState(() {
+                                      _selectedState = val;
+                                      _selectedCity = null;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            // City Dropdown (when state selected)
+                            if (_selectedState != null &&
+                                (AppConstants.stateCities[_selectedState!] ?? []).isNotEmpty) ...[
+                              const SizedBox(height: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14),
+                                decoration: BoxDecoration(
+                                  color: AppColors.ivory,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: AppColors.border),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: (AppConstants.stateCities[_selectedState!] ?? [])
+                                            .contains(_selectedCity)
+                                        ? _selectedCity
+                                        : null,
+                                    isExpanded: true,
+                                    hint: const Text(
+                                      'Select City (Optional)',
+                                      style: TextStyle(fontSize: 13, color: AppColors.slate),
+                                    ),
+                                    items: (AppConstants.stateCities[_selectedState!] ?? []).map((c) {
+                                      return DropdownMenuItem(
+                                        value: c,
+                                        child: Text(c, style: const TextStyle(fontSize: 13)),
+                                      );
+                                    }).toList(),
+                                    onChanged: (val) {
+                                      setState(() => _selectedCity = val);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+
+                            const SizedBox(height: 16),
+
+                            // Search Button
+                            SizedBox(
+                              height: 48,
+                              child: ElevatedButton(
+                                onPressed: _submitSearch,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.navy,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.search, size: 18),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Search',
+                                      style: GoogleFonts.manrope(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
