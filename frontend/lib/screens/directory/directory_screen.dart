@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
@@ -57,121 +58,123 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
         : <String>[];
 
     return Scaffold(
+      backgroundColor: AppColors.ivory,
       body: SingleChildScrollView(
         child: Column(
           children: [
             Navbar(onNavigate: widget.onNavigate),
+
+            // Directory Hero Section
             Container(
-              color: AppColors.background,
+              width: double.infinity,
+              color: AppColors.navy,
               padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 16 : 24,
-                vertical: isMobile ? 32 : 48,
+                horizontal: isMobile ? 24 : 48,
+                vertical: isMobile ? 50 : 75,
               ),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1400),
+                  constraints: const BoxConstraints(maxWidth: 1140),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isNarrow = constraints.maxWidth < 650;
-                          final titleCol = Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Find the Right Professional',
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'Showing ${dir.totalProviders} active verified service providers across Nigeria',
-                                style: const TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          );
-
-                          final resetBtn =
-                              (dir.selectedCategoryId != null ||
-                                  dir.selectedState != null ||
-                                  dir.searchQuery.isNotEmpty)
-                              ? OutlinedButton.icon(
-                                  onPressed: () {
-                                    _searchController.clear();
-                                    dir.clearFilters();
-                                  },
-                                  icon: const Icon(Icons.clear_all, size: 16),
-                                  label: const Text('Reset Filters'),
-                                )
-                              : null;
-
-                          return isNarrow
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    titleCol,
-                                    if (resetBtn != null) ...[
-                                      const SizedBox(height: 12),
-                                      resetBtn,
-                                    ],
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Expanded(child: titleCol),
-                                    if (resetBtn != null) ...[
-                                      const SizedBox(width: 16),
-                                      resetBtn,
-                                    ],
-                                  ],
-                                );
-                        },
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(width: 14, height: 2, color: AppColors.gold),
+                          const SizedBox(width: 8),
+                          Text(
+                            'PROVIDER DIRECTORY',
+                            style: GoogleFonts.manrope(
+                              color: AppColors.gold,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.4,
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 14),
+                      RichText(
+                        text: TextSpan(
+                          style: GoogleFonts.manrope(
+                            fontSize: isMobile ? 32 : 48,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            letterSpacing: -0.8,
+                          ),
+                          children: [
+                            const TextSpan(text: 'Find expertise you can '),
+                            TextSpan(
+                              text: 'trust.',
+                              style: GoogleFonts.dmSerifDisplay(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFFF2ECE1),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Explore verified home professionals serving communities across Nigeria.',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: const Color(0xFFAEB8C2),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
 
-                      const SizedBox(height: 24),
-
-                      // Filters Card
+            // Directory Content Body
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 18 : 36,
+                vertical: 40,
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1140),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Directory Filter Bar
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(4),
                           border: Border.all(color: AppColors.border),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.navy.withValues(alpha: 0.03),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
                         child: Column(
                           children: [
-                            // Row 1: Search keyword
+                            // Search field
                             TextField(
                               controller: _searchController,
                               onSubmitted: (v) => dir.setSearchQuery(v),
                               decoration: InputDecoration(
-                                hintText:
-                                    'Search by provider name, specialty, or description...',
-                                prefixIcon: const Icon(Icons.search, size: 20),
+                                hintText: 'Search by provider name, keyword or service...',
+                                prefixIcon: const Icon(Icons.search, size: 20, color: AppColors.slate),
                                 suffixIcon: IconButton(
-                                  icon: const Icon(
-                                    Icons.arrow_forward,
-                                    size: 18,
-                                  ),
-                                  onPressed: () => dir.setSearchQuery(
-                                    _searchController.text,
-                                  ),
+                                  icon: const Icon(Icons.arrow_forward, size: 18),
+                                  onPressed: () => dir.setSearchQuery(_searchController.text),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 12),
-                            // Row 2: Category, State, City, Sort
+
+                            // Dropdown Filters
                             Wrap(
                               spacing: 12,
                               runSpacing: 12,
@@ -181,259 +184,245 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                   width: 220,
                                   child: DropdownButtonFormField<int?>(
                                     isExpanded: true,
-                                    initialValue: dir.selectedCategoryId,
+                                    value: dir.selectedCategoryId,
                                     decoration: const InputDecoration(
-                                      labelText: 'Service Category',
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 10,
-                                      ),
+                                      labelText: 'Service category',
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     ),
                                     items: [
-                                      const DropdownMenuItem(
-                                        value: null,
-                                        child: Text('All Categories'),
-                                      ),
+                                      const DropdownMenuItem(value: null, child: Text('All services')),
                                       ...dir.categories.map(
                                         (c) => DropdownMenuItem(
                                           value: c.id,
-                                          child: Text(
-                                            c.name,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                          child: Text(c.name, overflow: TextOverflow.ellipsis),
                                         ),
                                       ),
                                     ],
                                     onChanged: (v) => dir.setCategoryFilter(v),
                                   ),
                                 ),
+
                                 // State
                                 SizedBox(
-                                  width: 180,
+                                  width: 170,
                                   child: DropdownButtonFormField<String?>(
                                     isExpanded: true,
-                                    initialValue: dir.selectedState,
+                                    value: dir.selectedState,
                                     decoration: const InputDecoration(
                                       labelText: 'State',
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 10,
-                                      ),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     ),
                                     items: [
-                                      const DropdownMenuItem(
-                                        value: null,
-                                        child: Text('All States'),
-                                      ),
+                                      const DropdownMenuItem(value: null, child: Text('All states')),
                                       ...AppConstants.nigerianStates.map(
-                                        (s) => DropdownMenuItem(
-                                          value: s,
-                                          child: Text(
-                                            s,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
+                                        (s) => DropdownMenuItem(value: s, child: Text(s)),
                                       ),
                                     ],
-                                    onChanged: (v) =>
-                                        dir.setLocationFilter(v, null),
+                                    onChanged: (v) => dir.setLocationFilter(v, null),
                                   ),
                                 ),
+
                                 // City
-                                if (cities.isNotEmpty) ...[
+                                if (cities.isNotEmpty)
                                   SizedBox(
-                                    width: 180,
+                                    width: 170,
                                     child: DropdownButtonFormField<String?>(
                                       isExpanded: true,
-                                      initialValue: dir.selectedCity,
+                                      value: dir.selectedCity,
                                       decoration: const InputDecoration(
-                                        labelText: 'City / District',
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 10,
-                                        ),
+                                        labelText: 'City',
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                       ),
                                       items: [
-                                        const DropdownMenuItem(
-                                          value: null,
-                                          child: Text('All Cities'),
-                                        ),
+                                        const DropdownMenuItem(value: null, child: Text('All cities')),
                                         ...cities.map(
-                                          (c) => DropdownMenuItem(
-                                            value: c,
-                                            child: Text(
-                                              c,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
+                                          (c) => DropdownMenuItem(value: c, child: Text(c)),
                                         ),
                                       ],
-                                      onChanged: (v) => dir.setLocationFilter(
-                                        dir.selectedState,
-                                        v,
-                                      ),
+                                      onChanged: (v) => dir.setLocationFilter(dir.selectedState, v),
                                     ),
                                   ),
-                                ],
-                                // Sort
-                                SizedBox(
-                                  width: 170,
-                                  child: DropdownButtonFormField<String>(
-                                    isExpanded: true,
-                                    initialValue: dir.sortBy,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Sort By',
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 10,
-                                      ),
+
+                                // Reset Filters
+                                if (dir.selectedCategoryId != null ||
+                                    dir.selectedState != null ||
+                                    dir.searchQuery.isNotEmpty)
+                                  OutlinedButton.icon(
+                                    onPressed: () {
+                                      _searchController.clear();
+                                      dir.clearFilters();
+                                    },
+                                    icon: const Icon(Icons.refresh, size: 15),
+                                    label: const Text('Reset filters'),
+                                    style: OutlinedButton.styleFrom(
+                                      minimumSize: const Size(0, 48),
+                                      padding: const EdgeInsets.symmetric(horizontal: 14),
                                     ),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: 'name',
-                                        child: Text('Name (A-Z)'),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: 'newest',
-                                        child: Text('Newest Joined'),
-                                      ),
-                                    ],
-                                    onChanged: (v) =>
-                                        dir.setSortBy(v ?? 'name'),
                                   ),
-                                ),
                               ],
                             ),
                           ],
                         ),
                       ),
+                      const SizedBox(height: 32),
 
-                      const SizedBox(height: 28),
-
-                      // Providers Grid / Empty State
-                      if (dir.isLoading) ...[
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(60),
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                      ] else if (dir.providers.isEmpty) ...[
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(60),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: Column(
+                      // Results Header
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(
-                                Icons.search_off_rounded,
-                                size: 48,
-                                color: AppColors.textSecondary,
-                              ),
-                              const SizedBox(height: 16),
-                              const Text(
-                                'No matching service providers found',
-                                style: TextStyle(
-                                  fontSize: 18,
+                              Text(
+                                '${dir.totalProviders} trusted providers',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w700,
+                                  color: AppColors.navy,
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'Try clearing your filters or choosing another Nigerian state or service category.',
-                                style: TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 14,
+                              const SizedBox(height: 2),
+                              Text(
+                                'Showing active, verified professionals',
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: AppColors.slate,
                                 ),
-                              ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {
-                                  _searchController.clear();
-                                  dir.clearFilters();
-                                },
-                                child: const Text('Reset All Filters'),
                               ),
                             ],
                           ),
-                        ),
-                      ] else ...[
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Loading State
+                      if (dir.isLoading)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(60.0),
+                            child: CircularProgressIndicator(color: AppColors.navy),
+                          ),
+                        )
+                      // Empty State
+                      else if (dir.providers.isEmpty)
+                        Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.search_off, size: 48, color: AppColors.slate),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No providers found',
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.navy,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Try a broader search or choose another service category.',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 13,
+                                    color: AppColors.slate,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                OutlinedButton(
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    dir.clearFilters();
+                                  },
+                                  child: const Text('Clear filters'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      // Provider Cards Grid
+                      else
                         LayoutBuilder(
                           builder: (context, constraints) {
-                            final width = constraints.maxWidth;
-                            // Max 4 cards per row; fixed card height avoids empty space.
-                            int cols;
-                            if (width < 600) {
+                            int cols = 3;
+                            if (constraints.maxWidth < 650) {
                               cols = 1;
-                            } else if (width < 900) {
+                            } else if (constraints.maxWidth < 1000) {
                               cols = 2;
-                            } else if (width < 1250) {
-                              cols = 3;
-                            } else {
-                              cols = 4;
                             }
 
                             return GridView.builder(
+                              itemCount: dir.providers.length,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: cols,
-                                    mainAxisSpacing: 16,
-                                    crossAxisSpacing: 16,
-                                    mainAxisExtent: 240,
-                                  ),
-                              itemCount: dir.providers.length,
-                              itemBuilder: (ctx, i) {
-                                final p = dir.providers[i];
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: cols,
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 20,
+                                childAspectRatio: cols == 1 ? 1.5 : 0.88,
+                              ),
+                              itemBuilder: (context, index) {
+                                final p = dir.providers[index];
                                 return _buildProviderCard(p);
                               },
                             );
                           },
                         ),
+                      const SizedBox(height: 40),
 
-                        const SizedBox(height: 32),
-
-                        // Pagination
-                        if (dir.totalPages > 1) ...[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              OutlinedButton.icon(
-                                onPressed: dir.currentPage > 1
-                                    ? () => dir.fetchProviders(
-                                        page: dir.currentPage - 1,
-                                      )
-                                    : null,
-                                icon: const Icon(Icons.arrow_back, size: 16),
-                                label: const Text('Previous'),
-                              ),
-                              const SizedBox(width: 16),
-                              Text(
-                                'Page ${dir.currentPage} of ${dir.totalPages}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                      // Pagination Controls
+                      if (dir.totalPages > 1)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.chevron_left),
+                              onPressed: dir.currentPage > 1
+                                  ? () => dir.fetchProviders(page: dir.currentPage - 1)
+                                  : null,
+                            ),
+                            const SizedBox(width: 8),
+                            ...List.generate(dir.totalPages, (i) {
+                              final pageNum = i + 1;
+                              final isActive = pageNum == dir.currentPage;
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                child: InkWell(
+                                  onTap: () => dir.fetchProviders(page: pageNum),
+                                  child: Container(
+                                    width: 36,
+                                    height: 36,
+                                    decoration: BoxDecoration(
+                                      color: isActive ? AppColors.navy : Colors.white,
+                                      border: Border.all(
+                                        color: isActive ? AppColors.navy : AppColors.border,
+                                      ),
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '$pageNum',
+                                        style: GoogleFonts.manrope(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: isActive ? Colors.white : AppColors.navy,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                              OutlinedButton.icon(
-                                onPressed: dir.currentPage < dir.totalPages
-                                    ? () => dir.fetchProviders(
-                                        page: dir.currentPage + 1,
-                                      )
-                                    : null,
-                                icon: const Icon(Icons.arrow_forward, size: 16),
-                                label: const Text('Next'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ],
+                              );
+                            }),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: const Icon(Icons.chevron_right),
+                              onPressed: dir.currentPage < dir.totalPages
+                                  ? () => dir.fetchProviders(page: dir.currentPage + 1)
+                                  : null,
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -447,135 +436,131 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
   }
 
   Widget _buildProviderCard(ProviderModel p) {
+    final initials = p.displayName.isNotEmpty
+        ? p.displayName
+            .trim()
+            .split(' ')
+            .take(2)
+            .map((w) => w.isNotEmpty ? w[0] : '')
+            .join()
+            .toUpperCase()
+        : 'PR';
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
+            color: AppColors.navy.withValues(alpha: 0.03),
+            blurRadius: 14,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: AppColors.sage,
-                child: Text(
-                  p.displayName.isNotEmpty ? p.displayName[0] : 'P',
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      p.displayName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on,
-                          size: 12,
-                          color: AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: 2),
-                        Expanded(
-                          child: Text(
-                            '${p.city}, ${p.state}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 6,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.sage,
-                  borderRadius: BorderRadius.circular(6),
+                  color: AppColors.ivory,
+                  border: Border.all(color: AppColors.border),
+                  shape: BoxShape.circle,
                 ),
-                child: Text(
-                  p.categoryName,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                child: Center(
+                  child: Text(
+                    initials,
+                    style: GoogleFonts.manrope(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.navy,
+                    ),
                   ),
                 ),
               ),
-              VerificationBadge(status: p.verificationStatus, compact: true),
+              VerificationBadge(
+                status: p.verificationStatus,
+                compact: true,
+              ),
             ],
           ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Text(
-              p.description,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textSecondary,
-                height: 1.4,
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => _openDetail(p),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  child: const Text('Profile', style: TextStyle(fontSize: 12)),
+              Text(
+                p.displayName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.manrope(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.navy,
                 ),
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => widget.onNavigate('create-lead', args: p),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+              const SizedBox(height: 4),
+              Text(
+                p.categoryName ?? 'Home Professional',
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: AppColors.gold,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                p.description.isNotEmpty
+                    ? p.description
+                    : 'Providing quality, reliable residential services across Nigeria.',
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.inter(
+                  fontSize: 12.5,
+                  color: AppColors.slate,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.location_on_outlined, size: 14, color: AppColors.slate),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${p.city ?? "Lagos"}, ${p.state ?? ""}',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: AppColors.slate,
+                    ),
                   ),
-                  child: const Text('Enquire', style: TextStyle(fontSize: 12)),
+                ],
+              ),
+              InkWell(
+                onTap: () => _openDetail(p),
+                child: Row(
+                  children: [
+                    Text(
+                      'View profile',
+                      style: GoogleFonts.manrope(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.navy,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.arrow_forward, size: 12, color: AppColors.navy),
+                  ],
                 ),
               ),
             ],

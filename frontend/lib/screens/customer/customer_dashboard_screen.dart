@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../models/lead_model.dart';
@@ -133,19 +134,37 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
                           final infoCol = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(width: 14, height: 2, color: AppColors.gold),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'CUSTOMER WORKSPACE',
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 1.4,
+                                      color: AppColors.gold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
                               Text(
-                                'Welcome back, ${auth.currentUser?.fullName.split(' ')[0] ?? 'Customer'}',
-                                style: const TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.textPrimary,
+                                'Good day, ${auth.currentUser?.fullName.split(' ')[0] ?? 'Amara'}.',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.navy,
+                                  letterSpacing: -0.6,
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
+                              Text(
                                 'Manage your home service requests and track provider statuses.',
-                                style: TextStyle(
-                                  color: AppColors.textSecondary,
+                                style: GoogleFonts.inter(
+                                  color: AppColors.slate,
                                   fontSize: 14,
                                 ),
                               ),
@@ -154,8 +173,15 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
 
                           final actionBtn = ElevatedButton.icon(
                             onPressed: _openCreateEnquiry,
-                            icon: const Icon(Icons.add, size: 18),
-                            label: const Text('New Enquiry'),
+                            icon: const Icon(Icons.arrow_forward, size: 16),
+                            label: const Text('Create enquiry'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.navy,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
                           );
 
                           return isNarrow

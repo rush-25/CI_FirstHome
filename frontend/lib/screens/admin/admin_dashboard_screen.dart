@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../models/lead_model.dart';
@@ -333,21 +334,39 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                           final isNarrow = constraints.maxWidth < 700;
                           final infoCol = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(width: 14, height: 2, color: AppColors.gold),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'OPERATIONS WORKSPACE',
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 1.4,
+                                      color: AppColors.gold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
                               Text(
-                                'FirstHome Operations Dashboard',
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.textPrimary,
+                                'FirstHome Operations',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.navy,
+                                  letterSpacing: -0.6,
                                 ),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
-                                'Database-driven metrics, lead status orchestration, and verification management.',
-                                style: TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 14,
+                                'Real-time metrics, lead orchestration, and verification management.',
+                                style: GoogleFonts.inter(
+                                  color: AppColors.slate,
+                                  fontSize: 13.5,
                                 ),
                               ),
                             ],

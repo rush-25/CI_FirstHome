@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/directory_provider.dart';
 import '../../core/services/api_service.dart';
-import '../../widgets/navbar.dart';
+import '../../widgets/brand_logo.dart';
+
+const String _heroImage =
+    'https://images.unsplash.com/photo-1748063578185-3d68121b11ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=85&w=2000';
 
 class RegisterScreen extends StatefulWidget {
   final String initialRole; // 'Customer' or 'Provider'
@@ -34,16 +38,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     text: '+234 800 ',
   );
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
   final TextEditingController _descController = TextEditingController();
 
   String? _selectedState = 'Lagos';
   String? _selectedCity = 'Ikeja';
-  String _contactPreference = 'Phone';
+  final String _contactPreference = 'Phone';
   int? _selectedCategoryId;
   bool _consent = false;
   bool _obscurePassword = true;
+  bool _isSuccess = false;
 
   @override
   void initState() {
@@ -64,7 +67,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     _descController.dispose();
     super.dispose();
   }
@@ -74,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!_consent) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please accept the consent terms to continue.'),
+          content: Text('Please accept the Terms of Service and Privacy Policy to continue.'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -97,11 +99,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (success && mounted) {
       if (_role == 'Provider') {
-        // Now create provider profile record
         try {
           final dir = context.read<DirectoryProvider>();
-          final catId =
-              _selectedCategoryId ??
+          final catId = _selectedCategoryId ??
               (dir.categories.isNotEmpty ? dir.categories.first.id : 1);
           await auth.updateProfile(
             fullName: _nameController.text.trim(),
@@ -109,7 +109,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             state: _selectedState,
             city: _selectedCity,
           );
-          // Persist ProviderProfile to real database
           final api = ApiService();
           await api.createProviderProfile(
             displayName: _businessNameController.text.trim().isNotEmpty
@@ -121,19 +120,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
             city: _selectedCity ?? 'Ikeja',
             description: _descController.text.trim().isNotEmpty
                 ? _descController.text.trim()
-                : 'Professional ${_nameController.text.trim()} providing trusted services in $_selectedState.',
+                : 'Professional ${_businessNameController.text.trim().isNotEmpty ? _businessNameController.text.trim() : _nameController.text.trim()} providing trusted services in ${_selectedState ?? "Nigeria"}.',
           );
           if (mounted) {
             final dirProv = context.read<DirectoryProvider>();
             await dirProv.fetchProviders(page: 1);
-            widget.onNavigate('provider-dashboard');
           }
-        } catch (_) {
-          if (mounted) widget.onNavigate('provider-dashboard');
-        }
-      } else {
-        widget.onNavigate('customer-dashboard');
+        } catch (_) {}
       }
+
+      setState(() {
+        _isSuccess = true;
+      });
     }
   }
 
@@ -141,469 +139,404 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     final dir = context.watch<DirectoryProvider>();
-    final isMobile = MediaQuery.of(context).size.width < 768;
-    final cities = AppConstants.stateCities[_selectedState] ?? ['General'];
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth >= 960;
+    final cities = _selectedState != null
+        ? (AppConstants.stateCities[_selectedState!] ?? ['Ikeja'])
+        : <String>[];
+
+    if (_isSuccess) {
+      return Scaffold(
+        backgroundColor: AppColors.ivory,
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Container(
+                padding: const EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.navy.withValues(alpha: 0.05),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: AppColors.successBg,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.check, color: AppColors.success, size: 30),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Your account is ready.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.manrope(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.navy,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Welcome to FirstHome. You can now build your profile and start making trusted connections.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: AppColors.slate,
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_role == 'Provider') {
+                            widget.onNavigate('provider-dashboard');
+                          } else {
+                            widget.onNavigate('customer-dashboard');
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.navy,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Open your dashboard',
+                              style: GoogleFonts.manrope(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.arrow_forward, size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Navbar(onNavigate: widget.onNavigate),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 16 : 24,
-                vertical: isMobile ? 24 : 64,
-              ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 620),
-                  child: Container(
-                    padding: EdgeInsets.all(isMobile ? 20 : 40),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.border),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.04),
-                          blurRadius: 16,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
+      backgroundColor: Colors.white,
+      body: Row(
+        children: [
+          // Left Visual Panel (Desktop only)
+          if (isDesktop)
+            Expanded(
+              flex: 4,
+              child: Container(
+                height: double.infinity,
+                decoration: const BoxDecoration(
+                  color: AppColors.navy,
+                ),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(
+                      _heroImage,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, err, stack) => Container(
+                        color: AppColors.navy,
+                      ),
                     ),
-                    child: Form(
-                      key: _formKey,
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            const Color(0xFF0A1420).withValues(alpha: 0.55),
+                            const Color(0xFF0A1420).withValues(alpha: 0.92),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(48.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Role Switcher Tabs
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: AppColors.background,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AppColors.border),
+                          BrandLogo(
+                            light: true,
+                            onTap: () => widget.onNavigate('home'),
+                          ),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 440),
+                            child: Text(
+                              '“The clearest path to trusted home professionals across Nigeria.”',
+                              style: GoogleFonts.dmSerifDisplay(
+                                fontSize: 32,
+                                color: Colors.white,
+                                height: 1.35,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
-                            child: Row(
+                          ),
+                          Text(
+                            'FIRSTHOME · YOUR HOME JOURNEY, SIMPLIFIED',
+                            style: GoogleFonts.inter(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 2.2,
+                              color: const Color(0xFFBDC5CC),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          // Right Form Panel
+          Expanded(
+            flex: 5,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 24,
+                  right: 28,
+                  child: IconButton(
+                    icon: const Icon(Icons.close, color: AppColors.navy, size: 22),
+                    tooltip: 'Return to home',
+                    onPressed: () => widget.onNavigate('home'),
+                  ),
+                ),
+                Center(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth < 500 ? 24 : 48,
+                      vertical: 48,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 480),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (!isDesktop) ...[
+                              BrandLogo(onTap: () => widget.onNavigate('home')),
+                              const SizedBox(height: 28),
+                            ],
+
+                            // Eyebrow
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () =>
-                                        setState(() => _role = 'Customer'),
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 10,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: _role == 'Customer'
-                                            ? Colors.white
-                                            : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: _role == 'Customer'
-                                            ? [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withValues(alpha: 0.05),
-                                                  blurRadius: 4,
-                                                ),
-                                              ]
-                                            : null,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.person_outline,
-                                            size: 16,
-                                            color: _role == 'Customer'
-                                                ? AppColors.primary
-                                                : AppColors.textSecondary,
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Flexible(
-                                            child: Text(
-                                              'Customer Account',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 13,
-                                                color: _role == 'Customer'
-                                                    ? AppColors.primary
-                                                    : AppColors.textSecondary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                Container(
+                                  width: 16,
+                                  height: 2,
+                                  color: AppColors.gold,
                                 ),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () =>
-                                        setState(() => _role = 'Provider'),
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 10,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: _role == 'Provider'
-                                            ? Colors.white
-                                            : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: _role == 'Provider'
-                                            ? [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withValues(alpha: 0.05),
-                                                  blurRadius: 4,
-                                                ),
-                                              ]
-                                            : null,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.business_outlined,
-                                            size: 16,
-                                            color: _role == 'Provider'
-                                                ? AppColors.primary
-                                                : AppColors.textSecondary,
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Flexible(
-                                            child: Text(
-                                              'Provider Account',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 13,
-                                                color: _role == 'Provider'
-                                                    ? AppColors.primary
-                                                    : AppColors.textSecondary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'JOIN THE NETWORK',
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1.4,
+                                    color: AppColors.gold,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
+                            const SizedBox(height: 10),
 
-                          const SizedBox(height: 24),
-
-                          Text(
-                            _role == 'Customer'
-                                ? 'Create Customer Account'
-                                : 'Join as a Service Provider',
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                            // Heading
+                            Text(
+                              'Create your account.',
+                              style: GoogleFonts.manrope(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.8,
+                                color: AppColors.navy,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            _role == 'Customer'
-                                ? 'Register to submit service enquiries and track vetted Nigerian home professionals.'
-                                : 'List your services in the FirstHome directory and receive direct customer requests.',
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 13,
+                            const SizedBox(height: 8),
+                            Text(
+                              'Choose your account type and start your journey.',
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                color: AppColors.slate,
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 24),
 
-                          const SizedBox(height: 24),
-
-                          if (auth.errorMessage != null) ...[
+                            // Role Segmented Switch
                             Container(
-                              padding: const EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: AppColors.verifRejectedBg,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: AppColors.error.withValues(alpha: 0.3),
-                                ),
+                                color: AppColors.ivory,
+                                border: Border.all(color: AppColors.border),
+                                borderRadius: BorderRadius.circular(4),
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(
-                                    Icons.error_outline,
-                                    color: AppColors.error,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 8),
                                   Expanded(
-                                    child: Text(
-                                      auth.errorMessage!,
-                                      style: const TextStyle(
-                                        color: AppColors.error,
-                                        fontSize: 13,
-                                      ),
+                                    child: _buildRoleTab(
+                                      title: 'Customer',
+                                      icon: Icons.person_outline,
+                                      selected: _role == 'Customer',
+                                      onTap: () {
+                                        setState(() => _role = 'Customer');
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: _buildRoleTab(
+                                      title: 'Provider',
+                                      icon: Icons.business_outlined,
+                                      selected: _role == 'Provider',
+                                      onTap: () {
+                                        setState(() => _role = 'Provider');
+                                      },
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 20),
-                          ],
+                            const SizedBox(height: 24),
 
-                          // Full Name
-                          const Text(
-                            'Full Name',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          TextFormField(
-                            controller: _nameController,
-                            decoration: const InputDecoration(
-                              hintText: 'e.g. Babatunde Lawal',
-                              prefixIcon: Icon(Icons.person_outline, size: 18),
-                            ),
-                            validator: (v) => (v == null || v.trim().length < 2)
-                                ? 'Full name is required (min 2 chars)'
-                                : null,
-                          ),
-
-                          if (_role == 'Provider') ...[
-                            const SizedBox(height: 16),
-                            const Text(
-                              'Business / Trade Name',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
+                            // Dynamic Inputs
+                            if (_role == 'Provider') ...[
+                              _buildFieldLabel('BUSINESS / DISPLAY NAME'),
+                              const SizedBox(height: 6),
+                              TextFormField(
+                                controller: _businessNameController,
+                                decoration: const InputDecoration(
+                                  hintText: 'e.g. Haven & Keys Realty',
+                                ),
+                                validator: (val) {
+                                  if (val == null || val.trim().isEmpty) {
+                                    return 'Business name is required';
+                                  }
+                                  return null;
+                                },
                               ),
-                            ),
+                              const SizedBox(height: 16),
+                            ],
+
+                            _buildFieldLabel(_role == 'Provider' ? 'CONTACT PERSON FULL NAME' : 'FULL NAME'),
                             const SizedBox(height: 6),
                             TextFormField(
-                              controller: _businessNameController,
-                              decoration: const InputDecoration(
-                                hintText:
-                                    'e.g. Lawal Electrical & Inverter Works',
-                                prefixIcon: Icon(
-                                  Icons.business_outlined,
-                                  size: 18,
-                                ),
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                hintText: _role == 'Provider' ? 'Your full name' : 'e.g. Amara Okafor',
                               ),
-                              validator: (v) =>
-                                  (v == null || v.trim().length < 2)
-                                  ? 'Business name is required'
-                                  : null,
+                              validator: (val) {
+                                if (val == null || val.trim().isEmpty) {
+                                  return 'Full name is required';
+                                }
+                                return null;
+                              },
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Primary Service Category',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+
+                            _buildFieldLabel('PHONE NUMBER'),
                             const SizedBox(height: 6),
-                            DropdownButtonFormField<int>(
-                              initialValue:
-                                  _selectedCategoryId ??
-                                  (dir.categories.isNotEmpty
-                                      ? dir.categories.first.id
-                                      : null),
+                            TextFormField(
+                              controller: _phoneController,
+                              keyboardType: TextInputType.phone,
                               decoration: const InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.category_outlined,
-                                  size: 18,
-                                ),
+                                hintText: '+234 800 000 0000',
                               ),
-                              items: dir.categories
-                                  .map(
-                                    (c) => DropdownMenuItem(
-                                      value: c.id,
-                                      child: Text(c.name),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (v) =>
-                                  setState(() => _selectedCategoryId = v),
-                            ),
-                          ],
-
-                          const SizedBox(height: 16),
-
-                          // Email
-                          const Text(
-                            'Email Address',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              hintText: 'e.g. user@sample.firsthome.test',
-                              prefixIcon: Icon(Icons.email_outlined, size: 18),
-                            ),
-                            validator: (v) {
-                              if (v == null || v.trim().isEmpty)
-                                return 'Email is required';
-                              if (!v.contains('@'))
-                                return 'Enter a valid email address';
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          // Phone
-                          const Text(
-                            'Phone Number (Synthetic)',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          TextFormField(
-                            controller: _phoneController,
-                            keyboardType: TextInputType.phone,
-                            decoration: const InputDecoration(
-                              hintText: '+234 800 000 0000',
-                              prefixIcon: Icon(Icons.phone_outlined, size: 18),
-                            ),
-                            validator: (v) => (v == null || v.trim().length < 7)
-                                ? 'Enter a valid phone number'
-                                : null,
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          // Location (State and City)
-                          if (isMobile) ...[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Nigerian State',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                DropdownButtonFormField<String>(
-                                  initialValue: _selectedState,
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.map_outlined,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  items: AppConstants.nigerianStates
-                                      .map(
-                                        (s) => DropdownMenuItem(
-                                          value: s,
-                                          child: Text(s),
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: (v) {
-                                    setState(() {
-                                      _selectedState = v;
-                                      final newCities =
-                                          AppConstants.stateCities[v] ??
-                                          ['General'];
-                                      _selectedCity = newCities.first;
-                                    });
-                                  },
-                                ),
-                              ],
+                              validator: (val) {
+                                if (val == null || val.trim().length < 8) {
+                                  return 'Valid phone number is required';
+                                }
+                                return null;
+                              },
                             ),
                             const SizedBox(height: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'City / District',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                DropdownButtonFormField<String>(
-                                  initialValue: cities.contains(_selectedCity)
-                                      ? _selectedCity
-                                      : cities.first,
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.location_city_outlined,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  items: cities
-                                      .map(
-                                        (c) => DropdownMenuItem(
-                                          value: c,
-                                          child: Text(c),
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: (v) =>
-                                      setState(() => _selectedCity = v),
-                                ),
-                              ],
+
+                            _buildFieldLabel('EMAIL ADDRESS'),
+                            const SizedBox(height: 6),
+                            TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                hintText: 'name@example.com',
+                              ),
+                              validator: (val) {
+                                if (val == null || !val.contains('@')) {
+                                  return 'Valid email address is required';
+                                }
+                                return null;
+                              },
                             ),
-                          ] else
+                            const SizedBox(height: 16),
+
+                            if (_role == 'Provider') ...[
+                              _buildFieldLabel('SERVICE CATEGORY'),
+                              const SizedBox(height: 6),
+                              DropdownButtonFormField<int>(
+                                value: _selectedCategoryId ??
+                                    (dir.categories.isNotEmpty ? dir.categories.first.id : null),
+                                decoration: const InputDecoration(
+                                  hintText: 'Select category',
+                                ),
+                                items: dir.categories.map((c) {
+                                  return DropdownMenuItem<int>(
+                                    value: c.id,
+                                    child: Text(c.name),
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
+                                  setState(() => _selectedCategoryId = val);
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+
+                            // State & City
                             Row(
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'Nigerian State',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
+                                      _buildFieldLabel('STATE'),
                                       const SizedBox(height: 6),
                                       DropdownButtonFormField<String>(
-                                        initialValue: _selectedState,
-                                        decoration: const InputDecoration(
-                                          prefixIcon: Icon(
-                                            Icons.map_outlined,
-                                            size: 18,
-                                          ),
-                                        ),
-                                        items: AppConstants.nigerianStates
-                                            .map(
-                                              (s) => DropdownMenuItem(
-                                                value: s,
-                                                child: Text(s),
-                                              ),
-                                            )
-                                            .toList(),
-                                        onChanged: (v) {
+                                        value: _selectedState,
+                                        decoration: const InputDecoration(),
+                                        items: AppConstants.nigerianStates.map((s) {
+                                          return DropdownMenuItem(value: s, child: Text(s));
+                                        }).toList(),
+                                        onChanged: (val) {
                                           setState(() {
-                                            _selectedState = v;
-                                            final newCities =
-                                                AppConstants.stateCities[v] ??
-                                                ['General'];
-                                            _selectedCity = newCities.first;
+                                            _selectedState = val;
+                                            _selectedCity = (AppConstants.stateCities[val] ?? ['General']).first;
                                           });
                                         },
                                       ),
@@ -613,212 +546,327 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'City / District',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
+                                      _buildFieldLabel('CITY'),
                                       const SizedBox(height: 6),
                                       DropdownButtonFormField<String>(
-                                        initialValue:
-                                            cities.contains(_selectedCity)
-                                            ? _selectedCity
-                                            : cities.first,
-                                        decoration: const InputDecoration(
-                                          prefixIcon: Icon(
-                                            Icons.location_city_outlined,
-                                            size: 18,
-                                          ),
-                                        ),
-                                        items: cities
-                                            .map(
-                                              (c) => DropdownMenuItem(
-                                                value: c,
-                                                child: Text(c),
-                                              ),
-                                            )
-                                            .toList(),
-                                        onChanged: (v) =>
-                                            setState(() => _selectedCity = v),
+                                        value: cities.contains(_selectedCity) ? _selectedCity : cities.firstOrNull,
+                                        decoration: const InputDecoration(),
+                                        items: cities.map((c) {
+                                          return DropdownMenuItem(value: c, child: Text(c));
+                                        }).toList(),
+                                        onChanged: (val) {
+                                          setState(() => _selectedCity = val);
+                                        },
                                       ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
-
-                          if (_role == 'Customer') ...[
                             const SizedBox(height: 16),
-                            const Text(
-                              'Preferred Contact Method',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+
+                            _buildFieldLabel('PASSWORD'),
                             const SizedBox(height: 6),
-                            DropdownButtonFormField<String>(
-                              initialValue: _contactPreference,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.contact_phone_outlined,
-                                  size: 18,
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _obscurePassword,
+                              decoration: InputDecoration(
+                                hintText: 'Create a strong password',
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: AppColors.slate,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
                                 ),
                               ),
-                              items: AppConstants.contactMethods
-                                  .map(
-                                    (m) => DropdownMenuItem(
-                                      value: m,
-                                      child: Text(m),
+                              validator: (val) {
+                                if (val == null || val.length < 6) {
+                                  return 'Password must be at least 6 characters';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+
+                            // Password Strength Bar
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    height: 3,
+                                    color: AppColors.success,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Container(
+                                    height: 3,
+                                    color: AppColors.success,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Container(
+                                    height: 3,
+                                    color: AppColors.success,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Container(
+                                    height: 3,
+                                    color: AppColors.success,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Strong password',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10,
+                                    color: AppColors.success,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 18),
+
+                            // Consent Checkbox
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: Checkbox(
+                                    value: _consent,
+                                    activeColor: AppColors.navy,
+                                    onChanged: (v) {
+                                      setState(() => _consent = v ?? false);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'I agree to the Terms of Service and Privacy Policy.',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: AppColors.slate,
+                                      height: 1.4,
                                     ),
-                                  )
-                                  .toList(),
-                              onChanged: (v) => setState(
-                                () => _contactPreference = v ?? 'Phone',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+
+                            // Provider Mock Note Banner
+                            if (_role == 'Provider') ...[
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: AppColors.ivory,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: AppColors.border),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Icon(
+                                      Icons.shield_outlined,
+                                      size: 16,
+                                      color: AppColors.gold,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: GoogleFonts.inter(
+                                            fontSize: 11,
+                                            color: AppColors.slate,
+                                            height: 1.4,
+                                          ),
+                                          children: const [
+                                            TextSpan(
+                                              text: 'Safe mock verification: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.navy,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text:
+                                                  'We will never request BVN, NIN or identity documents in this prototype.',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+
+                            // Error Display
+                            if (auth.error != null) ...[
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.errorBg,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: AppColors.error.withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Text(
+                                  auth.error!,
+                                  style: GoogleFonts.inter(
+                                    color: AppColors.error,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+
+                            // Submit Button
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48,
+                              child: ElevatedButton(
+                                onPressed: auth.isLoading ? null : _handleRegister,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.navy,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                child: auth.isLoading
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Create account',
+                                            style: GoogleFonts.manrope(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          const Icon(Icons.arrow_forward, size: 16),
+                                        ],
+                                      ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+
+                            // Switch to Sign In
+                            Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Already have an account? ',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: AppColors.slate,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () => widget.onNavigate('login'),
+                                    child: Text(
+                                      'Sign in',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xFF9B7538),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
-
-                          const SizedBox(height: 16),
-
-                          // Password
-                          const Text(
-                            'Password',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: _obscurePassword,
-                            decoration: InputDecoration(
-                              hintText: 'Min 8 chars, 1 uppercase, 1 digit',
-                              prefixIcon: const Icon(
-                                Icons.lock_outline,
-                                size: 18,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  size: 18,
-                                ),
-                                onPressed: () => setState(
-                                  () => _obscurePassword = !_obscurePassword,
-                                ),
-                              ),
-                            ),
-                            validator: (v) {
-                              if (v == null || v.length < 8)
-                                return 'Password must be at least 8 characters';
-                              if (!v.contains(RegExp(r'[A-Z]')))
-                                return 'Must include at least one uppercase letter';
-                              if (!v.contains(RegExp(r'[0-9]')))
-                                return 'Must include at least one digit';
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          // Confirm Password
-                          const Text(
-                            'Confirm Password',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          TextFormField(
-                            controller: _confirmPasswordController,
-                            obscureText: _obscurePassword,
-                            decoration: const InputDecoration(
-                              hintText: 'Re-enter your password',
-                              prefixIcon: Icon(Icons.lock_outline, size: 18),
-                            ),
-                            validator: (v) {
-                              if (v != _passwordController.text)
-                                return 'Passwords do not match';
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          // Synthetic Consent Checkbox
-                          Material(
-                            color: Colors.transparent,
-                            child: CheckboxListTile(
-                              value: _consent,
-                              contentPadding: EdgeInsets.zero,
-                              controlAffinity: ListTileControlAffinity.leading,
-                              onChanged: (v) =>
-                                  setState(() => _consent = v ?? false),
-                              title: const Text(
-                                'I understand this is a demonstration environment using synthetic data. I consent to FirstHome Nigeria storing my profile details for service matchmaking. (No real BVN/NIN collected).',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: auth.isLoading
-                                  ? null
-                                  : _handleRegister,
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                              ),
-                              child: auth.isLoading
-                                  ? const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : Text('Complete Registration ($_role)'),
-                            ),
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          Center(
-                            child: InkWell(
-                              onTap: () => widget.onNavigate('login'),
-                              child: const Text(
-                                'Already have an account? Sign In',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFieldLabel(String label) {
+    return Text(
+      label,
+      style: GoogleFonts.manrope(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.6,
+        color: AppColors.navy,
+      ),
+    );
+  }
+
+  Widget _buildRoleTab({
+    required String title,
+    required IconData icon,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 42,
+        decoration: BoxDecoration(
+          color: selected ? AppColors.navy : Colors.transparent,
+          borderRadius: BorderRadius.circular(3),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: selected ? Colors.white : AppColors.slate,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: GoogleFonts.manrope(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: selected ? Colors.white : AppColors.slate,
               ),
             ),
           ],

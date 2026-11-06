@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../core/constants/app_colors.dart';
 
 class VerificationBadge extends StatelessWidget {
@@ -22,19 +23,19 @@ class VerificationBadge extends StatelessWidget {
       case 'verified':
         bg = AppColors.verifVerifiedBg;
         fg = AppColors.verifVerifiedText;
-        icon = Icons.verified;
+        icon = Icons.verified_user_outlined;
         label = 'Verified';
         break;
       case 'pending':
         bg = AppColors.verifPendingBg;
         fg = AppColors.verifPendingText;
-        icon = Icons.hourglass_top_outlined;
+        icon = Icons.hourglass_empty_outlined;
         label = 'Pending';
         break;
       case 'rejected':
         bg = AppColors.verifRejectedBg;
         fg = AppColors.verifRejectedText;
-        icon = Icons.cancel_outlined;
+        icon = Icons.error_outline;
         label = 'Rejected';
         break;
       case 'notstarted':
@@ -52,23 +53,21 @@ class VerificationBadge extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: fg.withValues(alpha: 0.25)),
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(color: fg.withValues(alpha: 0.18), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: compact ? 12 : 14, color: fg),
-          const SizedBox(width: 4),
-          Flexible(
-            child: Text(
-              compact && label.contains(' ') ? label.split(' ')[0] : label,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: fg,
-                fontSize: compact ? 11 : 12,
-                fontWeight: FontWeight.w600,
-              ),
+          Icon(icon, size: compact ? 12 : 13, color: fg),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: GoogleFonts.manrope(
+              color: fg,
+              fontSize: compact ? 9 : 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.3,
             ),
           ),
         ],

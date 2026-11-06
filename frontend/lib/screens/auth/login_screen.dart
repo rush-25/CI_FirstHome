@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
-import '../../widgets/navbar.dart';
+import '../../widgets/brand_logo.dart';
+
+const String _heroImage =
+    'https://images.unsplash.com/photo-1748063578185-3d68121b11ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=85&w=2000';
 
 class LoginScreen extends StatefulWidget {
   final Function(String route, {dynamic args}) onNavigate;
@@ -18,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _rememberMe = false;
 
   @override
   void dispose() {
@@ -56,411 +61,455 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    final isMobile = MediaQuery.of(context).size.width < 768;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth >= 960;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Navbar(onNavigate: widget.onNavigate),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: isMobile ? 32 : 64,
-              ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 520),
-                  child: Column(
-                    children: [
-                      // Card
-                      Container(
-                        padding: EdgeInsets.all(isMobile ? 24 : 36),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.border),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.04),
-                              blurRadius: 16,
-                              offset: const Offset(0, 4),
-                            ),
+      backgroundColor: Colors.white,
+      body: Row(
+        children: [
+          // Left Visual Panel (Desktop only)
+          if (isDesktop)
+            Expanded(
+              flex: 4,
+              child: Container(
+                height: double.infinity,
+                decoration: const BoxDecoration(
+                  color: AppColors.navy,
+                ),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(
+                      _heroImage,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, err, stack) => Container(
+                        color: AppColors.navy,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            const Color(0xFF0A1420).withValues(alpha: 0.55),
+                            const Color(0xFF0A1420).withValues(alpha: 0.92),
                           ],
                         ),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 36,
-                                    height: 36,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.sage,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Icon(
-                                      Icons.lock_outline,
-                                      color: AppColors.primary,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  const Text(
-                                    'Welcome Back',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'Sign in to access your customer, provider, or administrator account.',
-                                style: TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 13,
-                                ),
-                              ),
-
-                              const SizedBox(height: 24),
-
-                              if (auth.errorMessage != null) ...[
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.verifRejectedBg,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: AppColors.error.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.error_outline,
-                                        color: AppColors.error,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          auth.errorMessage!,
-                                          style: const TextStyle(
-                                            color: AppColors.error,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                              ],
-
-                              // Email
-                              const Text(
-                                'Email Address',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              TextFormField(
-                                controller: _emailController,
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: const InputDecoration(
-                                  hintText: 'e.g. adaeze@sample.firsthome.test',
-                                  prefixIcon: Icon(
-                                    Icons.email_outlined,
-                                    size: 18,
-                                  ),
-                                ),
-                                validator: (v) {
-                                  if (v == null || v.trim().isEmpty)
-                                    return 'Email is required';
-                                  if (!v.contains('@'))
-                                    return 'Enter a valid email address';
-                                  return null;
-                                },
-                              ),
-
-                              const SizedBox(height: 18),
-
-                              // Password
-                              const Text(
-                                'Password',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              TextFormField(
-                                controller: _passwordController,
-                                obscureText: _obscurePassword,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter your password',
-                                  prefixIcon: const Icon(
-                                    Icons.lock_outline,
-                                    size: 18,
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _obscurePassword
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
-                                      size: 18,
-                                    ),
-                                    onPressed: () => setState(
-                                      () =>
-                                          _obscurePassword = !_obscurePassword,
-                                    ),
-                                  ),
-                                ),
-                                validator: (v) {
-                                  if (v == null || v.isEmpty)
-                                    return 'Password is required';
-                                  return null;
-                                },
-                              ),
-
-                              const SizedBox(height: 24),
-
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: auth.isLoading
-                                      ? null
-                                      : _handleLogin,
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                  ),
-                                  child: auth.isLoading
-                                      ? const SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                      : const Text('Sign In'),
-                                ),
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                spacing: 6,
-                                runSpacing: 4,
-                                children: [
-                                  const Text(
-                                    'Don\'t have an account?',
-                                    style: TextStyle(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () =>
-                                        widget.onNavigate('register-customer'),
-                                    child: const Text(
-                                      'Register as Customer',
-                                      style: TextStyle(
-                                        color: AppColors.primary,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Center(
-                                child: InkWell(
-                                  onTap: () =>
-                                      widget.onNavigate('register-provider'),
-                                  child: const Text(
-                                    'Register as Service Provider',
-                                    style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
-
-                      const SizedBox(height: 28),
-
-                      // Quick-Fill Demo Accounts Card
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: AppColors.sage.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppColors.primary.withValues(alpha: 0.2),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(48.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BrandLogo(
+                            light: true,
+                            onTap: () => widget.onNavigate('home'),
                           ),
-                        ),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 440),
+                            child: Text(
+                              '“The clearest path to trusted home professionals across Nigeria.”',
+                              style: GoogleFonts.dmSerifDisplay(
+                                fontSize: 32,
+                                color: Colors.white,
+                                height: 1.35,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'FIRSTHOME · YOUR HOME JOURNEY, SIMPLIFIED',
+                            style: GoogleFonts.inter(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 2.2,
+                              color: const Color(0xFFBDC5CC),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          // Right Form Panel
+          Expanded(
+            flex: 5,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 24,
+                  right: 28,
+                  child: IconButton(
+                    icon: const Icon(Icons.close, color: AppColors.navy, size: 22),
+                    tooltip: 'Return to home',
+                    onPressed: () => widget.onNavigate('home'),
+                  ),
+                ),
+                Center(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth < 500 ? 24 : 48,
+                      vertical: 48,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 440),
+                      child: Form(
+                        key: _formKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            if (!isDesktop) ...[
+                              BrandLogo(onTap: () => widget.onNavigate('home')),
+                              const SizedBox(height: 28),
+                            ],
+
+                            // Eyebrow
                             Row(
-                              children: const [
-                                Icon(
-                                  Icons.flash_on,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 16,
+                                  height: 2,
                                   color: AppColors.gold,
-                                  size: 18,
                                 ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    'Quick Demo Credentials (1-Click Fill)',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 13,
-                                      color: AppColors.primary,
-                                    ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'WELCOME BACK',
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1.4,
+                                    color: AppColors.gold,
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 12),
-                            _DemoUserButton(
-                              role: 'Administrator',
-                              label: 'FirstHome Admin (SAMPLE)',
-                              email: 'admin@sample.firsthome.test',
-                              onTap: () => _fillCredentials(
-                                'admin@sample.firsthome.test',
-                                'Fh4212091d1df34b1051A1',
+
+                            // Heading
+                            Text(
+                              'Sign in to FirstHome.',
+                              style: GoogleFonts.manrope(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.8,
+                                color: AppColors.navy,
                               ),
                             ),
                             const SizedBox(height: 8),
-                            _DemoUserButton(
-                              role: 'Customer',
-                              label: 'Adaeze Okafor (Lagos)',
-                              email: 'customer01@sample.firsthome.test',
-                              onTap: () => _fillCredentials(
-                                'customer01@sample.firsthome.test',
-                                'Fh9ae89105ef00edd81bA1',
+                            Text(
+                              'Manage your enquiries, connections and profile.',
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                color: AppColors.slate,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            _DemoUserButton(
-                              role: 'Provider',
-                              label: 'Lagos Pipe Masters (Plumbing)',
-                              email: 'provider01@sample.firsthome.test',
-                              onTap: () => _fillCredentials(
-                                'provider01@sample.firsthome.test',
-                                'Fh9ae89105ef00edd81bA1',
+                            const SizedBox(height: 28),
+
+                            // Email Field
+                            Text(
+                              'EMAIL ADDRESS',
+                              style: GoogleFonts.manrope(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.6,
+                                color: AppColors.navy,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                hintText: 'name@example.com',
+                              ),
+                              validator: (val) {
+                                if (val == null || val.trim().isEmpty) {
+                                  return 'Email is required';
+                                }
+                                if (!val.contains('@')) {
+                                  return 'Enter a valid email address';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 18),
+
+                            // Password Field
+                            Text(
+                              'PASSWORD',
+                              style: GoogleFonts.manrope(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.6,
+                                color: AppColors.navy,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _obscurePassword,
+                              decoration: InputDecoration(
+                                hintText: 'Enter your password',
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: AppColors.slate,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Password is required';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 12),
+
+                            // Remember Me & Forgot Password
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: Checkbox(
+                                        value: _rememberMe,
+                                        activeColor: AppColors.navy,
+                                        onChanged: (v) {
+                                          setState(() => _rememberMe = v ?? false);
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Remember me',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: AppColors.slate,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: const Color(0xFF9B7538),
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: Text(
+                                    'Forgot password?',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Error Display
+                            if (auth.error != null) ...[
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.errorBg,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: AppColors.error.withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Text(
+                                  auth.error!,
+                                  style: GoogleFonts.inter(
+                                    color: AppColors.error,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+
+                            // Submit Button
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48,
+                              child: ElevatedButton(
+                                onPressed: auth.isLoading ? null : _handleLogin,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.navy,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                child: auth.isLoading
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Sign in',
+                                            style: GoogleFonts.manrope(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          const Icon(Icons.arrow_forward, size: 16),
+                                        ],
+                                      ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+
+                            // Switch to Register
+                            Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'New to FirstHome? ',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: AppColors.slate,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () => widget.onNavigate('register-customer'),
+                                    child: Text(
+                                      'Create account',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xFF9B7538),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 36),
+
+                            // Quick Fill Demo Credentials (matching Figma prototype shortcuts)
+                            Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: AppColors.ivory,
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.touch_app_outlined,
+                                        size: 15,
+                                        color: AppColors.slate,
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        'PROTOTYPE QUICK LOGIN',
+                                        style: GoogleFonts.manrope(
+                                          fontSize: 9.5,
+                                          fontWeight: FontWeight.w700,
+                                          letterSpacing: 0.8,
+                                          color: AppColors.slate,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: [
+                                      _buildQuickLoginButton(
+                                        'Customer',
+                                        'customer@firsthome.ng',
+                                        'Password123!',
+                                      ),
+                                      _buildQuickLoginButton(
+                                        'Provider',
+                                        'provider@firsthome.ng',
+                                        'Password123!',
+                                      ),
+                                      _buildQuickLoginButton(
+                                        'Admin',
+                                        'admin@firsthome.ng',
+                                        'Password123!',
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _DemoUserButton extends StatelessWidget {
-  final String role;
-  final String label;
-  final String email;
-  final VoidCallback onTap;
-
-  const _DemoUserButton({
-    required this.role,
-    required this.label,
-    required this.email,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildQuickLoginButton(String label, String email, String password) {
     return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      onTap: () => _fillCredentials(email, password),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AppColors.border),
+          borderRadius: BorderRadius.circular(3),
         ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: AppColors.sage,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                role,
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                  Text(
-                    email,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Text(
-              'Fill',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        child: Text(
+          label,
+          style: GoogleFonts.manrope(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: AppColors.navy,
+          ),
         ),
       ),
     );

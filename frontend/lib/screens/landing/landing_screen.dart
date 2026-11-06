@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
@@ -7,6 +8,11 @@ import '../../models/provider_model.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/footer.dart';
 import '../../widgets/verification_badge.dart';
+
+const String _heroImage =
+    'https://images.unsplash.com/photo-1748063578185-3d68121b11ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=85&w=2000';
+const String _howImage =
+    'https://images.unsplash.com/photo-1706164971309-fb4785fe6ceb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=82&w=1200';
 
 class LandingScreen extends StatefulWidget {
   final Function(String route, {dynamic args}) onNavigate;
@@ -20,6 +26,7 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   final TextEditingController _searchController = TextEditingController();
   String? _selectedState;
+  String? _selectedCity;
 
   @override
   void initState() {
@@ -39,22 +46,26 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void _onSearchSubmit() {
     final dir = context.read<DirectoryProvider>();
-    dir.setLocationFilter(_selectedState, null);
-    dir.setSearchQuery(_searchController.text);
+    dir.setLocationFilter(_selectedState, _selectedCity);
+    dir.setSearchQuery(_searchController.text.trim());
     widget.onNavigate('directory');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.ivory,
       body: SingleChildScrollView(
         child: Column(
           children: [
             Navbar(onNavigate: widget.onNavigate),
             _buildHero(context),
+            _buildTrustStrip(context),
             _buildCategories(context),
             _buildHowItWorks(context),
             _buildFeaturedProviders(context),
+            _buildTestimonial(context),
+            _buildCta(context),
             Footer(onNavigate: widget.onNavigate),
           ],
         ),
@@ -62,442 +73,689 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
+  // 1. Hero Section
   Widget _buildHero(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 900;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 900;
 
     return Container(
       width: double.infinity,
-      color: AppColors.background,
-      padding: EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: isMobile ? 48 : 80,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1400),
-          child: Column(
-            children: [
-              // Badge
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 6,
+      color: AppColors.navy,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.network(
+              _heroImage,
+              fit: BoxFit.cover,
+              errorBuilder: (ctx, err, stack) => Container(color: AppColors.navy),
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0xFF0A1420).withValues(alpha: 0.65),
+                    const Color(0xFF0A1420).withValues(alpha: 0.92),
+                  ],
                 ),
-                decoration: BoxDecoration(
-                  color: AppColors.sage,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: AppColors.primary.withValues(alpha: 0.2),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(
-                      Icons.shield_outlined,
-                      size: 16,
-                      color: AppColors.primary,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 20 : 40,
+              vertical: isMobile ? 60 : 100,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1140),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Eyebrow
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 14,
+                          height: 2,
+                          color: AppColors.gold,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "NIGERIA'S TRUSTED HOME SERVICES NETWORK",
+                          style: GoogleFonts.manrope(
+                            color: AppColors.gold,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 6),
-                    Flexible(
+                    const SizedBox(height: 18),
+
+                    // Display Title
+                    RichText(
+                      text: TextSpan(
+                        style: GoogleFonts.dmSerifDisplay(
+                          fontSize: isMobile ? 38 : 62,
+                          color: Colors.white,
+                          height: 1.15,
+                          letterSpacing: -1.0,
+                        ),
+                        children: [
+                          const TextSpan(text: 'Find the right people.\n'),
+                          TextSpan(
+                            text: 'Build your next chapter.',
+                            style: GoogleFonts.dmSerifDisplay(
+                              fontStyle: FontStyle.italic,
+                              color: const Color(0xFFF0EAE1),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Subtitle
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 620),
                       child: Text(
-                        'Nigeria\'s Trusted Home Services Network',
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                        'Connect with trusted housing and professional service providers across Nigeria through one seamless platform.',
+                        style: GoogleFonts.inter(
+                          fontSize: isMobile ? 15 : 17,
+                          color: const Color(0xFFC8D1D9),
+                          height: 1.6,
                         ),
                       ),
                     ),
+                    const SizedBox(height: 32),
+
+                    // Actions
+                    Wrap(
+                      spacing: 14,
+                      runSpacing: 12,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => widget.onNavigate('directory'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: AppColors.navy,
+                            minimumSize: const Size(160, 48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Find a provider',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.arrow_forward, size: 16),
+                            ],
+                          ),
+                        ),
+                        OutlinedButton(
+                          onPressed: () => widget.onNavigate('register-customer'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.white54, width: 1.2),
+                            minimumSize: const Size(130, 48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ),
+                          child: Text(
+                            'Get started',
+                            style: GoogleFonts.manrope(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 48),
+
+                    // Unified Search Panel
+                    _buildSearchPanel(context, isMobile),
                   ],
                 ),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-              const SizedBox(height: 24),
+  // Hero Search Panel
+  Widget _buildSearchPanel(BuildContext context, bool isMobile) {
+    final cities = _selectedState != null
+        ? (AppConstants.stateCities[_selectedState!] ?? ['General'])
+        : <String>[];
 
-              // Headline
-              Text(
-                AppConstants.appTagline,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: isMobile ? 32 : 52,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textPrimary,
-                  letterSpacing: -1,
-                  height: 1.15,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Subtitle
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 700),
-                child: Text(
-                  AppConstants.appSubtitle,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: isMobile ? 16 : 18,
-                    color: AppColors.textSecondary,
-                    height: 1.5,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(12),
+      child: isMobile
+          ? Column(
+              children: [
+                TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.search, color: AppColors.slate, size: 20),
+                    hintText: 'What do you need? (e.g. Interior designer)',
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
                   ),
                 ),
-              ),
+                const Divider(height: 1),
+                DropdownButtonFormField<String>(
+                  value: _selectedState,
+                  hint: const Text('Select State'),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  items: AppConstants.nigerianStates.map((s) {
+                    return DropdownMenuItem(value: s, child: Text(s));
+                  }).toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      _selectedState = val;
+                      _selectedCity = null;
+                    });
+                  },
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  height: 46,
+                  child: ElevatedButton(
+                    onPressed: _onSearchSubmit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.navy,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    child: const Text('Search'),
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                // Need input
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'WHAT DO YOU NEED?',
+                          style: GoogleFonts.manrope(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.8,
+                            color: AppColors.slate,
+                          ),
+                        ),
+                        TextField(
+                          controller: _searchController,
+                          onSubmitted: (_) => _onSearchSubmit(),
+                          decoration: const InputDecoration(
+                            hintText: 'e.g. Interior designer, Architect',
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(vertical: 6),
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(width: 1, height: 42, color: AppColors.border),
 
-              const SizedBox(height: 36),
+                // State
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'STATE',
+                          style: GoogleFonts.manrope(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.8,
+                            color: AppColors.slate,
+                          ),
+                        ),
+                        DropdownButtonFormField<String>(
+                          value: _selectedState,
+                          isDense: true,
+                          hint: Text('All states', style: GoogleFonts.inter(fontSize: 13)),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 4),
+                          ),
+                          items: AppConstants.nigerianStates.map((s) {
+                            return DropdownMenuItem(value: s, child: Text(s));
+                          }).toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              _selectedState = val;
+                              _selectedCity = null;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(width: 1, height: 42, color: AppColors.border),
 
-              // Search Box
-              Container(
-                constraints: const BoxConstraints(maxWidth: 820),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.border),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 16,
-                      offset: const Offset(0, 6),
+                // City
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'CITY',
+                          style: GoogleFonts.manrope(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.8,
+                            color: AppColors.slate,
+                          ),
+                        ),
+                        DropdownButtonFormField<String>(
+                          value: cities.contains(_selectedCity) ? _selectedCity : null,
+                          isDense: true,
+                          hint: Text('Select city', style: GoogleFonts.inter(fontSize: 13)),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 4),
+                          ),
+                          items: cities.map((c) {
+                            return DropdownMenuItem(value: c, child: Text(c));
+                          }).toList(),
+                          onChanged: (val) {
+                            setState(() => _selectedCity = val);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Search Button
+                SizedBox(
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: _onSearchSubmit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.navy,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 28),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.search, size: 16),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Search',
+                          style: GoogleFonts.manrope(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  // 2. Trust Strip
+  Widget _buildTrustStrip(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: AppColors.border)),
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1140),
+          child: isMobile
+              ? Column(
+                  children: [
+                    Text(
+                      'Built around what matters most',
+                      style: GoogleFonts.manrope(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.slate,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 20,
+                      runSpacing: 12,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        _buildTrustPill(Icons.shield_outlined, 'Vetted professionals'),
+                        _buildTrustPill(Icons.check_circle_outline, 'Quality connections'),
+                        _buildTrustPill(Icons.access_time, 'Faster responses'),
+                        _buildTrustPill(Icons.headset_mic_outlined, 'Human support'),
+                      ],
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Built around what matters most',
+                      style: GoogleFonts.manrope(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.slate,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        _buildTrustPill(Icons.shield_outlined, 'Vetted professionals'),
+                        const SizedBox(width: 24),
+                        _buildTrustPill(Icons.check_circle_outline, 'Quality connections'),
+                        const SizedBox(width: 24),
+                        _buildTrustPill(Icons.access_time, 'Faster responses'),
+                        const SizedBox(width: 24),
+                        _buildTrustPill(Icons.headset_mic_outlined, 'Human support'),
+                      ],
                     ),
                   ],
                 ),
-                child: isMobile
-                    ? Column(
-                        children: [
-                          TextField(
-                            controller: _searchController,
-                            decoration: const InputDecoration(
-                              hintText:
-                                  'What service do you need? (e.g. Plumber, AC repair)',
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: AppColors.textSecondary,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                          const Divider(),
-                          DropdownButtonFormField<String>(
-                            initialValue: _selectedState,
-                            decoration: const InputDecoration(
-                              hintText: 'Select State',
-                              prefixIcon: Icon(
-                                Icons.location_on_outlined,
-                                color: AppColors.textSecondary,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                            items: [
-                              const DropdownMenuItem(
-                                value: null,
-                                child: Text('All States'),
-                              ),
-                              ...AppConstants.nigerianStates.map(
-                                (s) =>
-                                    DropdownMenuItem(value: s, child: Text(s)),
-                              ),
-                            ],
-                            onChanged: (v) =>
-                                setState(() => _selectedState = v),
-                          ),
-                          const SizedBox(height: 8),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: _onSearchSubmit,
-                              child: const Text('Find a Professional'),
-                            ),
-                          ),
-                        ],
-                      )
-                    : Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: TextField(
-                              controller: _searchController,
-                              onSubmitted: (_) => _onSearchSubmit(),
-                              decoration: const InputDecoration(
-                                hintText:
-                                    'What service do you need? (e.g. Plumber, AC repair)',
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: AppColors.textSecondary,
-                                ),
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: 36,
-                            color: AppColors.border,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: _selectedState,
-                                hint: const Row(
-                                  children: [
-                                    SizedBox(width: 12),
-                                    Icon(
-                                      Icons.location_on_outlined,
-                                      color: AppColors.textSecondary,
-                                      size: 20,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'All States',
-                                      style: TextStyle(
-                                        color: AppColors.textSecondary,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                isExpanded: true,
-                                items: [
-                                  const DropdownMenuItem(
-                                    value: null,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left: 12),
-                                      child: Text('All States'),
-                                    ),
-                                  ),
-                                  ...AppConstants.nigerianStates.map(
-                                    (s) => DropdownMenuItem(
-                                      value: s,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 12,
-                                        ),
-                                        child: Text(s),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                onChanged: (v) =>
-                                    setState(() => _selectedState = v),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: _onSearchSubmit,
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 28,
-                                vertical: 18,
-                              ),
-                            ),
-                            child: const Text('Find a Professional'),
-                          ),
-                        ],
-                      ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Trust note
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 16,
-                runSpacing: 8,
-                children: [
-                  _buildFeatureChip('Direct enquiries'),
-                  _buildFeatureChip('Transparent lead tracking'),
-                  _buildFeatureChip('Verified professionals'),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );
   }
 
-  Widget _buildFeatureChip(String label) {
+  Widget _buildTrustPill(IconData icon, String text) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(
-          Icons.check_circle_outline,
-          size: 16,
-          color: AppColors.success,
-        ),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 13,
-            ),
+        Icon(icon, size: 16, color: AppColors.gold),
+        const SizedBox(width: 7),
+        Text(
+          text,
+          style: GoogleFonts.manrope(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppColors.navy,
           ),
         ),
       ],
     );
   }
 
+  // 3. Categories Grid
   Widget _buildCategories(BuildContext context) {
     final dir = context.watch<DirectoryProvider>();
     final isMobile = MediaQuery.of(context).size.width < 900;
 
-    final categoryIcons = <String, IconData>{
-      'plumbing': Icons.plumbing,
-      'electrical-services': Icons.electric_bolt,
-      'home-cleaning': Icons.cleaning_services,
-      'carpentry': Icons.handyman,
-      'painting': Icons.format_paint,
-      'air-conditioning-and-hvac': Icons.ac_unit,
-      'appliance-repairs': Icons.home_repair_service,
-      'moving-services': Icons.local_shipping,
-      'home-maintenance': Icons.build,
-    };
+    final defaultCategories = [
+      ('01', 'Real Estate Agents', 'Find the right property with local experts.', Icons.business_outlined),
+      ('02', 'Property Management', 'Protect and manage your investment.', Icons.home_outlined),
+      ('03', 'Home Construction', 'Build with trusted project partners.', Icons.construction_outlined),
+      ('04', 'Interior Design', 'Create a space that feels like yours.', Icons.auto_awesome_outlined),
+      ('05', 'Mortgage Advisory', 'Make confident financial decisions.', Icons.account_balance_outlined),
+      ('06', 'Home Maintenance', 'Keep your home working beautifully.', Icons.build_circle_outlined),
+    ];
 
     return Container(
-      color: Colors.white,
+      width: double.infinity,
+      color: AppColors.ivory,
       padding: EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: isMobile ? 48 : 72,
+        horizontal: isMobile ? 20 : 40,
+        vertical: isMobile ? 60 : 90,
       ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1400),
+          constraints: const BoxConstraints(maxWidth: 1140),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (isMobile)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Popular Home Services',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    const Text(
-                      'Select a category to discover available service providers.',
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton.icon(
-                      onPressed: () => widget.onNavigate('directory'),
-                      icon: const Icon(Icons.arrow_forward, size: 16),
-                      label: const Text('View All'),
-                    ),
-                  ],
-                )
-              else
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+              // Section Heading
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(width: 14, height: 2, color: AppColors.gold),
+                          const SizedBox(width: 8),
                           Text(
-                            'Popular Home Services',
-                            style: TextStyle(
-                              fontSize: 26,
+                            'SERVICES FOR EVERY STAGE',
+                            style: GoogleFonts.manrope(
+                              color: AppColors.gold,
+                              fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                          SizedBox(height: 6),
-                          Text(
-                            'Select a category to discover available service providers.',
-                            style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 14,
+                              letterSpacing: 1.4,
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    TextButton.icon(
-                      onPressed: () => widget.onNavigate('directory'),
-                      icon: const Icon(Icons.arrow_forward, size: 16),
-                      label: const Text('View All'),
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 32),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: isMobile ? 2 : 4,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: isMobile ? 1.05 : 1.15,
-                ),
-                itemCount: dir.categories.length,
-                itemBuilder: (ctx, i) {
-                  final cat = dir.categories[i];
-                  final icon =
-                      categoryIcons[cat.slug] ?? Icons.home_repair_service;
-
-                  return InkWell(
-                    onTap: () {
-                      dir.setCategoryFilter(cat.id);
-                      widget.onNavigate('directory');
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColors.sage,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              icon,
-                              color: AppColors.primary,
-                              size: 24,
-                            ),
+                      const SizedBox(height: 12),
+                      RichText(
+                        text: TextSpan(
+                          style: GoogleFonts.manrope(
+                            fontSize: isMobile ? 26 : 38,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.navy,
+                            letterSpacing: -0.6,
+                            height: 1.2,
                           ),
-                          const SizedBox(height: 10),
-                          Flexible(
-                            child: Text(
-                              cat.name,
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
+                          children: [
+                            const TextSpan(text: 'Everything your home needs,\n'),
+                            TextSpan(
+                              text: 'all in one place.',
+                              style: GoogleFonts.dmSerifDisplay(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (!isMobile)
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 340),
+                      child: Text(
+                        'From finding your first property to making it feel like home, discover professionals you can trust.',
+                        style: GoogleFonts.inter(
+                          color: AppColors.slate,
+                          fontSize: 14,
+                          height: 1.5,
+                        ),
                       ),
                     ),
+                ],
+              ),
+              const SizedBox(height: 48),
+
+              // Categories Grid
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  int crossAxisCount = 3;
+                  if (constraints.maxWidth < 650) {
+                    crossAxisCount = 1;
+                  } else if (constraints.maxWidth < 950) {
+                    crossAxisCount = 2;
+                  }
+
+                  return GridView.builder(
+                    itemCount: dir.categories.isNotEmpty
+                        ? dir.categories.length
+                        : defaultCategories.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      mainAxisSpacing: 18,
+                      crossAxisSpacing: 18,
+                      childAspectRatio: crossAxisCount == 1 ? 2.6 : 1.35,
+                    ),
+                    itemBuilder: (context, index) {
+                      final title = dir.categories.isNotEmpty
+                          ? dir.categories[index].name
+                          : defaultCategories[index].$2;
+                      final desc = dir.categories.isNotEmpty
+                          ? (dir.categories[index].description ?? 'Trusted professional services.')
+                          : defaultCategories[index].$3;
+                      final icon = index < defaultCategories.length
+                          ? defaultCategories[index].$4
+                          : Icons.home_repair_service_outlined;
+                      final numStr = '0${index + 1}';
+
+                      return InkWell(
+                        onTap: () {
+                          if (dir.categories.isNotEmpty) {
+                            dir.selectCategory(dir.categories[index].id);
+                          }
+                          widget.onNavigate('directory');
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.border),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.navy.withValues(alpha: 0.02),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    numStr,
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.gold,
+                                    ),
+                                  ),
+                                  Icon(icon, size: 24, color: AppColors.navy),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    title,
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.navy,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    desc,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: AppColors.slate,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  width: 28,
+                                  height: 28,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.ivory,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Center(
+                                    child: Icon(Icons.arrow_forward, size: 14, color: AppColors.navy),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -508,429 +766,694 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
+  // 4. How It Works Section
   Widget _buildHowItWorks(BuildContext context) {
-    final steps = [
-      {
-        'num': '01',
-        'title': 'Find a Professional',
-        'desc':
-            'Search local providers across Lagos, Abuja, and other states filtered by category, location, and ratings.',
-        'icon': Icons.search,
-      },
-      {
-        'num': '02',
-        'title': 'Send an Enquiry',
-        'desc':
-            'Submit a structured service or housing enquiry with your location and contact preference (Phone, WhatsApp, Email).',
-        'icon': Icons.send_rounded,
-      },
-      {
-        'num': '03',
-        'title': 'Track Your Request',
-        'desc':
-            'Receive a unique reference number (e.g. FH-2026-0001) and follow real-time status updates through resolution.',
-        'icon': Icons.track_changes_rounded,
-      },
-    ];
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 960;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isNarrow = constraints.maxWidth < 850;
-
-        return Container(
-          color: AppColors.background,
-          padding: EdgeInsets.symmetric(
-            horizontal: isNarrow ? 16 : 24,
-            vertical: isNarrow ? 36 : 64,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1400),
-              child: Column(
-                children: [
-                  Text(
-                    'How FirstHome Works',
-                    style: TextStyle(
-                      fontSize: isNarrow ? 24 : 28,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Transparent, reliable connection between homeowners and vetted providers.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 36),
-                  isNarrow
-                      ? Column(
-                          children: steps
-                              .map((s) => _buildStepCard(s, isNarrow: true))
-                              .toList(),
-                        )
-                      : Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: steps
-                              .map(
-                                (s) => Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                    ),
-                                    child: _buildStepCard(s, isNarrow: false),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 20 : 40,
+        vertical: isMobile ? 60 : 100,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1140),
+          child: isMobile
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHowImage(),
+                    const SizedBox(height: 40),
+                    _buildHowCopy(),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(flex: 5, child: _buildHowImage()),
+                    const SizedBox(width: 60),
+                    Expanded(flex: 6, child: _buildHowCopy()),
+                  ],
+                ),
+        ),
+      ),
     );
   }
 
-  Widget _buildStepCard(Map<String, dynamic> s, {bool isNarrow = false}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: EdgeInsets.all(isNarrow ? 18 : 24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: AppColors.sage,
-                  borderRadius: BorderRadius.circular(10),
+  Widget _buildHowImage() {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: AspectRatio(
+            aspectRatio: 1.15,
+            child: Image.network(
+              _howImage,
+              fit: BoxFit.cover,
+              errorBuilder: (ctx, err, stack) => Container(color: AppColors.navy),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 20,
+          left: 20,
+          right: 20,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 20,
+                  offset: const Offset(0, 6),
                 ),
-                child: Icon(
-                  s['icon'] as IconData,
-                  color: AppColors.primary,
-                  size: 22,
+              ],
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.shield_outlined, color: AppColors.gold, size: 24),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Quality, verified',
+                        style: GoogleFonts.manrope(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.navy,
+                        ),
+                      ),
+                      Text(
+                        'Providers are reviewed before going live.',
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          color: AppColors.slate,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHowCopy() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 14, height: 2, color: AppColors.gold),
+            const SizedBox(width: 8),
+            Text(
+              'A SIMPLER WAY FORWARD',
+              style: GoogleFonts.manrope(
+                color: AppColors.gold,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.4,
               ),
-              Text(
-                s['num'] as String,
-                style: const TextStyle(
-                  color: AppColors.gold,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        RichText(
+          text: TextSpan(
+            style: GoogleFonts.manrope(
+              fontSize: 34,
+              fontWeight: FontWeight.w700,
+              color: AppColors.navy,
+              letterSpacing: -0.6,
+              height: 1.25,
+            ),
+            children: [
+              const TextSpan(text: 'From search to connection,\n'),
+              TextSpan(
+                text: 'we make it effortless.',
+                style: GoogleFonts.dmSerifDisplay(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            s['title'] as String,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'FirstHome brings clarity to one of life\'s most important journeys. Tell us what you need and connect with the right professional.',
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            color: AppColors.slate,
+            height: 1.6,
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        _buildStepItem(
+          '01',
+          'Tell us what you need',
+          'Create a clear enquiry in just a few thoughtful steps.',
+        ),
+        const SizedBox(height: 20),
+        _buildStepItem(
+          '02',
+          'Discover trusted providers',
+          'Explore relevant experts in your city and compare with confidence.',
+        ),
+        const SizedBox(height: 20),
+        _buildStepItem(
+          '03',
+          'Start the conversation',
+          'Connect directly and manage every enquiry from one place.',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepItem(String number, String title, String desc) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: AppColors.ivory,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Center(
+            child: Text(
+              number,
+              style: GoogleFonts.manrope(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: AppColors.gold,
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            s['desc'] as String,
-            style: const TextStyle(
-              fontSize: 13,
-              color: AppColors.textSecondary,
-              height: 1.5,
-            ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.manrope(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.navy,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                desc,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  color: AppColors.slate,
+                  height: 1.4,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  // 5. Featured Providers
+  Widget _buildFeaturedProviders(BuildContext context) {
+    final dir = context.watch<DirectoryProvider>();
+    final isMobile = MediaQuery.of(context).size.width < 900;
+    final providers = dir.providers.take(3).toList();
+
+    return Container(
+      width: double.infinity,
+      color: AppColors.ivory,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 20 : 40,
+        vertical: isMobile ? 60 : 90,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1140),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(width: 14, height: 2, color: AppColors.gold),
+                          const SizedBox(width: 8),
+                          Text(
+                            'FEATURED PROFESSIONALS',
+                            style: GoogleFonts.manrope(
+                              color: AppColors.gold,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      RichText(
+                        text: TextSpan(
+                          style: GoogleFonts.manrope(
+                            fontSize: isMobile ? 26 : 38,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.navy,
+                            letterSpacing: -0.6,
+                            height: 1.2,
+                          ),
+                          children: [
+                            const TextSpan(text: 'Trusted expertise,\n'),
+                            TextSpan(
+                              text: 'close to home.',
+                              style: GoogleFonts.dmSerifDisplay(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (!isMobile)
+                    OutlinedButton(
+                      onPressed: () => widget.onNavigate('directory'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.navy,
+                        side: const BorderSide(color: AppColors.navy, width: 1.2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Explore all providers',
+                            style: GoogleFonts.manrope(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward, size: 14),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 48),
+
+              // Providers Grid
+              if (providers.isEmpty)
+                Container(
+                  padding: const EdgeInsets.all(40),
+                  child: Text(
+                    'Loading trusted providers...',
+                    style: GoogleFonts.inter(color: AppColors.slate),
+                  ),
+                )
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    final cols = constraints.maxWidth < 700 ? 1 : 3;
+
+                    return GridView.builder(
+                      itemCount: providers.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: cols,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                        childAspectRatio: cols == 1 ? 1.6 : 0.88,
+                      ),
+                      itemBuilder: (context, index) {
+                        final p = providers[index];
+                        return _buildProviderCard(p);
+                      },
+                    );
+                  },
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildFeaturedProviders(BuildContext context) {
-    final dir = context.watch<DirectoryProvider>();
-    final featured = dir.providers.take(4).toList();
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isNarrow = constraints.maxWidth < 850;
-
-        return Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(
-            horizontal: isNarrow ? 16 : 24,
-            vertical: isNarrow ? 36 : 64,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1400),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (isNarrow)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Featured Service Professionals',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        const Text(
-                          'Verified providers active in your state with proven customer track records.',
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 13,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextButton.icon(
-                          onPressed: () => widget.onNavigate('directory'),
-                          icon: const Icon(Icons.arrow_forward, size: 16),
-                          label: const Text('Browse All Providers'),
-                        ),
-                      ],
-                    )
-                  else
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Featured Service Professionals',
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                              SizedBox(height: 6),
-                              Text(
-                                'Verified providers active in your state with proven customer track records.',
-                                style: TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        TextButton.icon(
-                          onPressed: () => widget.onNavigate('directory'),
-                          icon: const Icon(Icons.arrow_forward, size: 16),
-                          label: const Text('Browse All Providers'),
-                        ),
-                      ],
-                    ),
-                  const SizedBox(height: 24),
-                  if (dir.isLoading)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(40),
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  else if (featured.isEmpty)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(40),
-                        child: Text('No providers found in this category.'),
-                      ),
-                    )
-                  else
-                    LayoutBuilder(
-                      builder: (context, box) {
-                        final w = box.maxWidth;
-                        // Max 4 cards per row.
-                        final cols = w < 600
-                            ? 1
-                            : (w < 900 ? 2 : (w < 1250 ? 3 : 4));
-                        return GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: cols,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 0,
-                                mainAxisExtent: 285,
-                              ),
-                          itemCount: featured.length,
-                          itemBuilder: (ctx, i) =>
-                              _buildProviderCard(featured[i]),
-                        );
-                      },
-                    ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildProviderCard(ProviderModel p) {
+    final initials = p.displayName.isNotEmpty
+        ? p.displayName
+            .trim()
+            .split(' ')
+            .take(2)
+            .map((w) => w.isNotEmpty ? w[0] : '')
+            .join()
+            .toUpperCase()
+        : 'PR';
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
+            color: AppColors.navy.withValues(alpha: 0.03),
+            blurRadius: 14,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: AppColors.sage,
-                child: Text(
-                  p.displayName.isNotEmpty ? p.displayName[0] : 'P',
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.ivory,
+                  border: Border.all(color: AppColors.border),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    initials,
+                    style: GoogleFonts.manrope(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.navy,
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              VerificationBadge(
+                status: p.verificationStatus,
+                compact: true,
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                p.displayName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.manrope(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.navy,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                p.categoryName ?? 'Home Professional',
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: AppColors.gold,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                p.description.isNotEmpty
+                    ? p.description
+                    : 'Providing quality, reliable residential services across Nigeria.',
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.inter(
+                  fontSize: 12.5,
+                  color: AppColors.slate,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.location_on_outlined, size: 14, color: AppColors.slate),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${p.city ?? "Lagos"}, ${p.state ?? ""}',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: AppColors.slate,
+                    ),
+                  ),
+                ],
+              ),
+              InkWell(
+                onTap: () => widget.onNavigate('provider-detail', args: p),
+                child: Row(
                   children: [
                     Text(
-                      p.displayName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      'View profile',
+                      style: GoogleFonts.manrope(
+                        fontSize: 11.5,
                         fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: AppColors.textPrimary,
+                        color: AppColors.navy,
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on,
-                          size: 14,
-                          color: AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: 2),
-                        Expanded(
-                          child: Text(
-                            '${p.city}, ${p.state}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.arrow_forward, size: 12, color: AppColors.navy),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 8,
-            runSpacing: 6,
+        ],
+      ),
+    );
+  }
+
+  // 6. Testimonial Section
+  Widget _buildTestimonial(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: AppColors.navy,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 820),
+          child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.sage,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  p.categoryName,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
+              Text(
+                '“',
+                style: GoogleFonts.dmSerifDisplay(
+                  fontSize: 72,
+                  color: AppColors.gold,
+                  height: 0.8,
                 ),
               ),
-              VerificationBadge(status: p.verificationStatus, compact: true),
+              const SizedBox(height: 12),
+              Text(
+                'FirstHome gave us the clarity to move forward. We found a wonderful architect, understood every next step, and never felt overwhelmed.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.dmSerifDisplay(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontStyle: FontStyle.italic,
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: AppColors.gold.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'AO',
+                        style: GoogleFonts.manrope(
+                          color: AppColors.gold,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Amara Okafor',
+                        style: GoogleFonts.manrope(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        'First-time homeowner · Lagos',
+                        style: GoogleFonts.inter(
+                          color: const Color(0xFF8F9AA5),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: 12),
+        ),
+      ),
+    );
+  }
+
+  // 7. CTA Section
+  Widget _buildCta(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 800;
+
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFF142436), // Deep midnight blue accent
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24 : 48,
+        vertical: 70,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1140),
+          child: isMobile
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildCtaCopy(),
+                    const SizedBox(height: 24),
+                    _buildCtaButton(),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(child: _buildCtaCopy()),
+                    const SizedBox(width: 40),
+                    _buildCtaButton(),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCtaCopy() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 14, height: 2, color: AppColors.gold),
+            const SizedBox(width: 8),
+            Text(
+              'YOUR NEXT CHAPTER STARTS HERE',
+              style: GoogleFonts.manrope(
+                color: AppColors.gold,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.4,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        RichText(
+          text: TextSpan(
+            style: GoogleFonts.manrope(
+              fontSize: 32,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: -0.6,
+            ),
+            children: [
+              const TextSpan(text: 'Make your next move\n'),
+              TextSpan(
+                text: 'with confidence.',
+                style: GoogleFonts.dmSerifDisplay(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Join thousands of Nigerians finding trusted professionals for the homes they love.',
+          style: GoogleFonts.inter(
+            color: const Color(0xFFC8D1D9),
+            fontSize: 13,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCtaButton() {
+    return ElevatedButton(
+      onPressed: () => widget.onNavigate('register-customer'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: AppColors.navy,
+        minimumSize: const Size(200, 48),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
           Text(
-            p.description,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            'Create your free account',
+            style: GoogleFonts.manrope(
               fontSize: 13,
-              color: AppColors.textSecondary,
-              height: 1.4,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () =>
-                      widget.onNavigate('provider-detail', args: p),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  child: const Text(
-                    'View Profile',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => widget.onNavigate('create-lead', args: p),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  child: const Text(
-                    'Enquire',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const SizedBox(width: 8),
+          const Icon(Icons.arrow_forward, size: 16),
         ],
       ),
     );

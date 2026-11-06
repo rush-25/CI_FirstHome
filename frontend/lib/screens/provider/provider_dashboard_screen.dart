@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../models/lead_model.dart';
@@ -154,12 +155,30 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
                           final infoCol = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(width: 14, height: 2, color: AppColors.gold),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'PROVIDER WORKSPACE',
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 1.4,
+                                      color: AppColors.gold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
                               Text(
                                 _myProfile?.displayName ?? 'Provider Portal',
-                                style: const TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.textPrimary,
+                                style: GoogleFonts.manrope(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.navy,
+                                  letterSpacing: -0.6,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -170,9 +189,9 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
                                 children: [
                                   Text(
                                     '${_myProfile?.categoryName ?? 'Services'} • ${_myProfile?.city ?? ''}, ${_myProfile?.state ?? ''}',
-                                    style: const TextStyle(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 14,
+                                    style: GoogleFonts.inter(
+                                      color: AppColors.slate,
+                                      fontSize: 13,
                                     ),
                                   ),
                                   if (_myProfile != null)

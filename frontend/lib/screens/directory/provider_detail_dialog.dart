@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/provider_model.dart';
 import '../../widgets/verification_badge.dart';
@@ -16,13 +17,23 @@ class ProviderDetailDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
+    final initials = provider.displayName.isNotEmpty
+        ? provider.displayName
+            .trim()
+            .split(' ')
+            .take(2)
+            .map((w) => w.isNotEmpty ? w[0] : '')
+            .join()
+            .toUpperCase()
+        : 'PR';
 
     return Dialog(
+      backgroundColor: Colors.white,
       insetPadding: EdgeInsets.symmetric(
         horizontal: isMobile ? 16 : 32,
         vertical: 24,
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 580),
         child: SingleChildScrollView(
@@ -30,29 +41,34 @@ class ProviderDetailDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header Cover Banner
+              // Header Banner
               Container(
-                height: isMobile ? 100 : 120,
+                height: 120,
                 width: double.infinity,
                 decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                  color: AppColors.navy,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
                 ),
-                padding: EdgeInsets.all(isMobile ? 14 : 20),
+                padding: const EdgeInsets.all(20),
                 alignment: Alignment.bottomLeft,
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: isMobile ? 26 : 32,
-                      backgroundColor: Colors.white,
-                      child: Text(
-                        provider.displayName.isNotEmpty
-                            ? provider.displayName[0]
-                            : 'P',
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: isMobile ? 20 : 26,
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.gold, width: 1.5),
+                      ),
+                      child: Center(
+                        child: Text(
+                          initials,
+                          style: GoogleFonts.manrope(
+                            color: AppColors.navy,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
@@ -64,30 +80,28 @@ class ProviderDetailDialog extends StatelessWidget {
                         children: [
                           Text(
                             provider.displayName,
-                            style: const TextStyle(
+                            style: GoogleFonts.manrope(
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.w700,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          const SizedBox(height: 2),
                           Row(
                             children: [
                               const Icon(
-                                Icons.location_on,
+                                Icons.location_on_outlined,
                                 color: AppColors.gold,
                                 size: 14,
                               ),
                               const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  '${provider.city}, ${provider.state}',
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 13,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                              Text(
+                                '${provider.city ?? "Lagos"}, ${provider.state ?? ""}',
+                                style: GoogleFonts.inter(
+                                  color: const Color(0xFFC8D1D9),
+                                  fontSize: 12,
                                 ),
                               ),
                             ],
@@ -96,120 +110,126 @@ class ProviderDetailDialog extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
+                      icon: const Icon(Icons.close, color: Colors.white70, size: 20),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
                 ),
               ),
 
-              // Body content
+              // Content Body
               Padding(
-                padding: EdgeInsets.all(isMobile ? 16 : 24),
+                padding: const EdgeInsets.all(24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Badges
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppColors.sage,
-                            borderRadius: BorderRadius.circular(6),
+                            color: AppColors.ivory,
+                            border: Border.all(color: AppColors.border),
+                            borderRadius: BorderRadius.circular(3),
                           ),
                           child: Text(
-                            provider.categoryName,
-                            style: const TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
+                            provider.categoryName ?? 'Home Professional',
+                            style: GoogleFonts.manrope(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.navy,
                             ),
                           ),
                         ),
-                        VerificationBadge(status: provider.verificationStatus),
+                        VerificationBadge(
+                          status: provider.verificationStatus,
+                          compact: true,
+                        ),
                       ],
                     ),
+                    const SizedBox(height: 20),
 
-                    const SizedBox(height: 24),
-
-                    // About
-                    const Text(
-                      'About This Professional',
-                      style: TextStyle(
+                    Text(
+                      'ABOUT THE PROVIDER',
+                      style: GoogleFonts.manrope(
+                        fontSize: 10.5,
                         fontWeight: FontWeight.w700,
-                        fontSize: 15,
+                        letterSpacing: 0.8,
+                        color: AppColors.slate,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      provider.description,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                        height: 1.5,
+                      provider.description.isNotEmpty
+                          ? provider.description
+                          : 'Providing quality, reliable residential services across Nigeria.',
+                      style: GoogleFonts.inter(
+                        fontSize: 13.5,
+                        color: AppColors.navy,
+                        height: 1.55,
                       ),
                     ),
-
                     const SizedBox(height: 24),
 
-                    // Service Details Box
+                    Text(
+                      'LOCATION & COVERAGE',
+                      style: GoogleFonts.manrope(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.8,
+                        color: AppColors.slate,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.ivory,
+                        borderRadius: BorderRadius.circular(3),
                         border: Border.all(color: AppColors.border),
                       ),
-                      child: Column(
+                      child: Row(
                         children: [
-                          _DetailRow(
-                            icon: Icons.email_outlined,
-                            label: 'Contact Email',
-                            value: provider.contactEmail,
-                          ),
-                          const Divider(height: 20),
-                          _DetailRow(
-                            icon: Icons.phone_outlined,
-                            label: 'Phone',
-                            value: provider.phone,
-                          ),
-                          const Divider(height: 20),
-                          _DetailRow(
-                            icon: Icons.verified_user_outlined,
-                            label: 'Verification Status',
-                            value: provider.verificationStatus,
+                          const Icon(Icons.map_outlined, color: AppColors.slate, size: 18),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Serving ${provider.city ?? "Lagos"} and surrounding areas in ${provider.state ?? "Nigeria"}',
+                            style: GoogleFonts.inter(
+                              fontSize: 12.5,
+                              color: AppColors.navy,
+                            ),
                           ),
                         ],
                       ),
                     ),
+                    const SizedBox(height: 28),
 
-                    const SizedBox(height: 24),
-
-                    // Action buttons
+                    // Actions
                     Row(
                       children: [
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('Close'),
+                            child: const Text('Back to search'),
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           flex: 2,
-                          child: ElevatedButton.icon(
+                          child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                               onEnquire(provider);
                             },
-                            icon: const Icon(Icons.send_rounded, size: 16),
-                            label: const Text('Send an Enquiry'),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Send enquiry'),
+                                const SizedBox(width: 6),
+                                const Icon(Icons.arrow_forward, size: 15),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -221,45 +241,6 @@ class ProviderDetailDialog extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _DetailRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _DetailRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 18, color: AppColors.textSecondary),
-        const SizedBox(width: 10),
-        Text(
-          label,
-          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-              color: AppColors.textPrimary,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
