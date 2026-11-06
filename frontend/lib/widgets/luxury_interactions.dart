@@ -144,3 +144,4 @@ class _StaggeredFadeSlideState extends State<StaggeredFadeSlide>
     );
   }
 }
+
