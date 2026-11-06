@@ -8,6 +8,7 @@ import '../../models/provider_model.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/footer.dart';
 import '../../widgets/verification_badge.dart';
+import '../../widgets/luxury_interactions.dart';
 import 'provider_detail_dialog.dart';
 
 class DirectoryScreen extends StatefulWidget {
@@ -459,20 +460,10 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
             .toUpperCase()
         : 'PR';
 
-    return Container(
+    return LuxuryHoverCard(
+      borderRadius: 4,
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.navy.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+      onTap: () => _openDetail(p),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -559,22 +550,19 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                   ),
                 ],
               ),
-              InkWell(
-                onTap: () => _openDetail(p),
-                child: Row(
-                  children: [
-                    Text(
-                      'View profile',
-                      style: GoogleFonts.manrope(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.navy,
-                      ),
+              Row(
+                children: [
+                  Text(
+                    'View profile',
+                    style: GoogleFonts.manrope(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.navy,
                     ),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.arrow_forward, size: 12, color: AppColors.navy),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.arrow_forward, size: 12, color: AppColors.navy),
+                ],
               ),
             ],
           ),

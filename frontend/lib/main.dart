@@ -137,6 +137,43 @@ class AppRouteInformationParser
   }
 }
 
+class LuxuryPage<T> extends Page<T> {
+  final Widget child;
+
+  const LuxuryPage({
+    required LocalKey super.key,
+    required super.name,
+    required this.child,
+  });
+
+  @override
+  Route<T> createRoute(BuildContext context) {
+    return PageRouteBuilder<T>(
+      settings: this,
+      transitionDuration: const Duration(milliseconds: 360),
+      reverseTransitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) => child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+        return FadeTransition(
+          opacity: curved,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 0.015),
+              end: Offset.zero,
+            ).animate(curved),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+}
+
 class AppRouterDelegate extends RouterDelegate<RouteInformation>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteInformation> {
   @override
@@ -194,38 +231,38 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
     return Navigator(
       key: navigatorKey,
       pages: [
-        MaterialPage(
+        LuxuryPage(
           key: ValueKey('landing-page-$_routeId'),
           name: '/',
           child: LandingScreen(onNavigate: navigateTo),
         ),
         if (_currentPath == '/directory')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('directory-page-$_routeId'),
             name: '/directory',
             child: DirectoryScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/how-it-works')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('how-it-works-page-$_routeId'),
             name: '/how-it-works',
             child: HowItWorksScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/about')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('about-page-$_routeId'),
             name: '/about',
             child: AboutScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/login')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('login-page-$_routeId'),
             name: '/login',
             child: LoginScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/register' ||
             _currentPath == '/register-customer')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('register-customer-page-$_routeId'),
             name: '/register-customer',
             child: const RegisterScreen(
@@ -234,7 +271,7 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
             ),
           )
         else if (_currentPath == '/register-provider')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('register-provider-page-$_routeId'),
             name: '/register-provider',
             child: const RegisterScreen(
@@ -243,19 +280,19 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
             ),
           )
         else if (_currentPath == '/customer-dashboard')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('customer-dashboard-page-$_routeId'),
             name: '/customer-dashboard',
             child: CustomerDashboardScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/provider-dashboard')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('provider-dashboard-page-$_routeId'),
             name: '/provider-dashboard',
             child: ProviderDashboardScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/admin-dashboard')
-          MaterialPage(
+          LuxuryPage(
             key: ValueKey('admin-dashboard-page-$_routeId'),
             name: '/admin-dashboard',
             child: AdminDashboardScreen(onNavigate: navigateTo),

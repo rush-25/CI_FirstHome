@@ -9,6 +9,7 @@ import '../../models/provider_model.dart';
 import '../../widgets/navbar.dart';
 import '../../widgets/footer.dart';
 import '../../widgets/verification_badge.dart';
+import '../../widgets/luxury_interactions.dart';
 
 const String _heroImage =
     'https://images.unsplash.com/photo-1748063578185-3d68121b11ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=85&w=2000';
@@ -155,132 +156,144 @@ class _LandingScreenState extends State<LandingScreen> {
                     const Spacer(flex: 2),
 
                     // Eyebrow (Centered)
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 14,
-                          height: 2,
-                          color: AppColors.gold,
-                        ),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Text(
-                            "NIGERIA'S TRUSTED HOME SERVICES NETWORK",
-                            style: GoogleFonts.manrope(
-                              color: AppColors.gold,
-                              fontSize: isSmallMobile ? 9.5 : 10.5,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: isSmallMobile ? 1.0 : 1.5,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                    StaggeredFadeSlide(
+                      delayMs: 60,
+                      slideDistance: 14,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 14,
+                            height: 2,
+                            color: AppColors.gold,
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Container(
-                          width: 14,
-                          height: 2,
-                          color: AppColors.gold,
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              "NIGERIA'S TRUSTED HOME SERVICES NETWORK",
+                              style: GoogleFonts.manrope(
+                                color: AppColors.gold,
+                                fontSize: isSmallMobile ? 9.5 : 10.5,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: isSmallMobile ? 1.0 : 1.5,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 14,
+                            height: 2,
+                            color: AppColors.gold,
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: isSmallMobile ? 12 : 16),
 
                     // Display Title (Centered in screen)
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: GoogleFonts.dmSerifDisplay(
-                          fontSize: isSmallMobile
-                              ? 32.0
-                              : (screenWidth < 600
-                                  ? 38.0
-                                  : (screenWidth < 900 ? 46.0 : 62.0)),
-                          color: Colors.white,
-                          height: 1.15,
-                          letterSpacing: -0.8,
-                        ),
-                        children: [
-                          const TextSpan(text: 'Find the right people.\n'),
-                          TextSpan(
-                            text: 'Build your next chapter.',
-                            style: GoogleFonts.dmSerifDisplay(
-                              fontStyle: FontStyle.italic,
-                              color: const Color(0xFFF0EAE1),
-                            ),
+                    StaggeredFadeSlide(
+                      delayMs: 200,
+                      slideDistance: 22,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: GoogleFonts.dmSerifDisplay(
+                            fontSize: isSmallMobile
+                                ? 32.0
+                                : (screenWidth < 600
+                                    ? 38.0
+                                    : (screenWidth < 900 ? 46.0 : 62.0)),
+                            color: Colors.white,
+                            height: 1.15,
+                            letterSpacing: -0.8,
                           ),
-                        ],
+                          children: [
+                            const TextSpan(text: 'Find the right people.\n'),
+                            TextSpan(
+                              text: 'Build your next chapter.',
+                              style: GoogleFonts.dmSerifDisplay(
+                                fontStyle: FontStyle.italic,
+                                color: const Color(0xFFF0EAE1),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
                     const Spacer(flex: 3),
 
                     // Anchored at bottom: Action Buttons & Search Card
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 12,
-                          runSpacing: 10,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () => widget.onNavigate('directory'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: AppColors.navy,
-                                minimumSize: Size(isSmallMobile ? 140 : 160, 48),
-                                padding: const EdgeInsets.symmetric(horizontal: 18),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(3),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Find a provider',
-                                    style: GoogleFonts.manrope(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                    StaggeredFadeSlide(
+                      delayMs: 360,
+                      slideDistance: 18,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 12,
+                            runSpacing: 10,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () => widget.onNavigate('directory'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: AppColors.navy,
+                                  minimumSize: Size(isSmallMobile ? 140 : 160, 48),
+                                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(3),
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Icon(Icons.arrow_forward, size: 16),
-                                ],
-                              ),
-                            ),
-                            OutlinedButton(
-                              onPressed: () => widget.onNavigate('register-customer'),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                side: const BorderSide(color: Colors.white54, width: 1.2),
-                                minimumSize: Size(isSmallMobile ? 115 : 130, 48),
-                                padding: const EdgeInsets.symmetric(horizontal: 18),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(3),
+                                  elevation: 0,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Find a provider',
+                                      style: GoogleFonts.manrope(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Icon(Icons.arrow_forward, size: 16),
+                                  ],
                                 ),
                               ),
-                              child: Text(
-                                'Get started',
-                                style: GoogleFonts.manrope(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                              OutlinedButton(
+                                onPressed: () => widget.onNavigate('register-customer'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  side: const BorderSide(color: Colors.white54, width: 1.2),
+                                  minimumSize: Size(isSmallMobile ? 115 : 130, 48),
+                                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Get started',
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
+                          ),
+                          if (!isMobile) ...[
+                            const SizedBox(height: 22),
+                            // Unified Search Panel (moved to header as an icon on mobile)
+                            _buildSearchPanel(context, false),
                           ],
-                        ),
-                        if (!isMobile) ...[
-                          const SizedBox(height: 22),
-                          // Unified Search Panel (moved to header as an icon on mobile)
-                          _buildSearchPanel(context, false),
                         ],
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -759,87 +772,74 @@ class _LandingScreenState extends State<LandingScreen> {
                           : Icons.home_repair_service_outlined;
                       final numStr = '0${index + 1}';
 
-                      return InkWell(
+                      return LuxuryHoverCard(
+                        borderRadius: 4,
+                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                         onTap: () {
                           if (dir.categories.isNotEmpty) {
                             dir.setCategoryFilter(dir.categories[index].id);
                           }
                           widget.onNavigate('directory');
                         },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: AppColors.border),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.navy.withValues(alpha: 0.02),
-                                blurRadius: 10,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    numStr,
-                                    style: GoogleFonts.manrope(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.gold,
-                                    ),
-                                  ),
-                                  Icon(icon, size: 22, color: AppColors.navy),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    title,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.manrope(
-                                      fontSize: 15.5,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.navy,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    desc,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      color: AppColors.slate,
-                                      height: 1.35,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  width: 26,
-                                  height: 26,
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.ivory,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Center(
-                                    child: Icon(Icons.arrow_forward, size: 13, color: AppColors.navy),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  numStr,
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.gold,
                                   ),
                                 ),
+                                Icon(icon, size: 22, color: AppColors.navy),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 15.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.navy,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  desc,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    color: AppColors.slate,
+                                    height: 1.35,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                width: 26,
+                                height: 26,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.ivory,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Center(
+                                  child: Icon(Icons.arrow_forward, size: 13, color: AppColors.navy),
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -1223,20 +1223,10 @@ class _LandingScreenState extends State<LandingScreen> {
             .toUpperCase()
         : 'PR';
 
-    return Container(
+    return LuxuryHoverCard(
+      borderRadius: 4,
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.navy.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+      onTap: () => widget.onNavigate('provider-detail', args: p),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1323,22 +1313,19 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                 ],
               ),
-              InkWell(
-                onTap: () => widget.onNavigate('provider-detail', args: p),
-                child: Row(
-                  children: [
-                    Text(
-                      'View profile',
-                      style: GoogleFonts.manrope(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.navy,
-                      ),
+              Row(
+                children: [
+                  Text(
+                    'View profile',
+                    style: GoogleFonts.manrope(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.navy,
                     ),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.arrow_forward, size: 12, color: AppColors.navy),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.arrow_forward, size: 12, color: AppColors.navy),
+                ],
               ),
             ],
           ),

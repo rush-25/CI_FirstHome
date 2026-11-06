@@ -7,6 +7,7 @@ import '../core/constants/app_constants.dart';
 import '../providers/auth_provider.dart';
 import '../providers/directory_provider.dart';
 import 'brand_logo.dart';
+import 'luxury_interactions.dart';
 
 class Navbar extends StatefulWidget implements PreferredSizeWidget {
   final Function(String route)? onNavigate;
@@ -280,125 +281,129 @@ class _NavbarState extends State<Navbar> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.94),
-                          border: const Border(
-                            bottom: BorderSide(color: AppColors.border),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
+                  child: StaggeredFadeSlide(
+                    durationMs: 250,
+                    slideDistance: -12.0,
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.94),
+                            border: const Border(
+                              bottom: BorderSide(color: AppColors.border),
                             ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _buildMobileNavItem('Home', () {
-                              setState(() => _mobileMenuOpen = false);
-                              widget.onNavigate?.call('home');
-                            }),
-                            _buildMobileNavItem('Find Providers', () {
-                              setState(() => _mobileMenuOpen = false);
-                              widget.onNavigate?.call('directory');
-                            }),
-                            _buildMobileNavItem('How It Works', () {
-                              setState(() => _mobileMenuOpen = false);
-                              widget.onNavigate?.call('how-it-works');
-                            }),
-                            _buildMobileNavItem('About', () {
-                              setState(() => _mobileMenuOpen = false);
-                              widget.onNavigate?.call('about');
-                            }),
-                            const Divider(height: 24),
-                            if (!auth.isAuthenticated) ...[
-                              OutlinedButton(
-                                onPressed: () {
-                                  setState(() => _mobileMenuOpen = false);
-                                  widget.onNavigate?.call('login');
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  minimumSize: const Size(double.infinity, 46),
-                                  side: const BorderSide(color: AppColors.border),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                ),
-                                child: const Text('Sign in'),
-                              ),
-                              const SizedBox(height: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() => _mobileMenuOpen = false);
-                                  widget.onNavigate?.call('register-provider');
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.navy,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: const Size(double.infinity, 46),
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                ),
-                                child: const Text('Become a Provider'),
-                              ),
-                            ] else ...[
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() => _mobileMenuOpen = false);
-                                  if (auth.isAdmin) {
-                                    widget.onNavigate?.call('admin-dashboard');
-                                  } else if (auth.isProvider) {
-                                    widget.onNavigate?.call('provider-dashboard');
-                                  } else {
-                                    widget.onNavigate?.call('customer-dashboard');
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.navy,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: const Size(double.infinity, 46),
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                ),
-                                child: const Text('Go to Dashboard'),
-                              ),
-                              const SizedBox(height: 10),
-                              OutlinedButton(
-                                onPressed: () async {
-                                  setState(() => _mobileMenuOpen = false);
-                                  await auth.logout();
-                                  widget.onNavigate?.call('home');
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  minimumSize: const Size(double.infinity, 46),
-                                  side: const BorderSide(color: AppColors.border),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Sign out',
-                                  style: GoogleFonts.manrope(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.slate,
-                                  ),
-                                ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
                               ),
                             ],
-                          ],
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildMobileNavItem('Home', () {
+                                setState(() => _mobileMenuOpen = false);
+                                widget.onNavigate?.call('home');
+                              }),
+                              _buildMobileNavItem('Find Providers', () {
+                                setState(() => _mobileMenuOpen = false);
+                                widget.onNavigate?.call('directory');
+                              }),
+                              _buildMobileNavItem('How It Works', () {
+                                setState(() => _mobileMenuOpen = false);
+                                widget.onNavigate?.call('how-it-works');
+                              }),
+                              _buildMobileNavItem('About', () {
+                                setState(() => _mobileMenuOpen = false);
+                                widget.onNavigate?.call('about');
+                              }),
+                              const Divider(height: 24),
+                              if (!auth.isAuthenticated) ...[
+                                OutlinedButton(
+                                  onPressed: () {
+                                    setState(() => _mobileMenuOpen = false);
+                                    widget.onNavigate?.call('login');
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    minimumSize: const Size(double.infinity, 46),
+                                    side: const BorderSide(color: AppColors.border),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                  ),
+                                  child: const Text('Sign in'),
+                                ),
+                                const SizedBox(height: 10),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() => _mobileMenuOpen = false);
+                                    widget.onNavigate?.call('register-provider');
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.navy,
+                                    foregroundColor: Colors.white,
+                                    minimumSize: const Size(double.infinity, 46),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                  ),
+                                  child: const Text('Become a Provider'),
+                                ),
+                              ] else ...[
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() => _mobileMenuOpen = false);
+                                    if (auth.isAdmin) {
+                                      widget.onNavigate?.call('admin-dashboard');
+                                    } else if (auth.isProvider) {
+                                      widget.onNavigate?.call('provider-dashboard');
+                                    } else {
+                                      widget.onNavigate?.call('customer-dashboard');
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.navy,
+                                    foregroundColor: Colors.white,
+                                    minimumSize: const Size(double.infinity, 46),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                  ),
+                                  child: const Text('Go to Dashboard'),
+                                ),
+                                const SizedBox(height: 10),
+                                OutlinedButton(
+                                  onPressed: () async {
+                                    setState(() => _mobileMenuOpen = false);
+                                    await auth.logout();
+                                    widget.onNavigate?.call('home');
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    minimumSize: const Size(double.infinity, 46),
+                                    side: const BorderSide(color: AppColors.border),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Sign out',
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.slate,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -436,107 +441,75 @@ class _NavbarState extends State<Navbar> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.96),
-                          border: const Border(
-                            bottom: BorderSide(color: AppColors.border),
+                  child: StaggeredFadeSlide(
+                    durationMs: 250,
+                    slideDistance: -12.0,
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.96),
+                            border: const Border(
+                              bottom: BorderSide(color: AppColors.border),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.12),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.12),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'SEARCH PROVIDERS',
-                                  style: GoogleFonts.manrope(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 1.2,
-                                    color: AppColors.slate,
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'SEARCH PROVIDERS',
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 1.2,
+                                      color: AppColors.slate,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => setState(() => _mobileSearchOpen = false),
+                                    child: const Icon(Icons.close, size: 20, color: AppColors.slate),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 14),
+
+                              // What do you need input
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.ivory,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: AppColors.border),
+                                ),
+                                child: TextField(
+                                  controller: _searchController,
+                                  autofocus: true,
+                                  onSubmitted: (_) => _submitSearch(),
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.search, color: AppColors.slate, size: 20),
+                                    hintText: 'What do you need? (e.g. Interior design)',
+                                    hintStyle: TextStyle(fontSize: 13, color: AppColors.slate),
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () => setState(() => _mobileSearchOpen = false),
-                                  child: const Icon(Icons.close, size: 20, color: AppColors.slate),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 14),
-
-                            // What do you need input
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.ivory,
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(color: AppColors.border),
                               ),
-                              child: TextField(
-                                controller: _searchController,
-                                autofocus: true,
-                                onSubmitted: (_) => _submitSearch(),
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Icons.search, color: AppColors.slate, size: 20),
-                                  hintText: 'What do you need? (e.g. Interior design)',
-                                  hintStyle: TextStyle(fontSize: 13, color: AppColors.slate),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-
-                            // State Dropdown
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14),
-                              decoration: BoxDecoration(
-                                color: AppColors.ivory,
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(color: AppColors.border),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: _selectedState,
-                                  isExpanded: true,
-                                  hint: const Text(
-                                    'Select State',
-                                    style: TextStyle(fontSize: 13, color: AppColors.slate),
-                                  ),
-                                  items: AppConstants.nigerianStates.map((s) {
-                                    return DropdownMenuItem(
-                                      value: s,
-                                      child: Text(s, style: const TextStyle(fontSize: 13)),
-                                    );
-                                  }).toList(),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _selectedState = val;
-                                      _selectedCity = null;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-
-                            // City Dropdown (when state selected)
-                            if (_selectedState != null &&
-                                (AppConstants.stateCities[_selectedState!] ?? []).isNotEmpty) ...[
                               const SizedBox(height: 12),
+
+                              // State Dropdown
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 14),
                                 decoration: BoxDecoration(
@@ -546,61 +519,97 @@ class _NavbarState extends State<Navbar> {
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
-                                    value: (AppConstants.stateCities[_selectedState!] ?? [])
-                                            .contains(_selectedCity)
-                                        ? _selectedCity
-                                        : null,
+                                    value: _selectedState,
                                     isExpanded: true,
                                     hint: const Text(
-                                      'Select City (Optional)',
+                                      'Select State',
                                       style: TextStyle(fontSize: 13, color: AppColors.slate),
                                     ),
-                                    items: (AppConstants.stateCities[_selectedState!] ?? []).map((c) {
+                                    items: AppConstants.nigerianStates.map((s) {
                                       return DropdownMenuItem(
-                                        value: c,
-                                        child: Text(c, style: const TextStyle(fontSize: 13)),
+                                        value: s,
+                                        child: Text(s, style: const TextStyle(fontSize: 13)),
                                       );
                                     }).toList(),
                                     onChanged: (val) {
-                                      setState(() => _selectedCity = val);
+                                      setState(() {
+                                        _selectedState = val;
+                                        _selectedCity = null;
+                                      });
                                     },
                                   ),
                                 ),
                               ),
-                            ],
 
-                            const SizedBox(height: 16),
-
-                            // Search Button
-                            SizedBox(
-                              height: 48,
-                              child: ElevatedButton(
-                                onPressed: _submitSearch,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.navy,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(3),
+                              // City Dropdown (when state selected)
+                              if (_selectedState != null &&
+                                  (AppConstants.stateCities[_selectedState!] ?? []).isNotEmpty) ...[
+                                const SizedBox(height: 12),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.ivory,
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: AppColors.border),
                                   ),
-                                  elevation: 0,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.search, size: 18),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Search',
-                                      style: GoogleFonts.manrope(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      value: (AppConstants.stateCities[_selectedState!] ?? [])
+                                              .contains(_selectedCity)
+                                          ? _selectedCity
+                                          : null,
+                                      isExpanded: true,
+                                      hint: const Text(
+                                        'Select City (Optional)',
+                                        style: TextStyle(fontSize: 13, color: AppColors.slate),
                                       ),
+                                      items: (AppConstants.stateCities[_selectedState!] ?? []).map((c) {
+                                        return DropdownMenuItem(
+                                          value: c,
+                                          child: Text(c, style: const TextStyle(fontSize: 13)),
+                                        );
+                                      }).toList(),
+                                      onChanged: (val) {
+                                        setState(() => _selectedCity = val);
+                                      },
                                     ),
-                                  ],
+                                  ),
+                                ),
+                              ],
+
+                              const SizedBox(height: 16),
+
+                              // Search Button
+                              SizedBox(
+                                height: 48,
+                                child: ElevatedButton(
+                                  onPressed: _submitSearch,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.navy,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                    elevation: 0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.search, size: 18),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Search',
+                                        style: GoogleFonts.manrope(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
