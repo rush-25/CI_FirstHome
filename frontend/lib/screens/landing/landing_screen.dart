@@ -709,9 +709,9 @@ class _LandingScreenState extends State<LandingScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: crossAxisCount,
-                      mainAxisSpacing: 18,
-                      crossAxisSpacing: 18,
-                      childAspectRatio: crossAxisCount == 1 ? 2.6 : 1.35,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: crossAxisCount == 1 ? 2.5 : 1.9,
                     ),
                     itemBuilder: (context, index) {
                       final title = dir.categories.isNotEmpty
@@ -733,7 +733,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           widget.onNavigate('directory');
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(24),
+                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(4),
@@ -741,8 +741,8 @@ class _LandingScreenState extends State<LandingScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: AppColors.navy.withValues(alpha: 0.02),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
@@ -761,7 +761,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                       color: AppColors.gold,
                                     ),
                                   ),
-                                  Icon(icon, size: 24, color: AppColors.navy),
+                                  Icon(icon, size: 22, color: AppColors.navy),
                                 ],
                               ),
                               Column(
@@ -769,13 +769,15 @@ class _LandingScreenState extends State<LandingScreen> {
                                 children: [
                                   Text(
                                     title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.manrope(
-                                      fontSize: 16,
+                                      fontSize: 15.5,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.navy,
                                     ),
                                   ),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 4),
                                   Text(
                                     desc,
                                     maxLines: 2,
@@ -783,7 +785,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                     style: GoogleFonts.inter(
                                       fontSize: 12,
                                       color: AppColors.slate,
-                                      height: 1.4,
+                                      height: 1.35,
                                     ),
                                   ),
                                 ],
@@ -791,14 +793,14 @@ class _LandingScreenState extends State<LandingScreen> {
                               Align(
                                 alignment: Alignment.bottomRight,
                                 child: Container(
-                                  width: 28,
-                                  height: 28,
+                                  width: 26,
+                                  height: 26,
                                   decoration: const BoxDecoration(
                                     color: AppColors.ivory,
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Center(
-                                    child: Icon(Icons.arrow_forward, size: 14, color: AppColors.navy),
+                                    child: Icon(Icons.arrow_forward, size: 13, color: AppColors.navy),
                                   ),
                                 ),
                               ),
@@ -1158,9 +1160,9 @@ class _LandingScreenState extends State<LandingScreen> {
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: cols,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                        childAspectRatio: cols == 1 ? 1.6 : 0.88,
+                        crossAxisSpacing: 18,
+                        mainAxisSpacing: 18,
+                        childAspectRatio: cols == 1 ? 1.7 : 1.4,
                       ),
                       itemBuilder: (context, index) {
                         final p = providers[index];
@@ -1188,7 +1190,7 @@ class _LandingScreenState extends State<LandingScreen> {
         : 'PR';
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
@@ -1196,8 +1198,8 @@ class _LandingScreenState extends State<LandingScreen> {
         boxShadow: [
           BoxShadow(
             color: AppColors.navy.withValues(alpha: 0.03),
-            blurRadius: 14,
-            offset: const Offset(0, 4),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -1209,8 +1211,8 @@ class _LandingScreenState extends State<LandingScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: 44,
-                height: 44,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
                   color: AppColors.ivory,
                   border: Border.all(color: AppColors.border),
@@ -1220,7 +1222,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   child: Text(
                     initials,
                     style: GoogleFonts.manrope(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: AppColors.navy,
                     ),
@@ -1241,36 +1243,36 @@ class _LandingScreenState extends State<LandingScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.manrope(
-                  fontSize: 16,
+                  fontSize: 15.5,
                   fontWeight: FontWeight.w700,
                   color: AppColors.navy,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 3),
               Text(
                 p.categoryName ?? 'Home Professional',
                 style: GoogleFonts.inter(
-                  fontSize: 12,
+                  fontSize: 11.5,
                   color: AppColors.gold,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Text(
                 p.description.isNotEmpty
                     ? p.description
                     : 'Providing quality, reliable residential services across Nigeria.',
-                maxLines: 3,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(
-                  fontSize: 12.5,
+                  fontSize: 12,
                   color: AppColors.slate,
-                  height: 1.5,
+                  height: 1.4,
                 ),
               ),
             ],
           ),
-          const Divider(height: 20),
+          const Divider(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

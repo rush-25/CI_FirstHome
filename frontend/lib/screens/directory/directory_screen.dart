@@ -360,9 +360,9 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                               physics: const NeverScrollableScrollPhysics(),
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: cols,
-                                crossAxisSpacing: 20,
-                                mainAxisSpacing: 20,
-                                childAspectRatio: cols == 1 ? 1.5 : 0.88,
+                                crossAxisSpacing: 18,
+                                mainAxisSpacing: 18,
+                                childAspectRatio: cols == 1 ? 1.7 : 1.4,
                               ),
                               itemBuilder: (context, index) {
                                 final p = dir.providers[index];
@@ -457,7 +457,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
         : 'PR';
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
@@ -465,8 +465,8 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
         boxShadow: [
           BoxShadow(
             color: AppColors.navy.withValues(alpha: 0.03),
-            blurRadius: 14,
-            offset: const Offset(0, 4),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -478,8 +478,8 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: 44,
-                height: 44,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
                   color: AppColors.ivory,
                   border: Border.all(color: AppColors.border),
@@ -489,7 +489,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                   child: Text(
                     initials,
                     style: GoogleFonts.manrope(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: AppColors.navy,
                     ),
@@ -510,36 +510,36 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.manrope(
-                  fontSize: 16,
+                  fontSize: 15.5,
                   fontWeight: FontWeight.w700,
                   color: AppColors.navy,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 3),
               Text(
                 p.categoryName ?? 'Home Professional',
                 style: GoogleFonts.inter(
-                  fontSize: 12,
+                  fontSize: 11.5,
                   color: AppColors.gold,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Text(
                 p.description.isNotEmpty
                     ? p.description
                     : 'Providing quality, reliable residential services across Nigeria.',
-                maxLines: 3,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(
-                  fontSize: 12.5,
+                  fontSize: 12,
                   color: AppColors.slate,
-                  height: 1.5,
+                  height: 1.4,
                 ),
               ),
             ],
           ),
-          const Divider(height: 20),
+          const Divider(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
