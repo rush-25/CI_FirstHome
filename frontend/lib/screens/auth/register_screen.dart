@@ -720,7 +720,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ],
 
                             // Error Display
-                            if (auth.error != null) ...[
+                            if (auth.errorMessage != null) ...[
                               Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(
@@ -735,7 +735,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  auth.error!,
+                                  auth.errorMessage!,
                                   style: GoogleFonts.inter(
                                     color: AppColors.error,
                                     fontSize: 12,

@@ -330,7 +330,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(height: 24),
 
                             // Error Display
-                            if (auth.error != null) ...[
+                            if (auth.errorMessage != null) ...[
                               Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(
@@ -345,7 +345,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  auth.error!,
+                                  auth.errorMessage!,
                                   style: GoogleFonts.inter(
                                     color: AppColors.error,
                                     fontSize: 12,

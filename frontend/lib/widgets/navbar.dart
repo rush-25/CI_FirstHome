@@ -134,8 +134,8 @@ class _NavbarState extends State<Navbar> {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          (auth.user?.fullName.isNotEmpty == true
-                                                  ? auth.user!.fullName[0]
+                                          (auth.currentUser?.fullName.isNotEmpty == true
+                                                  ? auth.currentUser!.fullName[0]
                                                   : 'U')
                                               .toUpperCase(),
                                           style: GoogleFonts.manrope(

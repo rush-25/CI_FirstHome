@@ -85,7 +85,7 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
       providerId: _selectedProviderId,
       state: _selectedState ?? 'Lagos',
       city: _selectedCity ?? 'Ikeja',
-      preferredContactMethod: _preferredContact,
+      preferredContact: _preferredContact,
     );
 
     if (lead != null && mounted) {

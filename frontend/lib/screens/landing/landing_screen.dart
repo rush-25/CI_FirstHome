@@ -666,9 +666,9 @@ class _LandingScreenState extends State<LandingScreen> {
                       final title = dir.categories.isNotEmpty
                           ? dir.categories[index].name
                           : defaultCategories[index].$2;
-                      final desc = dir.categories.isNotEmpty
-                          ? (dir.categories[index].description ?? 'Trusted professional services.')
-                          : defaultCategories[index].$3;
+                      final desc = index < defaultCategories.length
+                          ? defaultCategories[index].$3
+                          : 'Trusted home and professional service providers.';
                       final icon = index < defaultCategories.length
                           ? defaultCategories[index].$4
                           : Icons.home_repair_service_outlined;
@@ -677,7 +677,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       return InkWell(
                         onTap: () {
                           if (dir.categories.isNotEmpty) {
-                            dir.selectCategory(dir.categories[index].id);
+                            dir.setCategoryFilter(dir.categories[index].id);
                           }
                           widget.onNavigate('directory');
                         },
@@ -1096,7 +1096,8 @@ class _LandingScreenState extends State<LandingScreen> {
                     style: GoogleFonts.inter(color: AppColors.slate),
                   ),
                 )
-              : LayoutBuilder(
+              else
+                LayoutBuilder(
                   builder: (context, constraints) {
                     final cols = constraints.maxWidth < 700 ? 1 : 3;
 
