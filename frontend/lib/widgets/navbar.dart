@@ -24,20 +24,25 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
 class _NavbarState extends State<Navbar> {
   bool _mobileMenuOpen = false;
   bool _mobileSearchOpen = false;
-  final TextEditingController _searchController = TextEditingController();
+  int? _selectedCategoryId;
   String? _selectedState;
   String? _selectedCity;
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final dir = context.read<DirectoryProvider>();
+      if (dir.categories.isEmpty) {
+        dir.loadCategories();
+      }
+    });
   }
 
   void _submitSearch() {
     final dir = context.read<DirectoryProvider>();
+    dir.setCategoryFilter(_selectedCategoryId);
     dir.setLocationFilter(_selectedState, _selectedCity);
-    dir.setSearchQuery(_searchController.text.trim());
     setState(() {
       _mobileSearchOpen = false;
     });
@@ -47,6 +52,26 @@ class _NavbarState extends State<Navbar> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
+    final dir = context.watch<DirectoryProvider>();
+
+    final categoriesList = dir.categories.isNotEmpty
+        ? dir.categories.map((c) => (c.id, c.name)).toList()
+        : const [
+            (1, 'Real Estate Agents'),
+            (2, 'Property Management'),
+            (3, 'Home Construction'),
+            (4, 'Interior Design'),
+            (5, 'Mortgage Advisory'),
+            (6, 'Home Maintenance'),
+            (7, 'Air Conditioning & HVAC'),
+            (8, 'Appliance Repairs'),
+            (9, 'Carpentry'),
+            (10, 'Electrical Services'),
+            (11, 'Home Cleaning'),
+            (12, 'Painting'),
+            (13, 'Plumbing'),
+            (14, 'Solar & Inverter Installation'),
+          ];
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -487,23 +512,62 @@ class _NavbarState extends State<Navbar> {
                               ),
                               const SizedBox(height: 14),
 
-                              // What do you need input
+                              // Service Category Dropdown
                               Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14),
                                 decoration: BoxDecoration(
                                   color: AppColors.ivory,
                                   borderRadius: BorderRadius.circular(4),
                                   border: Border.all(color: AppColors.border),
                                 ),
-                                child: TextField(
-                                  controller: _searchController,
-                                  autofocus: true,
-                                  onSubmitted: (_) => _submitSearch(),
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.search, color: AppColors.slate, size: 20),
-                                    hintText: 'What do you need? (e.g. Interior design)',
-                                    hintStyle: TextStyle(fontSize: 13, color: AppColors.slate),
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<int?>(
+                                    value: _selectedCategoryId,
+                                    isExpanded: true,
+                                    icon: const Icon(Icons.arrow_drop_down, color: AppColors.slate),
+                                    hint: const Row(
+                                      children: [
+                                        Icon(Icons.search, size: 18, color: AppColors.slate),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            'Select Service / Category',
+                                            style: TextStyle(fontSize: 13, color: AppColors.slate),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    items: [
+                                      const DropdownMenuItem<int?>(
+                                        value: null,
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.category_outlined, size: 18, color: AppColors.slate),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              'All Services / Categories',
+                                              style: TextStyle(fontSize: 13, color: AppColors.slate),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      ...categoriesList.map((c) {
+                                        return DropdownMenuItem<int?>(
+                                          value: c.$1,
+                                          child: Text(
+                                            c.$2,
+                                            style: const TextStyle(fontSize: 13, color: AppColors.navy),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        );
+                                      }),
+                                    ],
+                                    onChanged: (val) {
+                                      setState(() {
+                                        _selectedCategoryId = val;
+                                      });
+                                    },
                                   ),
                                 ),
                               ),

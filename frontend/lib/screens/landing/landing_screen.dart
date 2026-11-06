@@ -30,6 +30,7 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
+  int? _selectedCategoryId;
   String? _selectedState;
   String? _selectedCity;
 
@@ -66,6 +67,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void _onSearchSubmit() {
     final dir = context.read<DirectoryProvider>();
+    dir.setCategoryFilter(_selectedCategoryId);
     dir.setLocationFilter(_selectedState, _selectedCity);
     dir.setSearchQuery(_searchController.text.trim());
     widget.onNavigate('directory');
@@ -327,16 +329,32 @@ class _LandingScreenState extends State<LandingScreen> {
       child: isMobile
           ? Column(
               children: [
-                TextField(
-                  controller: _searchController,
-                  onSubmitted: (_) => _onSearchSubmit(),
+                DropdownButtonFormField<int?>(
+                  value: _selectedCategoryId,
+                  hint: const Text('Select Service / Category'),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.search, color: AppColors.slate, size: 20),
-                    hintText: 'What do you need? (e.g. Interior designer)',
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  items: [
+                    const DropdownMenuItem<int?>(
+                      value: null,
+                      child: Text('All Services / Categories'),
+                    ),
+                    ...context.read<DirectoryProvider>().categories.map((c) {
+                      return DropdownMenuItem<int?>(
+                        value: c.id,
+                        child: Text(c.name),
+                      );
+                    }),
+                  ],
+                  onChanged: (val) {
+                    setState(() {
+                      _selectedCategoryId = val;
+                    });
+                  },
                 ),
                 const Divider(height: 1),
                 DropdownButtonFormField<String>(
