@@ -216,35 +216,51 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
                       isMobile
                           ? Column(
                               children: [
-                                StatCard(
-                                  title: 'Total Enquiries',
-                                  value: leadProv.totalLeads.toString(),
-                                  icon: Icons.list_alt,
-                                  color: AppColors.primary,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Total Enquiries',
+                                        value: leadProv.totalLeads.toString(),
+                                        icon: Icons.list_alt,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'New Requests',
+                                        value: leadProv.newCount.toString(),
+                                        icon: Icons.fiber_new,
+                                        color: AppColors.statusNewText,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 12),
-                                StatCard(
-                                  title: 'New Requests',
-                                  value: leadProv.newCount.toString(),
-                                  icon: Icons.fiber_new,
-                                  color: AppColors.statusNewText,
-                                ),
-                                const SizedBox(height: 12),
-                                StatCard(
-                                  title: 'In Progress / Qualified',
-                                  value:
-                                      (leadProv.contactedCount +
-                                              leadProv.qualifiedCount)
-                                          .toString(),
-                                  icon: Icons.pending_actions,
-                                  color: AppColors.statusContactedText,
-                                ),
-                                const SizedBox(height: 12),
-                                StatCard(
-                                  title: 'Resolved / Closed',
-                                  value: leadProv.closedCount.toString(),
-                                  icon: Icons.check_circle_outline,
-                                  color: AppColors.success,
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'In Progress / Qualified',
+                                        value:
+                                            (leadProv.contactedCount +
+                                                    leadProv.qualifiedCount)
+                                                .toString(),
+                                        icon: Icons.pending_actions,
+                                        color: AppColors.statusContactedText,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Resolved / Closed',
+                                        value: leadProv.closedCount.toString(),
+                                        icon: Icons.check_circle_outline,
+                                        color: AppColors.success,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             )
@@ -306,6 +322,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
                         ),
                         child: TabBar(
                           controller: _tabController,
+                          isScrollable: isMobile,
+                          tabAlignment: isMobile
+                              ? TabAlignment.start
+                              : TabAlignment.fill,
                           labelColor: AppColors.primary,
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
@@ -333,7 +353,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
 
                       // Tab Content Box
                       Container(
-                        padding: const EdgeInsets.all(24),
+                        padding: EdgeInsets.all(isMobile ? 12 : 24),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.vertical(

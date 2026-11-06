@@ -279,23 +279,31 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
                       isMobile
                           ? Column(
                               children: [
-                                StatCard(
-                                  title: 'Incoming Leads',
-                                  value: _myLeads.length.toString(),
-                                  icon: Icons.mark_email_unread_outlined,
-                                  color: AppColors.primary,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Incoming Leads',
+                                        value: _myLeads.length.toString(),
+                                        icon: Icons.mark_email_unread_outlined,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'New Requests',
+                                        value: _myLeads
+                                            .where((l) => l.status == 'New')
+                                            .length
+                                            .toString(),
+                                        icon: Icons.fiber_new,
+                                        color: AppColors.statusNewText,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 12),
-                                StatCard(
-                                  title: 'New Requests',
-                                  value: _myLeads
-                                      .where((l) => l.status == 'New')
-                                      .length
-                                      .toString(),
-                                  icon: Icons.fiber_new,
-                                  color: AppColors.statusNewText,
-                                ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: 10),
                                 StatCard(
                                   title: 'Verification Status',
                                   value:
@@ -357,6 +365,10 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
                         ),
                         child: TabBar(
                           controller: _tabController,
+                          isScrollable: isMobile,
+                          tabAlignment: isMobile
+                              ? TabAlignment.start
+                              : TabAlignment.fill,
                           labelColor: AppColors.primary,
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
@@ -384,7 +396,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
 
                       // Tab View
                       Container(
-                        padding: const EdgeInsets.all(24),
+                        padding: EdgeInsets.all(isMobile ? 12 : 24),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.vertical(

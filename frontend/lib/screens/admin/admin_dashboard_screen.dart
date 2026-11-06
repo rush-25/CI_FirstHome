@@ -416,37 +416,56 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                       isMobile
                           ? Column(
                               children: [
-                                StatCard(
-                                  title: 'Total Customers',
-                                  value:
-                                      summary?.totalCustomers.toString() ??
-                                      '10',
-                                  icon: Icons.people_outline,
-                                  color: AppColors.primary,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Total Customers',
+                                        value:
+                                            summary?.totalCustomers
+                                                .toString() ??
+                                            '10',
+                                        icon: Icons.people_outline,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Total Providers',
+                                        value:
+                                            '${summary?.activeProviders ?? 8} / ${summary?.totalProviders ?? 8}',
+                                        icon: Icons.business_outlined,
+                                        subtitle: 'Active in directory',
+                                        color: AppColors.gold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 12),
-                                StatCard(
-                                  title: 'Total Providers',
-                                  value:
-                                      '${summary?.activeProviders ?? 8} / ${summary?.totalProviders ?? 8}',
-                                  icon: Icons.business_outlined,
-                                  subtitle: 'Active in directory',
-                                  color: AppColors.gold,
-                                ),
-                                const SizedBox(height: 12),
-                                StatCard(
-                                  title: 'Total Leads Generated',
-                                  value: summary?.totalLeads.toString() ?? '15',
-                                  icon: Icons.receipt_long_outlined,
-                                  color: AppColors.statusNewText,
-                                ),
-                                const SizedBox(height: 12),
-                                StatCard(
-                                  title: 'Qualified / Closed',
-                                  value:
-                                      '${(summary?.leadsByStatus['Qualified'] ?? 0) + (summary?.leadsByStatus['Closed'] ?? 0)}',
-                                  icon: Icons.check_circle_outline,
-                                  color: AppColors.success,
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Total Leads Generated',
+                                        value:
+                                            summary?.totalLeads.toString() ??
+                                            '15',
+                                        icon: Icons.receipt_long_outlined,
+                                        color: AppColors.statusNewText,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Qualified / Closed',
+                                        value:
+                                            '${(summary?.leadsByStatus['Qualified'] ?? 0) + (summary?.leadsByStatus['Closed'] ?? 0)}',
+                                        icon: Icons.check_circle_outline,
+                                        color: AppColors.success,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             )
@@ -511,6 +530,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                         ),
                         child: TabBar(
                           controller: _tabController,
+                          isScrollable: isMobile,
+                          tabAlignment: isMobile
+                              ? TabAlignment.start
+                              : TabAlignment.fill,
                           labelColor: AppColors.primary,
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
@@ -542,7 +565,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
 
                       // Tab View
                       Container(
-                        padding: const EdgeInsets.all(24),
+                        padding: EdgeInsets.all(isMobile ? 12 : 24),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.vertical(
@@ -555,14 +578,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                           ),
                         ),
                         child: SizedBox(
-                          height: 560,
+                          height: 600,
                           child: TabBarView(
                             controller: _tabController,
                             children: [
                               _buildLeadsTab(admin, isMobile),
-                              _buildCustomersTab(admin),
-                              _buildProvidersTab(admin),
-                              _buildVerificationEventsTab(admin),
+                              _buildCustomersTab(admin, isMobile),
+                              _buildProvidersTab(admin, isMobile),
+                              _buildVerificationEventsTab(admin, isMobile),
                             ],
                           ),
                         ),
@@ -590,55 +613,59 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   Widget _buildLeadsTab(AdminProvider admin, bool isMobile) {
     final dateFormat = DateFormat('dd MMM yyyy');
 
+    final searchField = TextField(
+      controller: _leadSearchController,
+      onSubmitted: (v) => admin.searchLeads(v),
+      decoration: InputDecoration(
+        hintText: 'Search reference, customer, title...',
+        prefixIcon: const Icon(Icons.search, size: 18),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 10,
+        ),
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.arrow_forward, size: 16),
+          onPressed: () => admin.searchLeads(_leadSearchController.text),
+        ),
+      ),
+    );
+
+    final statusDropdown = DropdownButtonFormField<String?>(
+      initialValue: admin.leadStatusFilter,
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 10,
+        ),
+      ),
+      items: [
+        const DropdownMenuItem(
+          value: null,
+          child: Text('All Statuses'),
+        ),
+        ...AppConstants.leadStatuses.map(
+          (s) => DropdownMenuItem(value: s, child: Text(s)),
+        ),
+      ],
+      onChanged: (v) => admin.filterLeadsByStatus(v),
+    );
+
     return Column(
       children: [
-        // Controls
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _leadSearchController,
-                onSubmitted: (v) => admin.searchLeads(v),
-                decoration: InputDecoration(
-                  hintText: 'Search by reference, customer name, title...',
-                  prefixIcon: const Icon(Icons.search, size: 18),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
-                  ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.arrow_forward, size: 16),
-                    onPressed: () =>
-                        admin.searchLeads(_leadSearchController.text),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 160,
-              child: DropdownButtonFormField<String?>(
-                initialValue: admin.leadStatusFilter,
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                ),
-                items: [
-                  const DropdownMenuItem(
-                    value: null,
-                    child: Text('All Statuses'),
-                  ),
-                  ...AppConstants.leadStatuses.map(
-                    (s) => DropdownMenuItem(value: s, child: Text(s)),
-                  ),
-                ],
-                onChanged: (v) => admin.filterLeadsByStatus(v),
-              ),
-            ),
-          ],
-        ),
+        // Responsive Controls
+        if (isMobile) ...[
+          searchField,
+          const SizedBox(height: 8),
+          statusDropdown,
+        ] else ...[
+          Row(
+            children: [
+              Expanded(child: searchField),
+              const SizedBox(width: 12),
+              SizedBox(width: 170, child: statusDropdown),
+            ],
+          ),
+        ],
 
         const SizedBox(height: 16),
 
@@ -654,6 +681,110 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                   separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (ctx, i) {
                     final l = admin.leads[i];
+
+                    final historyBtn = OutlinedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (c) => LeadDetailDialog(lead: l),
+                        );
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                      ),
+                      child: const Text(
+                        'History',
+                        style: TextStyle(fontSize: 11),
+                      ),
+                    );
+
+                    final changeStatusBtn = ElevatedButton(
+                      onPressed: () => _openStatusChangeModal(l),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                      ),
+                      child: const Text(
+                        'Change Status',
+                        style: TextStyle(fontSize: 11),
+                      ),
+                    );
+
+                    if (isMobile) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 4,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  l.reference,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 13,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                StatusBadge(status: l.status, compact: true),
+                                const Spacer(),
+                                Text(
+                                  l.categoryName ?? 'Category',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              l.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Customer: ${l.customerName} (${l.customerEmail})',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Provider: ${l.providerName ?? 'Unassigned'} • ${dateFormat.format(l.createdAt.toLocal())}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                historyBtn,
+                                const SizedBox(width: 8),
+                                changeStatusBtn,
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     return Material(
                       color: Colors.transparent,
                       child: ListTile(
@@ -676,7 +807,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                             ),
                             StatusBadge(status: l.status, compact: true),
                             Text(
-                              'â€¢  ${l.categoryName ?? 'Category'}',
+                              '•  ${l.categoryName ?? 'Category'}',
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: AppColors.textSecondary,
@@ -697,7 +828,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'Customer: ${l.customerName} (${l.customerEmail}) â€¢ Provider: ${l.providerName ?? 'Unassigned'} â€¢ ${dateFormat.format(l.createdAt.toLocal())}',
+                              'Customer: ${l.customerName} (${l.customerEmail}) • Provider: ${l.providerName ?? 'Unassigned'} • ${dateFormat.format(l.createdAt.toLocal())}',
                               style: const TextStyle(
                                 fontSize: 11,
                                 color: AppColors.textSecondary,
@@ -710,37 +841,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                           runSpacing: 4,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            OutlinedButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (c) => LeadDetailDialog(lead: l),
-                                );
-                              },
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
-                                ),
-                              ),
-                              child: const Text(
-                                'History',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => _openStatusChangeModal(l),
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
-                                ),
-                              ),
-                              child: const Text(
-                                'Change Status',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                            ),
+                            historyBtn,
+                            changeStatusBtn,
                           ],
                         ),
                       ),
@@ -752,7 +854,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     );
   }
 
-  Widget _buildCustomersTab(AdminProvider admin) {
+  Widget _buildCustomersTab(AdminProvider admin, bool isMobile) {
     final dateFormat = DateFormat('dd MMM yyyy');
 
     return Column(
@@ -783,6 +885,92 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                   separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (ctx, i) {
                     final c = admin.customers[i];
+                    final verifyBtn = OutlinedButton(
+                      onPressed: () => _openVerificationModal(
+                        c.id,
+                        c.fullName,
+                        c.verificationStatus,
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                      ),
+                      child: const Text(
+                        'Verify User',
+                        style: TextStyle(fontSize: 11),
+                      ),
+                    );
+
+                    if (isMobile) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 4,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: AppColors.sage,
+                                  child: Text(
+                                    c.fullName.isNotEmpty ? c.fullName[0] : 'C',
+                                    style: const TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        c.fullName,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      VerificationBadge(
+                                        status: c.verificationStatus,
+                                        compact: true,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                verifyBtn,
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              '${c.email} • ${c.phone}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Location: ${c.city ?? ''}, ${c.state ?? ''} • Enquiries: ${c.leadCount} • Joined ${dateFormat.format(c.createdAt.toLocal())}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     return Material(
                       color: Colors.transparent,
                       child: ListTile(
@@ -819,23 +1007,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                           ],
                         ),
                         subtitle: Text(
-                          '${c.email} â€¢ ${c.phone} â€¢ Location: ${c.city ?? ''}, ${c.state ?? ''} â€¢ Enquiries: ${c.leadCount} â€¢ Joined ${dateFormat.format(c.createdAt.toLocal())}',
+                          '${c.email} • ${c.phone} • Location: ${c.city ?? ''}, ${c.state ?? ''} • Enquiries: ${c.leadCount} • Joined ${dateFormat.format(c.createdAt.toLocal())}',
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary,
                           ),
                         ),
-                        trailing: OutlinedButton(
-                          onPressed: () => _openVerificationModal(
-                            c.id,
-                            c.fullName,
-                            c.verificationStatus,
-                          ),
-                          child: const Text(
-                            'Verify User',
-                            style: TextStyle(fontSize: 11),
-                          ),
-                        ),
+                        trailing: verifyBtn,
                       ),
                     );
                   },
@@ -845,7 +1023,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     );
   }
 
-  Widget _buildProvidersTab(AdminProvider admin) {
+  Widget _buildProvidersTab(AdminProvider admin, bool isMobile) {
     return Column(
       children: [
         TextField(
@@ -874,6 +1052,128 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                   separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (ctx, i) {
                     final p = admin.providers[i];
+
+                    final activeToggle = Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          p.isActive ? 'Active' : 'Hidden',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: p.isActive
+                                ? AppColors.success
+                                : AppColors.error,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Transform.scale(
+                          scale: 0.85,
+                          child: Switch(
+                            value: p.isActive,
+                            activeThumbColor: AppColors.success,
+                            onChanged: (val) =>
+                                admin.toggleProviderActive(p.id, p.isActive),
+                          ),
+                        ),
+                      ],
+                    );
+
+                    final verifyBtn = OutlinedButton(
+                      onPressed: () => _openVerificationModal(
+                        p.userId,
+                        p.displayName,
+                        p.verificationStatus,
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                      ),
+                      child: const Text(
+                        'Verify Provider',
+                        style: TextStyle(fontSize: 11),
+                      ),
+                    );
+
+                    if (isMobile) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 4,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: AppColors.sage,
+                                  child: Text(
+                                    p.displayName.isNotEmpty
+                                        ? p.displayName[0]
+                                        : 'P',
+                                    style: const TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        p.displayName,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      VerificationBadge(
+                                        status: p.verificationStatus,
+                                        compact: true,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Owner: ${p.ownerName} • ${p.categoryName}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '${p.city}, ${p.state} • ${p.email}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                activeToggle,
+                                verifyBtn,
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     return Material(
                       color: Colors.transparent,
                       child: ListTile(
@@ -910,7 +1210,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                           ],
                         ),
                         subtitle: Text(
-                          'Owner: ${p.ownerName} â€¢ ${p.categoryName} â€¢ ${p.city}, ${p.state} â€¢ ${p.email}',
+                          'Owner: ${p.ownerName} • ${p.categoryName} • ${p.city}, ${p.state} • ${p.email}',
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary,
@@ -921,39 +1221,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                           runSpacing: 4,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            // Active switch
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  p.isActive ? 'Active' : 'Hidden',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: p.isActive
-                                        ? AppColors.success
-                                        : AppColors.error,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Switch(
-                                  value: p.isActive,
-                                  activeThumbColor: AppColors.success,
-                                  onChanged: (val) => admin
-                                      .toggleProviderActive(p.id, p.isActive),
-                                ),
-                              ],
-                            ),
-                            OutlinedButton(
-                              onPressed: () => _openVerificationModal(
-                                p.userId,
-                                p.displayName,
-                                p.verificationStatus,
-                              ),
-                              child: const Text(
-                                'Verify Provider',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                            ),
+                            activeToggle,
+                            verifyBtn,
                           ],
                         ),
                       ),
@@ -965,7 +1234,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     );
   }
 
-  Widget _buildVerificationEventsTab(AdminProvider admin) {
+  Widget _buildVerificationEventsTab(AdminProvider admin, bool isMobile) {
     final dateFormat = DateFormat('dd MMM yyyy, HH:mm');
 
     return Column(
@@ -1020,6 +1289,54 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                   separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (ctx, i) {
                     final ev = admin.verificationEvents[i];
+
+                    if (isMobile) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 4,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  ev.simulatedReference,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 12,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                VerificationBadge(
+                                  status: ev.status,
+                                  compact: true,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Target: ${ev.userName} (${ev.userRole})',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Note: ${ev.note ?? 'None'} • ${dateFormat.format(ev.createdAt.toLocal())}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
                     return Material(
                       color: Colors.transparent,
                       child: ListTile(
@@ -1063,7 +1380,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                           ],
                         ),
                         subtitle: Text(
-                          'Note: ${ev.note ?? 'None'} â€¢ Timestamp: ${dateFormat.format(ev.createdAt.toLocal())}',
+                          'Note: ${ev.note ?? 'None'} • Timestamp: ${dateFormat.format(ev.createdAt.toLocal())}',
                           style: const TextStyle(
                             fontSize: 11,
                             color: AppColors.textSecondary,
