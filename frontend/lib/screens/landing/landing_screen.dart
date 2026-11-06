@@ -179,21 +179,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: isSmallMobile ? 14 : 20),
-
-                    // Subtitle
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 620),
-                      child: Text(
-                        'Connect with trusted housing and professional service providers across Nigeria through one seamless platform.',
-                        style: GoogleFonts.inter(
-                          fontSize: isSmallMobile ? 13.5 : (isMobile ? 15 : 17),
-                          color: const Color(0xFFC8D1D9),
-                          height: 1.55,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: isSmallMobile ? 20 : 32),
+                    SizedBox(height: isSmallMobile ? 24 : 32),
 
                     // Actions
                     Wrap(
