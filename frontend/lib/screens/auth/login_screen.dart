@@ -461,18 +461,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                     children: [
                                       _buildQuickLoginButton(
                                         'Customer',
-                                        'customer@firsthome.ng',
-                                        'Password123!',
+                                        'customer01@sample.firsthome.test',
+                                        'Fh9ae89105ef00edd81bA1',
                                       ),
                                       _buildQuickLoginButton(
                                         'Provider',
-                                        'provider@firsthome.ng',
-                                        'Password123!',
+                                        'provider01@sample.firsthome.test',
+                                        'Fh9ae89105ef00edd81bA1',
                                       ),
                                       _buildQuickLoginButton(
                                         'Admin',
-                                        'admin@firsthome.ng',
-                                        'Password123!',
+                                        'admin@sample.firsthome.test',
+                                        'Fh4212091d1df34b1051A1',
                                       ),
                                     ],
                                   ),
@@ -497,19 +497,26 @@ class _LoginScreenState extends State<LoginScreen> {
     return InkWell(
       onTap: () => _fillCredentials(email, password),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: AppColors.border),
           borderRadius: BorderRadius.circular(3),
         ),
-        child: Text(
-          label,
-          style: GoogleFonts.manrope(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: AppColors.navy,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.flash_on, size: 13, color: AppColors.gold),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: GoogleFonts.manrope(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: AppColors.navy,
+              ),
+            ),
+          ],
         ),
       ),
     );
