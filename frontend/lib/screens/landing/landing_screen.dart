@@ -97,12 +97,10 @@ class _LandingScreenState extends State<LandingScreen> {
     final minContentHeight = isSmallMobile ? 540.0 : (isMobile ? 580.0 : 640.0);
     final targetHeroHeight = math.max(screenHeight - 82.0, minContentHeight);
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      constraints: BoxConstraints(minHeight: targetHeroHeight),
-      color: AppColors.navy,
+      height: targetHeroHeight,
       child: Stack(
-        alignment: Alignment.center,
         children: [
           Positioned.fill(
             child: Image.network(
@@ -128,18 +126,19 @@ class _LandingScreenState extends State<LandingScreen> {
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: isSmallMobile ? 18 : (isMobile ? 24 : 40),
-              vertical: isSmallMobile ? 24 : (isMobile ? 32 : 48),
+              vertical: isSmallMobile ? 18 : (isMobile ? 24 : 32),
             ),
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1140),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Eyebrow
+                    const Spacer(flex: 2),
+
+                    // Eyebrow (Centered)
                     Row(
                       mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           width: 14,
@@ -160,12 +159,19 @@ class _LandingScreenState extends State<LandingScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 14,
+                          height: 2,
+                          color: AppColors.gold,
+                        ),
                       ],
                     ),
-                    SizedBox(height: isSmallMobile ? 12 : 18),
+                    SizedBox(height: isSmallMobile ? 12 : 16),
 
-                    // Display Title
+                    // Display Title (Centered in screen)
                     RichText(
+                      textAlign: TextAlign.center,
                       text: TextSpan(
                         style: GoogleFonts.dmSerifDisplay(
                           fontSize: isSmallMobile
@@ -189,65 +195,73 @@ class _LandingScreenState extends State<LandingScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: isSmallMobile ? 24 : 32),
 
-                    // Actions
-                    Wrap(
-                      spacing: 12,
-                      runSpacing: 10,
+                    const Spacer(flex: 3),
+
+                    // Anchored at bottom: Action Buttons & Search Card
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: () => widget.onNavigate('directory'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: AppColors.navy,
-                            minimumSize: Size(isSmallMobile ? 140 : 160, 48),
-                            padding: const EdgeInsets.symmetric(horizontal: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 12,
+                          runSpacing: 10,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => widget.onNavigate('directory'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: AppColors.navy,
+                                minimumSize: Size(isSmallMobile ? 140 : 160, 48),
+                                padding: const EdgeInsets.symmetric(horizontal: 18),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                                elevation: 0,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Find a provider',
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Icon(Icons.arrow_forward, size: 16),
+                                ],
+                              ),
                             ),
-                            elevation: 0,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Find a provider',
-                                style: GoogleFonts.manrope(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
+                            OutlinedButton(
+                              onPressed: () => widget.onNavigate('register-customer'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                side: const BorderSide(color: Colors.white54, width: 1.2),
+                                minimumSize: Size(isSmallMobile ? 115 : 130, 48),
+                                padding: const EdgeInsets.symmetric(horizontal: 18),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward, size: 16),
-                            ],
-                          ),
-                        ),
-                        OutlinedButton(
-                          onPressed: () => widget.onNavigate('register-customer'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white54, width: 1.2),
-                            minimumSize: Size(isSmallMobile ? 115 : 130, 48),
-                            padding: const EdgeInsets.symmetric(horizontal: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3),
+                              child: Text(
+                                'Get started',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Get started',
-                            style: GoogleFonts.manrope(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          ],
                         ),
+                        SizedBox(height: isSmallMobile ? 16 : 22),
+
+                        // Unified Search Panel
+                        _buildSearchPanel(context, isMobile),
                       ],
                     ),
-                    SizedBox(height: isSmallMobile ? 24 : (isMobile ? 32 : 48)),
-
-                    // Unified Search Panel
-                    _buildSearchPanel(context, isMobile),
                   ],
                 ),
               ),
