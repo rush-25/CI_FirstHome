@@ -102,7 +102,10 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
           children: const [
             Icon(Icons.check_circle, color: AppColors.success, size: 28),
             SizedBox(width: 10),
-            Text('Enquiry Submitted', style: TextStyle(fontWeight: FontWeight.w700)),
+            Text(
+              'Enquiry Submitted',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
           ],
         ),
         content: Column(
@@ -123,7 +126,10 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Reference Code:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                  const Text(
+                    'Reference Code:',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                  ),
                   Text(
                     reference,
                     style: const TextStyle(
@@ -165,7 +171,10 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 24),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 32,
+        vertical: 24,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 620),
@@ -176,15 +185,24 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
             final enquiryTypeField = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Enquiry Type', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Enquiry Type',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
                   initialValue: _enquiryType,
                   items: AppConstants.enquiryTypes
-                      .map((t) => DropdownMenuItem(value: t, child: Text(t, overflow: TextOverflow.ellipsis)))
+                      .map(
+                        (t) => DropdownMenuItem(
+                          value: t,
+                          child: Text(t, overflow: TextOverflow.ellipsis),
+                        ),
+                      )
                       .toList(),
-                  onChanged: (v) => setState(() => _enquiryType = v ?? 'Service request'),
+                  onChanged: (v) =>
+                      setState(() => _enquiryType = v ?? 'Service request'),
                 ),
               ],
             );
@@ -192,13 +210,25 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
             final categoryField = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Service Category', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Service Category',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<int>(
                   isExpanded: true,
-                  initialValue: _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : null),
+                  initialValue:
+                      _selectedCategoryId ??
+                      (dir.categories.isNotEmpty
+                          ? dir.categories.first.id
+                          : null),
                   items: dir.categories
-                      .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name, overflow: TextOverflow.ellipsis)))
+                      .map(
+                        (c) => DropdownMenuItem(
+                          value: c.id,
+                          child: Text(c.name, overflow: TextOverflow.ellipsis),
+                        ),
+                      )
                       .toList(),
                   onChanged: (v) => setState(() => _selectedCategoryId = v),
                 ),
@@ -208,18 +238,27 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
             final stateField = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const Text(
+                  'State',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
                   initialValue: _selectedState,
                   items: AppConstants.nigerianStates
-                      .map((s) => DropdownMenuItem(value: s, child: Text(s, overflow: TextOverflow.ellipsis)))
+                      .map(
+                        (s) => DropdownMenuItem(
+                          value: s,
+                          child: Text(s, overflow: TextOverflow.ellipsis),
+                        ),
+                      )
                       .toList(),
                   onChanged: (v) {
                     setState(() {
                       _selectedState = v;
-                      final newCities = AppConstants.stateCities[v] ?? ['General'];
+                      final newCities =
+                          AppConstants.stateCities[v] ?? ['General'];
                       _selectedCity = newCities.first;
                     });
                   },
@@ -230,13 +269,23 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
             final cityField = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const Text(
+                  'City / District',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
                   isExpanded: true,
-                  initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                  initialValue: cities.contains(_selectedCity)
+                      ? _selectedCity
+                      : cities.first,
                   items: cities
-                      .map((c) => DropdownMenuItem(value: c, child: Text(c, overflow: TextOverflow.ellipsis)))
+                      .map(
+                        (c) => DropdownMenuItem(
+                          value: c,
+                          child: Text(c, overflow: TextOverflow.ellipsis),
+                        ),
+                      )
                       .toList(),
                   onChanged: (v) => setState(() => _selectedCity = v),
                 ),
@@ -263,13 +312,20 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                                   color: AppColors.sage,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Icon(Icons.send_rounded, color: AppColors.primary, size: 20),
+                                child: const Icon(
+                                  Icons.send_rounded,
+                                  color: AppColors.primary,
+                                  size: 20,
+                                ),
                               ),
                               const SizedBox(width: 12),
                               const Flexible(
                                 child: Text(
                                   'Create New Enquiry',
-                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -285,7 +341,10 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                     const SizedBox(height: 6),
                     const Text(
                       'Submit a structured service request or housing enquiry directly to providers.',
-                      style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 13,
+                      ),
                     ),
 
                     const SizedBox(height: 20),
@@ -296,20 +355,35 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                         decoration: BoxDecoration(
                           color: AppColors.sage.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                          border: Border.all(
+                            color: AppColors.primary.withValues(alpha: 0.2),
+                          ),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.business, color: AppColors.primary, size: 20),
+                            const Icon(
+                              Icons.business,
+                              color: AppColors.primary,
+                              size: 20,
+                            ),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('Direct Enquiry To:', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                  const Text(
+                                    'Direct Enquiry To:',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
                                   Text(
                                     widget.preselectedProvider!.displayName,
-                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -338,30 +412,47 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                     const SizedBox(height: 16),
 
                     // Title
-                    const Text('Enquiry Title', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                    const Text(
+                      'Enquiry Title',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     TextFormField(
                       controller: _titleController,
                       decoration: const InputDecoration(
-                        hintText: 'e.g. Repair kitchen pipe leak and install mixer tap',
+                        hintText:
+                            'e.g. Repair kitchen pipe leak and install mixer tap',
                         prefixIcon: Icon(Icons.title, size: 18),
                       ),
-                      validator: (v) => (v == null || v.trim().length < 5) ? 'Title must be at least 5 characters' : null,
+                      validator: (v) => (v == null || v.trim().length < 5)
+                          ? 'Title must be at least 5 characters'
+                          : null,
                     ),
 
                     const SizedBox(height: 16),
 
                     // Description
-                    const Text('Description of Work', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                    const Text(
+                      'Description of Work',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     TextFormField(
                       controller: _descController,
                       maxLines: 4,
                       decoration: const InputDecoration(
-                        hintText: 'Describe your requirements, timing, and specific home needs in detail...',
+                        hintText:
+                            'Describe your requirements, timing, and specific home needs in detail...',
                       ),
-                      validator: (v) =>
-                          (v == null || v.trim().length < 10) ? 'Description must be at least 10 characters' : null,
+                      validator: (v) => (v == null || v.trim().length < 10)
+                          ? 'Description must be at least 10 characters'
+                          : null,
                     ),
 
                     const SizedBox(height: 16),
@@ -384,50 +475,62 @@ class _CreateLeadDialogState extends State<CreateLeadDialog> {
                     const SizedBox(height: 16),
 
                     // Preferred Contact Method
-                    const Text('Preferred Contact Method', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                    const Text(
+                      'Preferred Contact Method',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     DropdownButtonFormField<String>(
                       isExpanded: true,
                       initialValue: _preferredContact,
                       items: AppConstants.contactMethods
-                          .map((m) => DropdownMenuItem(value: m, child: Text(m)))
+                          .map(
+                            (m) => DropdownMenuItem(value: m, child: Text(m)),
+                          )
                           .toList(),
-                      onChanged: (v) => setState(() => _preferredContact = v ?? 'Phone'),
+                      onChanged: (v) =>
+                          setState(() => _preferredContact = v ?? 'Phone'),
                     ),
 
-                const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Cancel'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: ElevatedButton(
-                        onPressed: leadProv.isLoading ? null : _submit,
-                        child: leadProv.isLoading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                              )
-                            : const Text('Submit Enquiry'),
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('Cancel'),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          flex: 2,
+                          child: ElevatedButton(
+                            onPressed: leadProv.isLoading ? null : _submit,
+                            child: leadProv.isLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Text('Submit Enquiry'),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-        );
-      },
-    ),
-  ),
-);
-}
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
 }

@@ -59,7 +59,9 @@ class VerificationStateModel {
       providerType: json['providerType'] as String? ?? 'MOCK',
       consentGiven: json['consentGiven'] as bool? ?? false,
       events: (json['events'] as List<dynamic>? ?? [])
-          .map((e) => VerificationEventModel.fromJson(e as Map<String, dynamic>))
+          .map(
+            (e) => VerificationEventModel.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
       disclaimer: json['disclaimer'] as String? ?? '',
     );

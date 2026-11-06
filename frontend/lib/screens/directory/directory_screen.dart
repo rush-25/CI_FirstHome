@@ -63,7 +63,10 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
             Navbar(onNavigate: widget.onNavigate),
             Container(
               color: AppColors.background,
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 32 : 48),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16 : 24,
+                vertical: isMobile ? 32 : 48,
+              ),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1400),
@@ -88,12 +91,16 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                               const SizedBox(height: 6),
                               Text(
                                 'Showing ${dir.totalProviders} active verified service providers across Nigeria',
-                                style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                                style: const TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 14,
+                                ),
                               ),
                             ],
                           );
 
-                          final resetBtn = (dir.selectedCategoryId != null ||
+                          final resetBtn =
+                              (dir.selectedCategoryId != null ||
                                   dir.selectedState != null ||
                                   dir.searchQuery.isNotEmpty)
                               ? OutlinedButton.icon(
@@ -118,7 +125,8 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                   ],
                                 )
                               : Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Expanded(child: titleCol),
@@ -148,11 +156,17 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                               controller: _searchController,
                               onSubmitted: (v) => dir.setSearchQuery(v),
                               decoration: InputDecoration(
-                                hintText: 'Search by provider name, specialty, or description...',
+                                hintText:
+                                    'Search by provider name, specialty, or description...',
                                 prefixIcon: const Icon(Icons.search, size: 20),
                                 suffixIcon: IconButton(
-                                  icon: const Icon(Icons.arrow_forward, size: 18),
-                                  onPressed: () => dir.setSearchQuery(_searchController.text),
+                                  icon: const Icon(
+                                    Icons.arrow_forward,
+                                    size: 18,
+                                  ),
+                                  onPressed: () => dir.setSearchQuery(
+                                    _searchController.text,
+                                  ),
                                 ),
                               ),
                             ),
@@ -170,11 +184,25 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                     initialValue: dir.selectedCategoryId,
                                     decoration: const InputDecoration(
                                       labelText: 'Service Category',
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 10,
+                                      ),
                                     ),
                                     items: [
-                                      const DropdownMenuItem(value: null, child: Text('All Categories')),
-                                      ...dir.categories.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name, overflow: TextOverflow.ellipsis))),
+                                      const DropdownMenuItem(
+                                        value: null,
+                                        child: Text('All Categories'),
+                                      ),
+                                      ...dir.categories.map(
+                                        (c) => DropdownMenuItem(
+                                          value: c.id,
+                                          child: Text(
+                                            c.name,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                     onChanged: (v) => dir.setCategoryFilter(v),
                                   ),
@@ -187,13 +215,28 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                     initialValue: dir.selectedState,
                                     decoration: const InputDecoration(
                                       labelText: 'State',
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 10,
+                                      ),
                                     ),
                                     items: [
-                                      const DropdownMenuItem(value: null, child: Text('All States')),
-                                      ...AppConstants.nigerianStates.map((s) => DropdownMenuItem(value: s, child: Text(s, overflow: TextOverflow.ellipsis))),
+                                      const DropdownMenuItem(
+                                        value: null,
+                                        child: Text('All States'),
+                                      ),
+                                      ...AppConstants.nigerianStates.map(
+                                        (s) => DropdownMenuItem(
+                                          value: s,
+                                          child: Text(
+                                            s,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
                                     ],
-                                    onChanged: (v) => dir.setLocationFilter(v, null),
+                                    onChanged: (v) =>
+                                        dir.setLocationFilter(v, null),
                                   ),
                                 ),
                                 // City
@@ -205,13 +248,30 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                       initialValue: dir.selectedCity,
                                       decoration: const InputDecoration(
                                         labelText: 'City / District',
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 10,
+                                        ),
                                       ),
                                       items: [
-                                        const DropdownMenuItem(value: null, child: Text('All Cities')),
-                                        ...cities.map((c) => DropdownMenuItem(value: c, child: Text(c, overflow: TextOverflow.ellipsis))),
+                                        const DropdownMenuItem(
+                                          value: null,
+                                          child: Text('All Cities'),
+                                        ),
+                                        ...cities.map(
+                                          (c) => DropdownMenuItem(
+                                            value: c,
+                                            child: Text(
+                                              c,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
                                       ],
-                                      onChanged: (v) => dir.setLocationFilter(dir.selectedState, v),
+                                      onChanged: (v) => dir.setLocationFilter(
+                                        dir.selectedState,
+                                        v,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -223,13 +283,23 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                                     initialValue: dir.sortBy,
                                     decoration: const InputDecoration(
                                       labelText: 'Sort By',
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 10,
+                                      ),
                                     ),
                                     items: const [
-                                      DropdownMenuItem(value: 'name', child: Text('Name (A-Z)')),
-                                      DropdownMenuItem(value: 'newest', child: Text('Newest Joined')),
+                                      DropdownMenuItem(
+                                        value: 'name',
+                                        child: Text('Name (A-Z)'),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: 'newest',
+                                        child: Text('Newest Joined'),
+                                      ),
                                     ],
-                                    onChanged: (v) => dir.setSortBy(v ?? 'name'),
+                                    onChanged: (v) =>
+                                        dir.setSortBy(v ?? 'name'),
                                   ),
                                 ),
                               ],
@@ -259,16 +329,26 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                           ),
                           child: Column(
                             children: [
-                              const Icon(Icons.search_off_rounded, size: 48, color: AppColors.textSecondary),
+                              const Icon(
+                                Icons.search_off_rounded,
+                                size: 48,
+                                color: AppColors.textSecondary,
+                              ),
                               const SizedBox(height: 16),
                               const Text(
                                 'No matching service providers found',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               const Text(
                                 'Try clearing your filters or choosing another Nigerian state or service category.',
-                                style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 14,
+                                ),
                               ),
                               const SizedBox(height: 20),
                               ElevatedButton(
@@ -300,12 +380,13 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                             return GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: cols,
-                                mainAxisSpacing: 16,
-                                crossAxisSpacing: 16,
-                                mainAxisExtent: 240,
-                              ),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: cols,
+                                    mainAxisSpacing: 16,
+                                    crossAxisSpacing: 16,
+                                    mainAxisExtent: 240,
+                                  ),
                               itemCount: dir.providers.length,
                               itemBuilder: (ctx, i) {
                                 final p = dir.providers[i];
@@ -324,7 +405,9 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                             children: [
                               OutlinedButton.icon(
                                 onPressed: dir.currentPage > 1
-                                    ? () => dir.fetchProviders(page: dir.currentPage - 1)
+                                    ? () => dir.fetchProviders(
+                                        page: dir.currentPage - 1,
+                                      )
                                     : null,
                                 icon: const Icon(Icons.arrow_back, size: 16),
                                 label: const Text('Previous'),
@@ -332,12 +415,17 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                               const SizedBox(width: 16),
                               Text(
                                 'Page ${dir.currentPage} of ${dir.totalPages}',
-                                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
                               ),
                               const SizedBox(width: 16),
                               OutlinedButton.icon(
                                 onPressed: dir.currentPage < dir.totalPages
-                                    ? () => dir.fetchProviders(page: dir.currentPage + 1)
+                                    ? () => dir.fetchProviders(
+                                        page: dir.currentPage + 1,
+                                      )
                                     : null,
                                 icon: const Icon(Icons.arrow_forward, size: 16),
                                 label: const Text('Next'),
@@ -408,7 +496,11 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        const Icon(Icons.location_on, size: 12, color: AppColors.textSecondary),
+                        const Icon(
+                          Icons.location_on,
+                          size: 12,
+                          color: AppColors.textSecondary,
+                        ),
                         const SizedBox(width: 2),
                         Expanded(
                           child: Text(

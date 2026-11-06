@@ -52,20 +52,20 @@ class ProviderModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'displayName': displayName,
-        'contactEmail': contactEmail,
-        'phone': phone,
-        'categoryId': categoryId,
-        'categoryName': categoryName,
-        'state': state,
-        'city': city,
-        'description': description,
-        'isActive': isActive,
-        'verificationStatus': verificationStatus,
-        'createdAt': createdAt.toIso8601String(),
-        'userId': userId,
-      };
+    'id': id,
+    'displayName': displayName,
+    'contactEmail': contactEmail,
+    'phone': phone,
+    'categoryId': categoryId,
+    'categoryName': categoryName,
+    'state': state,
+    'city': city,
+    'description': description,
+    'isActive': isActive,
+    'verificationStatus': verificationStatus,
+    'createdAt': createdAt.toIso8601String(),
+    'userId': userId,
+  };
 }
 
 class PagedProviders {

@@ -79,16 +79,25 @@ class _LandingScreenState extends State<LandingScreen> {
             children: [
               // Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.sage,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: 0.2),
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
-                    Icon(Icons.shield_outlined, size: 16, color: AppColors.primary),
+                    Icon(
+                      Icons.shield_outlined,
+                      size: 16,
+                      color: AppColors.primary,
+                    ),
                     SizedBox(width: 6),
                     Flexible(
                       child: Text(
@@ -159,8 +168,12 @@ class _LandingScreenState extends State<LandingScreen> {
                           TextField(
                             controller: _searchController,
                             decoration: const InputDecoration(
-                              hintText: 'What service do you need? (e.g. Plumber, AC repair)',
-                              prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
+                              hintText:
+                                  'What service do you need? (e.g. Plumber, AC repair)',
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: AppColors.textSecondary,
+                              ),
                               border: InputBorder.none,
                             ),
                           ),
@@ -169,14 +182,24 @@ class _LandingScreenState extends State<LandingScreen> {
                             initialValue: _selectedState,
                             decoration: const InputDecoration(
                               hintText: 'Select State',
-                              prefixIcon: Icon(Icons.location_on_outlined, color: AppColors.textSecondary),
+                              prefixIcon: Icon(
+                                Icons.location_on_outlined,
+                                color: AppColors.textSecondary,
+                              ),
                               border: InputBorder.none,
                             ),
                             items: [
-                              const DropdownMenuItem(value: null, child: Text('All States')),
-                              ...AppConstants.nigerianStates.map((s) => DropdownMenuItem(value: s, child: Text(s))),
+                              const DropdownMenuItem(
+                                value: null,
+                                child: Text('All States'),
+                              ),
+                              ...AppConstants.nigerianStates.map(
+                                (s) =>
+                                    DropdownMenuItem(value: s, child: Text(s)),
+                              ),
                             ],
-                            onChanged: (v) => setState(() => _selectedState = v),
+                            onChanged: (v) =>
+                                setState(() => _selectedState = v),
                           ),
                           const SizedBox(height: 8),
                           SizedBox(
@@ -196,15 +219,23 @@ class _LandingScreenState extends State<LandingScreen> {
                               controller: _searchController,
                               onSubmitted: (_) => _onSearchSubmit(),
                               decoration: const InputDecoration(
-                                hintText: 'What service do you need? (e.g. Plumber, AC repair)',
-                                prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
+                                hintText:
+                                    'What service do you need? (e.g. Plumber, AC repair)',
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: AppColors.textSecondary,
+                                ),
                                 border: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),
                             ),
                           ),
-                          Container(width: 1, height: 36, color: AppColors.border),
+                          Container(
+                            width: 1,
+                            height: 36,
+                            color: AppColors.border,
+                          ),
                           Expanded(
                             flex: 2,
                             child: DropdownButtonHideUnderline(
@@ -213,9 +244,19 @@ class _LandingScreenState extends State<LandingScreen> {
                                 hint: const Row(
                                   children: [
                                     SizedBox(width: 12),
-                                    Icon(Icons.location_on_outlined, color: AppColors.textSecondary, size: 20),
+                                    Icon(
+                                      Icons.location_on_outlined,
+                                      color: AppColors.textSecondary,
+                                      size: 20,
+                                    ),
                                     SizedBox(width: 8),
-                                    Text('All States', style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+                                    Text(
+                                      'All States',
+                                      style: TextStyle(
+                                        color: AppColors.textSecondary,
+                                        fontSize: 14,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 isExpanded: true,
@@ -231,13 +272,16 @@ class _LandingScreenState extends State<LandingScreen> {
                                     (s) => DropdownMenuItem(
                                       value: s,
                                       child: Padding(
-                                        padding: const EdgeInsets.only(left: 12),
+                                        padding: const EdgeInsets.only(
+                                          left: 12,
+                                        ),
                                         child: Text(s),
                                       ),
                                     ),
                                   ),
                                 ],
-                                onChanged: (v) => setState(() => _selectedState = v),
+                                onChanged: (v) =>
+                                    setState(() => _selectedState = v),
                               ),
                             ),
                           ),
@@ -245,7 +289,10 @@ class _LandingScreenState extends State<LandingScreen> {
                           ElevatedButton(
                             onPressed: _onSearchSubmit,
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 28,
+                                vertical: 18,
+                              ),
                             ),
                             child: const Text('Find a Professional'),
                           ),
@@ -277,12 +324,19 @@ class _LandingScreenState extends State<LandingScreen> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.check_circle_outline, size: 16, color: AppColors.success),
+        const Icon(
+          Icons.check_circle_outline,
+          size: 16,
+          color: AppColors.success,
+        ),
         const SizedBox(width: 6),
         Flexible(
           child: Text(
             label,
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 13,
+            ),
           ),
         ),
       ],
@@ -307,7 +361,10 @@ class _LandingScreenState extends State<LandingScreen> {
 
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 48 : 72),
+      padding: EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: isMobile ? 48 : 72,
+      ),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1400),
@@ -329,7 +386,10 @@ class _LandingScreenState extends State<LandingScreen> {
                     const SizedBox(height: 6),
                     const Text(
                       'Select a category to discover available service providers.',
-                      style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     TextButton.icon(
@@ -358,7 +418,10 @@ class _LandingScreenState extends State<LandingScreen> {
                           SizedBox(height: 6),
                           Text(
                             'Select a category to discover available service providers.',
-                            style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
@@ -384,7 +447,8 @@ class _LandingScreenState extends State<LandingScreen> {
                 itemCount: dir.categories.length,
                 itemBuilder: (ctx, i) {
                   final cat = dir.categories[i];
-                  final icon = categoryIcons[cat.slug] ?? Icons.home_repair_service;
+                  final icon =
+                      categoryIcons[cat.slug] ?? Icons.home_repair_service;
 
                   return InkWell(
                     onTap: () {
@@ -393,7 +457,10 @@ class _LandingScreenState extends State<LandingScreen> {
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 14,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.background,
                         borderRadius: BorderRadius.circular(12),
@@ -408,7 +475,11 @@ class _LandingScreenState extends State<LandingScreen> {
                               color: AppColors.sage,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Icon(icon, color: AppColors.primary, size: 24),
+                            child: Icon(
+                              icon,
+                              color: AppColors.primary,
+                              size: 24,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           Flexible(
@@ -442,19 +513,22 @@ class _LandingScreenState extends State<LandingScreen> {
       {
         'num': '01',
         'title': 'Find a Professional',
-        'desc': 'Search local providers across Lagos, Abuja, and other states filtered by category, location, and ratings.',
+        'desc':
+            'Search local providers across Lagos, Abuja, and other states filtered by category, location, and ratings.',
         'icon': Icons.search,
       },
       {
         'num': '02',
         'title': 'Send an Enquiry',
-        'desc': 'Submit a structured service or housing enquiry with your location and contact preference (Phone, WhatsApp, Email).',
+        'desc':
+            'Submit a structured service or housing enquiry with your location and contact preference (Phone, WhatsApp, Email).',
         'icon': Icons.send_rounded,
       },
       {
         'num': '03',
         'title': 'Track Your Request',
-        'desc': 'Receive a unique reference number (e.g. FH-2026-0001) and follow real-time status updates through resolution.',
+        'desc':
+            'Receive a unique reference number (e.g. FH-2026-0001) and follow real-time status updates through resolution.',
         'icon': Icons.track_changes_rounded,
       },
     ];
@@ -486,12 +560,17 @@ class _LandingScreenState extends State<LandingScreen> {
                   const Text(
                     'Transparent, reliable connection between homeowners and vetted providers.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                    ),
                   ),
                   const SizedBox(height: 36),
                   isNarrow
                       ? Column(
-                          children: steps.map((s) => _buildStepCard(s, isNarrow: true)).toList(),
+                          children: steps
+                              .map((s) => _buildStepCard(s, isNarrow: true))
+                              .toList(),
                         )
                       : Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -499,7 +578,9 @@ class _LandingScreenState extends State<LandingScreen> {
                               .map(
                                 (s) => Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                    ),
                                     child: _buildStepCard(s, isNarrow: false),
                                   ),
                                 ),
@@ -536,7 +617,11 @@ class _LandingScreenState extends State<LandingScreen> {
                   color: AppColors.sage,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(s['icon'] as IconData, color: AppColors.primary, size: 22),
+                child: Icon(
+                  s['icon'] as IconData,
+                  color: AppColors.primary,
+                  size: 22,
+                ),
               ),
               Text(
                 s['num'] as String,
@@ -606,7 +691,10 @@ class _LandingScreenState extends State<LandingScreen> {
                         const SizedBox(height: 6),
                         const Text(
                           'Verified providers active in your state with proven customer track records.',
-                          style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 13,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         TextButton.icon(
@@ -635,7 +723,10 @@ class _LandingScreenState extends State<LandingScreen> {
                               SizedBox(height: 6),
                               Text(
                                 'Verified providers active in your state with proven customer track records.',
-                                style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 14,
+                                ),
                               ),
                             ],
                           ),
@@ -668,18 +759,22 @@ class _LandingScreenState extends State<LandingScreen> {
                       builder: (context, box) {
                         final w = box.maxWidth;
                         // Max 4 cards per row.
-                        final cols = w < 600 ? 1 : (w < 900 ? 2 : (w < 1250 ? 3 : 4));
+                        final cols = w < 600
+                            ? 1
+                            : (w < 900 ? 2 : (w < 1250 ? 3 : 4));
                         return GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: cols,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 0,
-                            mainAxisExtent: 285,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: cols,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 0,
+                                mainAxisExtent: 285,
+                              ),
                           itemCount: featured.length,
-                          itemBuilder: (ctx, i) => _buildProviderCard(featured[i]),
+                          itemBuilder: (ctx, i) =>
+                              _buildProviderCard(featured[i]),
                         );
                       },
                     ),
@@ -743,7 +838,11 @@ class _LandingScreenState extends State<LandingScreen> {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        const Icon(Icons.location_on, size: 14, color: AppColors.textSecondary),
+                        const Icon(
+                          Icons.location_on,
+                          size: 14,
+                          color: AppColors.textSecondary,
+                        ),
                         const SizedBox(width: 2),
                         Expanded(
                           child: Text(
@@ -802,11 +901,17 @@ class _LandingScreenState extends State<LandingScreen> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () => widget.onNavigate('provider-detail', args: p),
+                  onPressed: () =>
+                      widget.onNavigate('provider-detail', args: p),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
-                  child: const Text('View Profile', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12)),
+                  child: const Text(
+                    'View Profile',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -816,7 +921,12 @@ class _LandingScreenState extends State<LandingScreen> {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
-                  child: const Text('Enquire', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12)),
+                  child: const Text(
+                    'Enquire',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
               ),
             ],

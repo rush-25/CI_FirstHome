@@ -20,10 +20,12 @@ class ProviderDashboardScreen extends StatefulWidget {
   const ProviderDashboardScreen({super.key, required this.onNavigate});
 
   @override
-  State<ProviderDashboardScreen> createState() => _ProviderDashboardScreenState();
+  State<ProviderDashboardScreen> createState() =>
+      _ProviderDashboardScreenState();
 }
 
-class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with SingleTickerProviderStateMixin {
+class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ApiService _api = ApiService();
 
@@ -135,7 +137,10 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
             Navbar(onNavigate: widget.onNavigate),
             Container(
               color: AppColors.background,
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 40),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16 : 24,
+                vertical: isMobile ? 24 : 40,
+              ),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1400),
@@ -165,22 +170,35 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 children: [
                                   Text(
                                     '${_myProfile?.categoryName ?? 'Services'} • ${_myProfile?.city ?? ''}, ${_myProfile?.state ?? ''}',
-                                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                                    style: const TextStyle(
+                                      color: AppColors.textSecondary,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                   if (_myProfile != null)
-                                    VerificationBadge(status: _myProfile!.verificationStatus, compact: true),
+                                    VerificationBadge(
+                                      status: _myProfile!.verificationStatus,
+                                      compact: true,
+                                    ),
                                 ],
                               ),
                             ],
                           );
 
                           final badge = Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
-                              color: (_myProfile?.isActive ?? true) ? AppColors.statusQualifiedBg : AppColors.verifRejectedBg,
+                              color: (_myProfile?.isActive ?? true)
+                                  ? AppColors.statusQualifiedBg
+                                  : AppColors.verifRejectedBg,
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: (_myProfile?.isActive ?? true) ? AppColors.success : AppColors.error,
+                                color: (_myProfile?.isActive ?? true)
+                                    ? AppColors.success
+                                    : AppColors.error,
                               ),
                             ),
                             child: Row(
@@ -189,15 +207,21 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 Icon(
                                   Icons.circle,
                                   size: 10,
-                                  color: (_myProfile?.isActive ?? true) ? AppColors.success : AppColors.error,
+                                  color: (_myProfile?.isActive ?? true)
+                                      ? AppColors.success
+                                      : AppColors.error,
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  (_myProfile?.isActive ?? true) ? 'Visible in Directory' : 'Hidden from Directory',
+                                  (_myProfile?.isActive ?? true)
+                                      ? 'Visible in Directory'
+                                      : 'Hidden from Directory',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
-                                    color: (_myProfile?.isActive ?? true) ? AppColors.success : AppColors.error,
+                                    color: (_myProfile?.isActive ?? true)
+                                        ? AppColors.success
+                                        : AppColors.error,
                                   ),
                                 ),
                               ],
@@ -214,7 +238,8 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                   ],
                                 )
                               : Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(child: infoCol),
                                     const SizedBox(width: 16),
@@ -239,14 +264,19 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 const SizedBox(height: 12),
                                 StatCard(
                                   title: 'New Requests',
-                                  value: _myLeads.where((l) => l.status == 'New').length.toString(),
+                                  value: _myLeads
+                                      .where((l) => l.status == 'New')
+                                      .length
+                                      .toString(),
                                   icon: Icons.fiber_new,
                                   color: AppColors.statusNewText,
                                 ),
                                 const SizedBox(height: 12),
                                 StatCard(
                                   title: 'Verification Status',
-                                  value: _myProfile?.verificationStatus ?? 'Not Started',
+                                  value:
+                                      _myProfile?.verificationStatus ??
+                                      'Not Started',
                                   icon: Icons.verified_user_outlined,
                                   color: AppColors.gold,
                                 ),
@@ -266,7 +296,10 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 Expanded(
                                   child: StatCard(
                                     title: 'New Requests',
-                                    value: _myLeads.where((l) => l.status == 'New').length.toString(),
+                                    value: _myLeads
+                                        .where((l) => l.status == 'New')
+                                        .length
+                                        .toString(),
                                     icon: Icons.fiber_new,
                                     color: AppColors.statusNewText,
                                   ),
@@ -275,7 +308,9 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                                 Expanded(
                                   child: StatCard(
                                     title: 'Verification Status',
-                                    value: _myProfile?.verificationStatus ?? 'Not Started',
+                                    value:
+                                        _myProfile?.verificationStatus ??
+                                        'Not Started',
                                     icon: Icons.verified_user_outlined,
                                     color: AppColors.gold,
                                   ),
@@ -289,8 +324,12 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                       Container(
                         decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                          border: Border(bottom: BorderSide(color: AppColors.border)),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(12),
+                          ),
+                          border: Border(
+                            bottom: BorderSide(color: AppColors.border),
+                          ),
                         ),
                         child: TabBar(
                           controller: _tabController,
@@ -298,11 +337,23 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
                           indicatorWeight: 3,
-                          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                          labelStyle: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
                           tabs: const [
-                            Tab(icon: Icon(Icons.inbox, size: 18), text: 'Incoming Leads'),
-                            Tab(icon: Icon(Icons.business_outlined, size: 18), text: 'Business Profile'),
-                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Verification Panel'),
+                            Tab(
+                              icon: Icon(Icons.inbox, size: 18),
+                              text: 'Incoming Leads',
+                            ),
+                            Tab(
+                              icon: Icon(Icons.business_outlined, size: 18),
+                              text: 'Business Profile',
+                            ),
+                            Tab(
+                              icon: Icon(Icons.shield_outlined, size: 18),
+                              text: 'Verification Panel',
+                            ),
                           ],
                         ),
                       ),
@@ -312,7 +363,9 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                         padding: const EdgeInsets.all(24),
                         decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(12),
+                          ),
                           border: Border(
                             left: BorderSide(color: AppColors.border),
                             right: BorderSide(color: AppColors.border),
@@ -353,9 +406,16 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(Icons.inbox_outlined, size: 48, color: AppColors.textSecondary),
+            Icon(
+              Icons.inbox_outlined,
+              size: 48,
+              color: AppColors.textSecondary,
+            ),
             SizedBox(height: 12),
-            Text('No incoming leads yet', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+            Text(
+              'No incoming leads yet',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+            ),
             SizedBox(height: 4),
             Text(
               'Enquiries directed to your business profile or category will appear here.',
@@ -374,14 +434,21 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
         return Material(
           color: Colors.transparent,
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 8,
+            ),
             leading: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: AppColors.sage,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.handyman_outlined, color: AppColors.primary, size: 20),
+              child: const Icon(
+                Icons.handyman_outlined,
+                color: AppColors.primary,
+                size: 20,
+              ),
             ),
             title: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
@@ -390,7 +457,11 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
               children: [
                 Text(
                   l.reference,
-                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13,
+                    color: AppColors.primary,
+                  ),
                 ),
                 StatusBadge(status: l.status, compact: true),
               ],
@@ -399,18 +470,31 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 4),
-                Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+                Text(
+                  l.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
                 const SizedBox(height: 2),
                 Text(
                   'Customer: ${l.customerName} • Contact: ${l.preferredContact} • ${dateFormat.format(l.createdAt.toLocal())}',
-                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   l.description,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -427,9 +511,15 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Edit Business Profile', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            const Text(
+              'Edit Business Profile',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 4),
-            const Text('Manage how your services appear in the FirstHome Nigeria public directory.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+            const Text(
+              'Manage how your services appear in the FirstHome Nigeria public directory.',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+            ),
             const SizedBox(height: 20),
             Row(
               children: [
@@ -437,11 +527,19 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Business Display Name', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'Business Display Name',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       TextFormField(
                         controller: _businessNameController,
-                        validator: (v) => (v == null || v.trim().length < 2) ? 'Required' : null,
+                        validator: (v) => (v == null || v.trim().length < 2)
+                            ? 'Required'
+                            : null,
                       ),
                     ],
                   ),
@@ -451,11 +549,19 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Contact Email', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'Contact Email',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       TextFormField(
                         controller: _emailController,
-                        validator: (v) => (v == null || !v.contains('@')) ? 'Valid email required' : null,
+                        validator: (v) => (v == null || !v.contains('@'))
+                            ? 'Valid email required'
+                            : null,
                       ),
                     ],
                   ),
@@ -469,14 +575,26 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Primary Category', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'Primary Category',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<int>(
                         initialValue: _selectedCategoryId,
                         items: dir.categories
-                            .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c.id,
+                                child: Text(c.name),
+                              ),
+                            )
                             .toList(),
-                        onChanged: (v) => setState(() => _selectedCategoryId = v),
+                        onChanged: (v) =>
+                            setState(() => _selectedCategoryId = v),
                       ),
                     ],
                   ),
@@ -486,17 +604,27 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'State',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<String>(
                         initialValue: _selectedState,
                         items: AppConstants.nigerianStates
-                            .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                            .map(
+                              (s) => DropdownMenuItem(value: s, child: Text(s)),
+                            )
                             .toList(),
                         onChanged: (v) {
                           setState(() {
                             _selectedState = v;
-                            _selectedCity = (AppConstants.stateCities[v] ?? ['General']).first;
+                            _selectedCity =
+                                (AppConstants.stateCities[v] ?? ['General'])
+                                    .first;
                           });
                         },
                       ),
@@ -508,11 +636,23 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('City', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'City',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<String>(
-                        initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
-                        items: cities.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                        initialValue: cities.contains(_selectedCity)
+                            ? _selectedCity
+                            : cities.first,
+                        items: cities
+                            .map(
+                              (c) => DropdownMenuItem(value: c, child: Text(c)),
+                            )
+                            .toList(),
                         onChanged: (v) => setState(() => _selectedCity = v),
                       ),
                     ],
@@ -524,12 +664,17 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Business Description', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Business Description',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 6),
                 TextFormField(
                   controller: _descController,
                   maxLines: 4,
-                  validator: (v) => (v == null || v.trim().length < 10) ? 'Min 10 characters' : null,
+                  validator: (v) => (v == null || v.trim().length < 10)
+                      ? 'Min 10 characters'
+                      : null,
                 ),
               ],
             ),
@@ -571,12 +716,20 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
             ),
             child: Row(
               children: const [
-                Icon(Icons.privacy_tip_outlined, color: AppColors.primary, size: 20),
+                Icon(
+                  Icons.privacy_tip_outlined,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     'Verified status elevates your visibility in directory searches and awards your profile a verified badge.',
-                    style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.4),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                      height: 1.4,
+                    ),
                   ),
                 ),
               ],
@@ -592,9 +745,12 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
             status == 'Verified'
                 ? 'Your provider account is verified. A verified badge is publicly shown to customers on the directory.'
                 : status == 'Pending'
-                    ? 'Your verification application is currently pending administrator review.'
-                    : 'Submit your profile for verification to earn a verified trust badge on your listing.',
-            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                ? 'Your verification application is currently pending administrator review.'
+                : 'Submit your profile for verification to earn a verified trust badge on your listing.',
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+            ),
           ),
           const SizedBox(height: 24),
           if (status == 'NotStarted' || status == 'Rejected') ...[
@@ -606,7 +762,9 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen> with 
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Verification request submitted. Status is now Pending.'),
+                        content: Text(
+                          'Verification request submitted. Status is now Pending.',
+                        ),
                         backgroundColor: AppColors.success,
                       ),
                     );

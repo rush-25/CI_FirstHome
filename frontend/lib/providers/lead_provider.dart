@@ -28,8 +28,10 @@ class LeadProvider extends ChangeNotifier {
 
   // Computed metrics for customer dashboard
   int get newCount => _myLeads.where((l) => l.status == 'New').length;
-  int get contactedCount => _myLeads.where((l) => l.status == 'Contacted').length;
-  int get qualifiedCount => _myLeads.where((l) => l.status == 'Qualified').length;
+  int get contactedCount =>
+      _myLeads.where((l) => l.status == 'Contacted').length;
+  int get qualifiedCount =>
+      _myLeads.where((l) => l.status == 'Qualified').length;
   int get closedCount => _myLeads.where((l) => l.status == 'Closed').length;
 
   Future<void> fetchMyLeads({int page = 1}) async {

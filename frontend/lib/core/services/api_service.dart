@@ -25,7 +25,9 @@ class ApiException implements Exception {
   @override
   String toString() {
     if (errors != null && errors!.isNotEmpty) {
-      final details = errors!.entries.map((e) => '${e.key}: ${e.value}').join(', ');
+      final details = errors!.entries
+          .map((e) => '${e.key}: ${e.value}')
+          .join(', ');
       return '$message ($details)';
     }
     return message;
@@ -114,10 +116,7 @@ class ApiService {
     final res = await http.post(
       Uri.parse('$baseUrl/auth/login'),
       headers: await _headers(needsAuth: false),
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-      }),
+      body: jsonEncode({'email': email, 'password': password}),
     );
     final data = _handleResponse(res) as Map<String, dynamic>;
     return AuthResponseModel.fromJson(data);
@@ -179,7 +178,9 @@ class ApiService {
       headers: await _headers(needsAuth: false),
     );
     final list = _handleResponse(res) as List<dynamic>;
-    return list.map((e) => CategoryModel.fromJson(e as Map<String, dynamic>)).toList();
+    return list
+        .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   // ---------- PROVIDERS ----------
@@ -202,7 +203,9 @@ class ApiService {
     if (city != null && city.isNotEmpty) params['city'] = city;
     if (q != null && q.isNotEmpty) params['q'] = q;
 
-    final uri = Uri.parse('$baseUrl/providers').replace(queryParameters: params);
+    final uri = Uri.parse(
+      '$baseUrl/providers',
+    ).replace(queryParameters: params);
     final res = await http.get(uri, headers: await _headers(needsAuth: false));
     final data = _handleResponse(res) as Map<String, dynamic>;
     return PagedProviders.fromJson(data);
@@ -232,7 +235,9 @@ class ApiService {
       headers: await _headers(),
     );
     final list = _handleResponse(res) as List<dynamic>;
-    return list.map((e) => LeadModel.fromJson(e as Map<String, dynamic>)).toList();
+    return list
+        .map((e) => LeadModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<ProviderModel> createProviderProfile({
@@ -326,7 +331,9 @@ class ApiService {
     if (status != null && status.isNotEmpty) params['status'] = status;
     if (q != null && q.isNotEmpty) params['q'] = q;
 
-    final uri = Uri.parse('$baseUrl/leads/mine').replace(queryParameters: params);
+    final uri = Uri.parse(
+      '$baseUrl/leads/mine',
+    ).replace(queryParameters: params);
     final res = await http.get(uri, headers: await _headers());
     final data = _handleResponse(res) as Map<String, dynamic>;
     return PagedLeads.fromJson(data);
@@ -362,7 +369,9 @@ class ApiService {
     };
     if (q != null && q.isNotEmpty) params['q'] = q;
 
-    final uri = Uri.parse('$baseUrl/admin/customers').replace(queryParameters: params);
+    final uri = Uri.parse(
+      '$baseUrl/admin/customers',
+    ).replace(queryParameters: params);
     final res = await http.get(uri, headers: await _headers());
     final data = _handleResponse(res) as Map<String, dynamic>;
     final items = (data['items'] as List<dynamic>? ?? [])
@@ -389,7 +398,9 @@ class ApiService {
     if (q != null && q.isNotEmpty) params['q'] = q;
     if (category != null) params['category'] = category.toString();
 
-    final uri = Uri.parse('$baseUrl/admin/providers').replace(queryParameters: params);
+    final uri = Uri.parse(
+      '$baseUrl/admin/providers',
+    ).replace(queryParameters: params);
     final res = await http.get(uri, headers: await _headers());
     final data = _handleResponse(res) as Map<String, dynamic>;
     final items = (data['items'] as List<dynamic>? ?? [])
@@ -426,7 +437,9 @@ class ApiService {
     if (status != null && status.isNotEmpty) params['status'] = status;
     if (q != null && q.isNotEmpty) params['q'] = q;
 
-    final uri = Uri.parse('$baseUrl/admin/leads').replace(queryParameters: params);
+    final uri = Uri.parse(
+      '$baseUrl/admin/leads',
+    ).replace(queryParameters: params);
     final res = await http.get(uri, headers: await _headers());
     final data = _handleResponse(res) as Map<String, dynamic>;
     return PagedLeads.fromJson(data);
@@ -450,10 +463,7 @@ class ApiService {
     final res = await http.post(
       Uri.parse('$baseUrl/admin/users/$userId/mock-verification'),
       headers: await _headers(),
-      body: jsonEncode({
-        'status': status,
-        'note': note ?? 'Verified by admin',
-      }),
+      body: jsonEncode({'status': status, 'note': note ?? 'Verified by admin'}),
     );
     final data = _handleResponse(res) as Map<String, dynamic>;
     return VerificationEventModel.fromJson(data);
@@ -467,7 +477,9 @@ class ApiService {
       'page': page.toString(),
       'pageSize': pageSize.toString(),
     };
-    final uri = Uri.parse('$baseUrl/admin/verification-events').replace(queryParameters: params);
+    final uri = Uri.parse(
+      '$baseUrl/admin/verification-events',
+    ).replace(queryParameters: params);
     final res = await http.get(uri, headers: await _headers());
     final data = _handleResponse(res) as Map<String, dynamic>;
     final items = (data['items'] as List<dynamic>? ?? [])

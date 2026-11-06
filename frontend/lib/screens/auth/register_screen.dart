@@ -30,9 +30,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _businessNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController(text: '+234 800 ');
+  final TextEditingController _phoneController = TextEditingController(
+    text: '+234 800 ',
+  );
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _descController = TextEditingController();
 
   String? _selectedState = 'Lagos';
@@ -97,7 +100,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // Now create provider profile record
         try {
           final dir = context.read<DirectoryProvider>();
-          final catId = _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : 1);
+          final catId =
+              _selectedCategoryId ??
+              (dir.categories.isNotEmpty ? dir.categories.first.id : 1);
           await auth.updateProfile(
             fullName: _nameController.text.trim(),
             phone: _phoneController.text.trim(),
@@ -145,7 +150,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             Navbar(onNavigate: widget.onNavigate),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 64),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16 : 24,
+                vertical: isMobile ? 24 : 64,
+              ),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 620),
@@ -180,29 +188,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               children: [
                                 Expanded(
                                   child: InkWell(
-                                    onTap: () => setState(() => _role = 'Customer'),
+                                    onTap: () =>
+                                        setState(() => _role = 'Customer'),
                                     borderRadius: BorderRadius.circular(8),
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: _role == 'Customer' ? Colors.white : Colors.transparent,
+                                        color: _role == 'Customer'
+                                            ? Colors.white
+                                            : Colors.transparent,
                                         borderRadius: BorderRadius.circular(8),
                                         boxShadow: _role == 'Customer'
                                             ? [
                                                 BoxShadow(
-                                                  color: Colors.black.withValues(alpha: 0.05),
+                                                  color: Colors.black
+                                                      .withValues(alpha: 0.05),
                                                   blurRadius: 4,
                                                 ),
                                               ]
                                             : null,
                                       ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.person_outline,
                                             size: 16,
-                                            color: _role == 'Customer' ? AppColors.primary : AppColors.textSecondary,
+                                            color: _role == 'Customer'
+                                                ? AppColors.primary
+                                                : AppColors.textSecondary,
                                           ),
                                           const SizedBox(width: 6),
                                           Flexible(
@@ -213,7 +230,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 13,
-                                                color: _role == 'Customer' ? AppColors.primary : AppColors.textSecondary,
+                                                color: _role == 'Customer'
+                                                    ? AppColors.primary
+                                                    : AppColors.textSecondary,
                                               ),
                                             ),
                                           ),
@@ -224,29 +243,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 Expanded(
                                   child: InkWell(
-                                    onTap: () => setState(() => _role = 'Provider'),
+                                    onTap: () =>
+                                        setState(() => _role = 'Provider'),
                                     borderRadius: BorderRadius.circular(8),
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: _role == 'Provider' ? Colors.white : Colors.transparent,
+                                        color: _role == 'Provider'
+                                            ? Colors.white
+                                            : Colors.transparent,
                                         borderRadius: BorderRadius.circular(8),
                                         boxShadow: _role == 'Provider'
                                             ? [
                                                 BoxShadow(
-                                                  color: Colors.black.withValues(alpha: 0.05),
+                                                  color: Colors.black
+                                                      .withValues(alpha: 0.05),
                                                   blurRadius: 4,
                                                 ),
                                               ]
                                             : null,
                                       ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.business_outlined,
                                             size: 16,
-                                            color: _role == 'Provider' ? AppColors.primary : AppColors.textSecondary,
+                                            color: _role == 'Provider'
+                                                ? AppColors.primary
+                                                : AppColors.textSecondary,
                                           ),
                                           const SizedBox(width: 6),
                                           Flexible(
@@ -257,7 +285,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 13,
-                                                color: _role == 'Provider' ? AppColors.primary : AppColors.textSecondary,
+                                                color: _role == 'Provider'
+                                                    ? AppColors.primary
+                                                    : AppColors.textSecondary,
                                               ),
                                             ),
                                           ),
@@ -273,7 +303,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 24),
 
                           Text(
-                            _role == 'Customer' ? 'Create Customer Account' : 'Join as a Service Provider',
+                            _role == 'Customer'
+                                ? 'Create Customer Account'
+                                : 'Join as a Service Provider',
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w700,
@@ -285,7 +317,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             _role == 'Customer'
                                 ? 'Register to submit service enquiries and track vetted Nigerian home professionals.'
                                 : 'List your services in the FirstHome directory and receive direct customer requests.',
-                            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 13,
+                            ),
                           ),
 
                           const SizedBox(height: 24),
@@ -296,16 +331,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               decoration: BoxDecoration(
                                 color: AppColors.verifRejectedBg,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                                border: Border.all(
+                                  color: AppColors.error.withValues(alpha: 0.3),
+                                ),
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.error_outline, color: AppColors.error, size: 18),
+                                  const Icon(
+                                    Icons.error_outline,
+                                    color: AppColors.error,
+                                    size: 18,
+                                  ),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       auth.errorMessage!,
-                                      style: const TextStyle(color: AppColors.error, fontSize: 13),
+                                      style: const TextStyle(
+                                        color: AppColors.error,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -315,7 +359,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
 
                           // Full Name
-                          const Text('Full Name', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                          const Text(
+                            'Full Name',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SizedBox(height: 6),
                           TextFormField(
                             controller: _nameController,
@@ -323,41 +373,80 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               hintText: 'e.g. Babatunde Lawal',
                               prefixIcon: Icon(Icons.person_outline, size: 18),
                             ),
-                            validator: (v) => (v == null || v.trim().length < 2) ? 'Full name is required (min 2 chars)' : null,
+                            validator: (v) => (v == null || v.trim().length < 2)
+                                ? 'Full name is required (min 2 chars)'
+                                : null,
                           ),
 
                           if (_role == 'Provider') ...[
                             const SizedBox(height: 16),
-                            const Text('Business / Trade Name', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                            const Text(
+                              'Business / Trade Name',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             const SizedBox(height: 6),
                             TextFormField(
                               controller: _businessNameController,
                               decoration: const InputDecoration(
-                                hintText: 'e.g. Lawal Electrical & Inverter Works',
-                                prefixIcon: Icon(Icons.business_outlined, size: 18),
+                                hintText:
+                                    'e.g. Lawal Electrical & Inverter Works',
+                                prefixIcon: Icon(
+                                  Icons.business_outlined,
+                                  size: 18,
+                                ),
                               ),
                               validator: (v) =>
-                                  (v == null || v.trim().length < 2) ? 'Business name is required' : null,
+                                  (v == null || v.trim().length < 2)
+                                  ? 'Business name is required'
+                                  : null,
                             ),
                             const SizedBox(height: 16),
-                            const Text('Primary Service Category', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                            const Text(
+                              'Primary Service Category',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             const SizedBox(height: 6),
                             DropdownButtonFormField<int>(
-                              initialValue: _selectedCategoryId ?? (dir.categories.isNotEmpty ? dir.categories.first.id : null),
+                              initialValue:
+                                  _selectedCategoryId ??
+                                  (dir.categories.isNotEmpty
+                                      ? dir.categories.first.id
+                                      : null),
                               decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.category_outlined, size: 18),
+                                prefixIcon: Icon(
+                                  Icons.category_outlined,
+                                  size: 18,
+                                ),
                               ),
                               items: dir.categories
-                                  .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
+                                  .map(
+                                    (c) => DropdownMenuItem(
+                                      value: c.id,
+                                      child: Text(c.name),
+                                    ),
+                                  )
                                   .toList(),
-                              onChanged: (v) => setState(() => _selectedCategoryId = v),
+                              onChanged: (v) =>
+                                  setState(() => _selectedCategoryId = v),
                             ),
                           ],
 
                           const SizedBox(height: 16),
 
                           // Email
-                          const Text('Email Address', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                          const Text(
+                            'Email Address',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SizedBox(height: 6),
                           TextFormField(
                             controller: _emailController,
@@ -367,8 +456,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               prefixIcon: Icon(Icons.email_outlined, size: 18),
                             ),
                             validator: (v) {
-                              if (v == null || v.trim().isEmpty) return 'Email is required';
-                              if (!v.contains('@')) return 'Enter a valid email address';
+                              if (v == null || v.trim().isEmpty)
+                                return 'Email is required';
+                              if (!v.contains('@'))
+                                return 'Enter a valid email address';
                               return null;
                             },
                           ),
@@ -376,7 +467,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 16),
 
                           // Phone
-                          const Text('Phone Number (Synthetic)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                          const Text(
+                            'Phone Number (Synthetic)',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SizedBox(height: 6),
                           TextFormField(
                             controller: _phoneController,
@@ -385,7 +482,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               hintText: '+234 800 000 0000',
                               prefixIcon: Icon(Icons.phone_outlined, size: 18),
                             ),
-                            validator: (v) => (v == null || v.trim().length < 7) ? 'Enter a valid phone number' : null,
+                            validator: (v) => (v == null || v.trim().length < 7)
+                                ? 'Enter a valid phone number'
+                                : null,
                           ),
 
                           const SizedBox(height: 16),
@@ -395,20 +494,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Nigerian State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                const Text(
+                                  'Nigerian State',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                                 const SizedBox(height: 6),
                                 DropdownButtonFormField<String>(
                                   initialValue: _selectedState,
                                   decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.map_outlined, size: 18),
+                                    prefixIcon: Icon(
+                                      Icons.map_outlined,
+                                      size: 18,
+                                    ),
                                   ),
                                   items: AppConstants.nigerianStates
-                                      .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                                      .map(
+                                        (s) => DropdownMenuItem(
+                                          value: s,
+                                          child: Text(s),
+                                        ),
+                                      )
                                       .toList(),
                                   onChanged: (v) {
                                     setState(() {
                                       _selectedState = v;
-                                      final newCities = AppConstants.stateCities[v] ?? ['General'];
+                                      final newCities =
+                                          AppConstants.stateCities[v] ??
+                                          ['General'];
                                       _selectedCity = newCities.first;
                                     });
                                   },
@@ -419,17 +534,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                const Text(
+                                  'City / District',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                                 const SizedBox(height: 6),
                                 DropdownButtonFormField<String>(
-                                  initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                                  initialValue: cities.contains(_selectedCity)
+                                      ? _selectedCity
+                                      : cities.first,
                                   decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.location_city_outlined, size: 18),
+                                    prefixIcon: Icon(
+                                      Icons.location_city_outlined,
+                                      size: 18,
+                                    ),
                                   ),
                                   items: cities
-                                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                                      .map(
+                                        (c) => DropdownMenuItem(
+                                          value: c,
+                                          child: Text(c),
+                                        ),
+                                      )
                                       .toList(),
-                                  onChanged: (v) => setState(() => _selectedCity = v),
+                                  onChanged: (v) =>
+                                      setState(() => _selectedCity = v),
                                 ),
                               ],
                             ),
@@ -438,22 +570,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Text('Nigerian State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                      const Text(
+                                        'Nigerian State',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                       const SizedBox(height: 6),
                                       DropdownButtonFormField<String>(
                                         initialValue: _selectedState,
                                         decoration: const InputDecoration(
-                                          prefixIcon: Icon(Icons.map_outlined, size: 18),
+                                          prefixIcon: Icon(
+                                            Icons.map_outlined,
+                                            size: 18,
+                                          ),
                                         ),
                                         items: AppConstants.nigerianStates
-                                            .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                                            .map(
+                                              (s) => DropdownMenuItem(
+                                                value: s,
+                                                child: Text(s),
+                                              ),
+                                            )
                                             .toList(),
                                         onChanged: (v) {
                                           setState(() {
                                             _selectedState = v;
-                                            final newCities = AppConstants.stateCities[v] ?? ['General'];
+                                            final newCities =
+                                                AppConstants.stateCities[v] ??
+                                                ['General'];
                                             _selectedCity = newCities.first;
                                           });
                                         },
@@ -464,19 +613,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Text('City / District', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                      const Text(
+                                        'City / District',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                       const SizedBox(height: 6),
                                       DropdownButtonFormField<String>(
-                                        initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
+                                        initialValue:
+                                            cities.contains(_selectedCity)
+                                            ? _selectedCity
+                                            : cities.first,
                                         decoration: const InputDecoration(
-                                          prefixIcon: Icon(Icons.location_city_outlined, size: 18),
+                                          prefixIcon: Icon(
+                                            Icons.location_city_outlined,
+                                            size: 18,
+                                          ),
                                         ),
                                         items: cities
-                                            .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                                            .map(
+                                              (c) => DropdownMenuItem(
+                                                value: c,
+                                                child: Text(c),
+                                              ),
+                                            )
                                             .toList(),
-                                        onChanged: (v) => setState(() => _selectedCity = v),
+                                        onChanged: (v) =>
+                                            setState(() => _selectedCity = v),
                                       ),
                                     ],
                                   ),
@@ -486,43 +654,75 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           if (_role == 'Customer') ...[
                             const SizedBox(height: 16),
-                            const Text('Preferred Contact Method', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                            const Text(
+                              'Preferred Contact Method',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             const SizedBox(height: 6),
                             DropdownButtonFormField<String>(
                               initialValue: _contactPreference,
                               decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.contact_phone_outlined, size: 18),
+                                prefixIcon: Icon(
+                                  Icons.contact_phone_outlined,
+                                  size: 18,
+                                ),
                               ),
                               items: AppConstants.contactMethods
-                                  .map((m) => DropdownMenuItem(value: m, child: Text(m)))
+                                  .map(
+                                    (m) => DropdownMenuItem(
+                                      value: m,
+                                      child: Text(m),
+                                    ),
+                                  )
                                   .toList(),
-                              onChanged: (v) => setState(() => _contactPreference = v ?? 'Phone'),
+                              onChanged: (v) => setState(
+                                () => _contactPreference = v ?? 'Phone',
+                              ),
                             ),
                           ],
 
                           const SizedBox(height: 16),
 
                           // Password
-                          const Text('Password', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                          const Text(
+                            'Password',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SizedBox(height: 6),
                           TextFormField(
                             controller: _passwordController,
                             obscureText: _obscurePassword,
                             decoration: InputDecoration(
                               hintText: 'Min 8 chars, 1 uppercase, 1 digit',
-                              prefixIcon: const Icon(Icons.lock_outline, size: 18),
+                              prefixIcon: const Icon(
+                                Icons.lock_outline,
+                                size: 18,
+                              ),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                                  _obscurePassword
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
                                   size: 18,
                                 ),
-                                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                onPressed: () => setState(
+                                  () => _obscurePassword = !_obscurePassword,
+                                ),
                               ),
                             ),
                             validator: (v) {
-                              if (v == null || v.length < 8) return 'Password must be at least 8 characters';
-                              if (!v.contains(RegExp(r'[A-Z]'))) return 'Must include at least one uppercase letter';
-                              if (!v.contains(RegExp(r'[0-9]'))) return 'Must include at least one digit';
+                              if (v == null || v.length < 8)
+                                return 'Password must be at least 8 characters';
+                              if (!v.contains(RegExp(r'[A-Z]')))
+                                return 'Must include at least one uppercase letter';
+                              if (!v.contains(RegExp(r'[0-9]')))
+                                return 'Must include at least one digit';
                               return null;
                             },
                           ),
@@ -530,7 +730,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 16),
 
                           // Confirm Password
-                          const Text('Confirm Password', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                          const Text(
+                            'Confirm Password',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                           const SizedBox(height: 6),
                           TextFormField(
                             controller: _confirmPasswordController,
@@ -540,7 +746,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               prefixIcon: Icon(Icons.lock_outline, size: 18),
                             ),
                             validator: (v) {
-                              if (v != _passwordController.text) return 'Passwords do not match';
+                              if (v != _passwordController.text)
+                                return 'Passwords do not match';
                               return null;
                             },
                           ),
@@ -554,10 +761,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               value: _consent,
                               contentPadding: EdgeInsets.zero,
                               controlAffinity: ListTileControlAffinity.leading,
-                              onChanged: (v) => setState(() => _consent = v ?? false),
+                              onChanged: (v) =>
+                                  setState(() => _consent = v ?? false),
                               title: const Text(
                                 'I understand this is a demonstration environment using synthetic data. I consent to FirstHome Nigeria storing my profile details for service matchmaking. (No real BVN/NIN collected).',
-                                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
                             ),
                           ),
@@ -567,15 +778,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: auth.isLoading ? null : _handleRegister,
+                              onPressed: auth.isLoading
+                                  ? null
+                                  : _handleRegister,
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                               ),
                               child: auth.isLoading
                                   ? const SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
                                     )
                                   : Text('Complete Registration ($_role)'),
                             ),
@@ -588,7 +806,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               onTap: () => widget.onNavigate('login'),
                               child: const Text(
                                 'Already have an account? Sign In',
-                                style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 13),
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
                               ),
                             ),
                           ),

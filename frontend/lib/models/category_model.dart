@@ -21,9 +21,9 @@ class CategoryModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'slug': slug,
-        'isActive': isActive,
-      };
+    'id': id,
+    'name': name,
+    'slug': slug,
+    'isActive': isActive,
+  };
 }

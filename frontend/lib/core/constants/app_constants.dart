@@ -25,7 +25,15 @@ class AppConstants {
   ];
 
   static const Map<String, List<String>> stateCities = {
-    'Lagos': ['Ikeja', 'Lekki', 'Yaba', 'Victoria Island', 'Surulere', 'Maryland', 'Ikoyi'],
+    'Lagos': [
+      'Ikeja',
+      'Lekki',
+      'Yaba',
+      'Victoria Island',
+      'Surulere',
+      'Maryland',
+      'Ikoyi',
+    ],
     'Abuja (FCT)': ['Wuse', 'Garki', 'Maitama', 'Asokoro', 'Gwarinpa', 'Jabi'],
     'Rivers': ['Port Harcourt', 'Obio-Akpor', 'Eleme', 'Bonny'],
     'Oyo': ['Ibadan', 'Ogbomosho', 'Oyo'],
@@ -42,11 +50,7 @@ class AppConstants {
     'Housing enquiry',
   ];
 
-  static const List<String> contactMethods = [
-    'Phone',
-    'Email',
-    'WhatsApp',
-  ];
+  static const List<String> contactMethods = ['Phone', 'Email', 'WhatsApp'];
 
   static const List<String> leadStatuses = [
     'New',

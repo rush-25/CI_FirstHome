@@ -50,18 +50,18 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'fullName': fullName,
-        'email': email,
-        'phone': phone,
-        'role': role,
-        'state': state,
-        'city': city,
-        'contactPreference': contactPreference,
-        'consentAt': consentAt?.toIso8601String(),
-        'providerId': providerId,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'id': id,
+    'fullName': fullName,
+    'email': email,
+    'phone': phone,
+    'role': role,
+    'state': state,
+    'city': city,
+    'contactPreference': contactPreference,
+    'consentAt': consentAt?.toIso8601String(),
+    'providerId': providerId,
+    'createdAt': createdAt.toIso8601String(),
+  };
 }
 
 class AuthResponseModel {

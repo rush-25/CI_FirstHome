@@ -177,7 +177,10 @@ class AdminProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final res = await _api.getAdminVerificationEvents(page: page, pageSize: 15);
+      final res = await _api.getAdminVerificationEvents(
+        page: page,
+        pageSize: 15,
+      );
       _verificationEvents = res['items'] as List<VerificationEventModel>;
       _totalEvents = res['total'] as int;
     } catch (e) {
@@ -188,7 +191,11 @@ class AdminProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> simulateMockVerification(int userId, String status, String note) async {
+  Future<bool> simulateMockVerification(
+    int userId,
+    String status,
+    String note,
+  ) async {
     try {
       await _api.simulateMockVerification(userId, status: status, note: note);
       await fetchSummary();

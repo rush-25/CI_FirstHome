@@ -34,7 +34,10 @@ class LeadDetailDialog extends StatelessWidget {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.sage,
                             borderRadius: BorderRadius.circular(8),
@@ -85,27 +88,44 @@ class LeadDetailDialog extends StatelessWidget {
                   children: [
                     _InfoRow(label: 'Enquiry Type', value: lead.enquiryType),
                     const Divider(height: 16),
-                    _InfoRow(label: 'Service Category', value: lead.categoryName ?? 'General'),
+                    _InfoRow(
+                      label: 'Service Category',
+                      value: lead.categoryName ?? 'General',
+                    ),
                     const Divider(height: 16),
                     _InfoRow(
                       label: 'Assigned Provider',
-                      value: lead.providerName != null && lead.providerName!.isNotEmpty
+                      value:
+                          lead.providerName != null &&
+                              lead.providerName!.isNotEmpty
                           ? lead.providerName!
                           : 'Open Pool / Unassigned',
                     ),
                     const Divider(height: 16),
-                    _InfoRow(label: 'Location', value: '${lead.city}, ${lead.state}'),
+                    _InfoRow(
+                      label: 'Location',
+                      value: '${lead.city}, ${lead.state}',
+                    ),
                     const Divider(height: 16),
-                    _InfoRow(label: 'Preferred Contact', value: lead.preferredContact),
+                    _InfoRow(
+                      label: 'Preferred Contact',
+                      value: lead.preferredContact,
+                    ),
                     const Divider(height: 16),
-                    _InfoRow(label: 'Submitted Date', value: dateFormat.format(lead.createdAt.toLocal())),
+                    _InfoRow(
+                      label: 'Submitted Date',
+                      value: dateFormat.format(lead.createdAt.toLocal()),
+                    ),
                   ],
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              const Text('Description', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+              const Text(
+                'Description',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+              ),
               const SizedBox(height: 6),
               Container(
                 width: double.infinity,
@@ -117,7 +137,11 @@ class LeadDetailDialog extends StatelessWidget {
                 ),
                 child: Text(
                   lead.description,
-                  style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.5),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textPrimary,
+                    height: 1.5,
+                  ),
                 ),
               ),
 
@@ -137,7 +161,13 @@ class LeadDetailDialog extends StatelessWidget {
               const SizedBox(height: 12),
 
               if (lead.history.isEmpty)
-                const Text('No status transitions recorded.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13))
+                const Text(
+                  'No status transitions recorded.',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 13,
+                  ),
+                )
               else
                 Column(
                   children: List.generate(lead.history.length, (i) {
@@ -153,13 +183,17 @@ class LeadDetailDialog extends StatelessWidget {
                               width: 24,
                               height: 24,
                               decoration: BoxDecoration(
-                                color: isLast ? AppColors.primary : AppColors.sage,
+                                color: isLast
+                                    ? AppColors.primary
+                                    : AppColors.sage,
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 isLast ? Icons.check : Icons.circle,
                                 size: 12,
-                                color: isLast ? Colors.white : AppColors.primary,
+                                color: isLast
+                                    ? Colors.white
+                                    : AppColors.primary,
                               ),
                             ),
                             if (!isLast)
@@ -179,20 +213,29 @@ class LeadDetailDialog extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    StatusBadge(status: h.newStatus, compact: true),
+                                    StatusBadge(
+                                      status: h.newStatus,
+                                      compact: true,
+                                    ),
                                     const SizedBox(width: 8),
                                     Text(
                                       h.oldStatus != null
                                           ? 'Changed from ${h.oldStatus}'
                                           : 'Initial creation',
-                                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.textSecondary,
+                                      ),
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   'By ${h.changedByName} • ${dateFormat.format(h.changedAt.toLocal())}',
-                                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
                               ],
                             ),
@@ -232,13 +275,20 @@ class _InfoRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+        Text(
+          label,
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
             value,
             textAlign: TextAlign.right,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: AppColors.textPrimary,
+            ),
           ),
         ),
       ],

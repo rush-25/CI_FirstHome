@@ -18,7 +18,10 @@ class ProviderDetailDialog extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 24),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 32,
+        vertical: 24,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 580),
@@ -43,7 +46,9 @@ class ProviderDetailDialog extends StatelessWidget {
                       radius: isMobile ? 26 : 32,
                       backgroundColor: Colors.white,
                       child: Text(
-                        provider.displayName.isNotEmpty ? provider.displayName[0] : 'P',
+                        provider.displayName.isNotEmpty
+                            ? provider.displayName[0]
+                            : 'P',
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
@@ -69,12 +74,19 @@ class ProviderDetailDialog extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              const Icon(Icons.location_on, color: AppColors.gold, size: 14),
+                              const Icon(
+                                Icons.location_on,
+                                color: AppColors.gold,
+                                size: 14,
+                              ),
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   '${provider.city}, ${provider.state}',
-                                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 13,
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -103,7 +115,10 @@ class ProviderDetailDialog extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.sage,
                             borderRadius: BorderRadius.circular(6),
@@ -118,40 +133,27 @@ class ProviderDetailDialog extends StatelessWidget {
                           ),
                         ),
                         VerificationBadge(status: provider.verificationStatus),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: AppColors.background,
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.star, color: AppColors.gold, size: 14),
-                              SizedBox(width: 4),
-                              Text(
-                                '4.9 (18 reviews)',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
 
                     const SizedBox(height: 24),
 
                     // About
-                    const Text('About This Professional', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                    const Text(
+                      'About This Professional',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Text(
                       provider.description,
-                      style: const TextStyle(fontSize: 14, color: AppColors.textSecondary, height: 1.5),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
+                        height: 1.5,
+                      ),
                     ),
 
                     const SizedBox(height: 24),
@@ -228,7 +230,11 @@ class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const _DetailRow({required this.icon, required this.label, required this.value});
+  const _DetailRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -237,13 +243,20 @@ class _DetailRow extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: AppColors.textSecondary),
         const SizedBox(width: 10),
-        Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+        Text(
+          label,
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
             value,
             textAlign: TextAlign.right,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textPrimary),
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: AppColors.textPrimary,
+            ),
           ),
         ),
       ],

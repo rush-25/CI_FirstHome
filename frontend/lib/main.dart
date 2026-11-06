@@ -18,7 +18,9 @@ import 'screens/provider/provider_dashboard_screen.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
-final AppRouterDelegate appRouterDelegate = AppRouterDelegate(navigatorKey: rootNavigatorKey);
+final AppRouterDelegate appRouterDelegate = AppRouterDelegate(
+  navigatorKey: rootNavigatorKey,
+);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -107,11 +109,14 @@ void navigateTo(String route, {dynamic args}) {
   appRouterDelegate.pushRoute(route);
 }
 
-class AppRouteInformationParser extends RouteInformationParser<RouteInformation> {
+class AppRouteInformationParser
+    extends RouteInformationParser<RouteInformation> {
   const AppRouteInformationParser();
 
   @override
-  Future<RouteInformation> parseRouteInformation(RouteInformation routeInformation) async {
+  Future<RouteInformation> parseRouteInformation(
+    RouteInformation routeInformation,
+  ) async {
     return routeInformation;
   }
 
@@ -145,7 +150,8 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
   }
 
   @override
-  RouteInformation get currentConfiguration => RouteInformation(uri: Uri.parse(_currentPath));
+  RouteInformation get currentConfiguration =>
+      RouteInformation(uri: Uri.parse(_currentPath));
 
   @override
   Future<void> setNewRoutePath(RouteInformation configuration) async {
@@ -179,17 +185,24 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
             name: '/login',
             child: LoginScreen(onNavigate: navigateTo),
           )
-        else if (_currentPath == '/register' || _currentPath == '/register-customer')
+        else if (_currentPath == '/register' ||
+            _currentPath == '/register-customer')
           const MaterialPage(
             key: ValueKey('register-customer-page'),
             name: '/register-customer',
-            child: RegisterScreen(initialRole: 'Customer', onNavigate: navigateTo),
+            child: RegisterScreen(
+              initialRole: 'Customer',
+              onNavigate: navigateTo,
+            ),
           )
         else if (_currentPath == '/register-provider')
           const MaterialPage(
             key: ValueKey('register-provider-page'),
             name: '/register-provider',
-            child: RegisterScreen(initialRole: 'Provider', onNavigate: navigateTo),
+            child: RegisterScreen(
+              initialRole: 'Provider',
+              onNavigate: navigateTo,
+            ),
           )
         else if (_currentPath == '/customer-dashboard')
           MaterialPage(

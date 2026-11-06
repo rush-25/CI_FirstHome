@@ -20,10 +20,12 @@ class CustomerDashboardScreen extends StatefulWidget {
   const CustomerDashboardScreen({super.key, required this.onNavigate});
 
   @override
-  State<CustomerDashboardScreen> createState() => _CustomerDashboardScreenState();
+  State<CustomerDashboardScreen> createState() =>
+      _CustomerDashboardScreenState();
 }
 
-class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with SingleTickerProviderStateMixin {
+class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
 
@@ -70,9 +72,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
   void _openCreateEnquiry() {
     showDialog(
       context: context,
-      builder: (ctx) => CreateLeadDialog(
-        onNavigate: widget.onNavigate,
-      ),
+      builder: (ctx) => CreateLeadDialog(onNavigate: widget.onNavigate),
     );
   }
 
@@ -116,7 +116,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
             Navbar(onNavigate: widget.onNavigate),
             Container(
               color: AppColors.background,
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 40),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16 : 24,
+                vertical: isMobile ? 24 : 40,
+              ),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1400),
@@ -141,7 +144,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                               const SizedBox(height: 4),
                               const Text(
                                 'Manage your home service requests and track provider statuses.',
-                                style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 14,
+                                ),
                               ),
                             ],
                           );
@@ -162,7 +168,8 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                                   ],
                                 )
                               : Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(child: infoCol),
                                     const SizedBox(width: 16),
@@ -194,7 +201,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                                 const SizedBox(height: 12),
                                 StatCard(
                                   title: 'In Progress / Qualified',
-                                  value: (leadProv.contactedCount + leadProv.qualifiedCount).toString(),
+                                  value:
+                                      (leadProv.contactedCount +
+                                              leadProv.qualifiedCount)
+                                          .toString(),
                                   icon: Icons.pending_actions,
                                   color: AppColors.statusContactedText,
                                 ),
@@ -230,7 +240,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                                 Expanded(
                                   child: StatCard(
                                     title: 'In Progress / Qualified',
-                                    value: (leadProv.contactedCount + leadProv.qualifiedCount).toString(),
+                                    value:
+                                        (leadProv.contactedCount +
+                                                leadProv.qualifiedCount)
+                                            .toString(),
                                     icon: Icons.pending_actions,
                                     color: AppColors.statusContactedText,
                                   ),
@@ -253,8 +266,12 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                       Container(
                         decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                          border: Border(bottom: BorderSide(color: AppColors.border)),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(12),
+                          ),
+                          border: Border(
+                            bottom: BorderSide(color: AppColors.border),
+                          ),
                         ),
                         child: TabBar(
                           controller: _tabController,
@@ -262,11 +279,23 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
                           indicatorWeight: 3,
-                          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                          labelStyle: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
                           tabs: const [
-                            Tab(icon: Icon(Icons.receipt_long, size: 18), text: 'My Enquiries'),
-                            Tab(icon: Icon(Icons.person_outline, size: 18), text: 'My Profile'),
-                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Identity Verification'),
+                            Tab(
+                              icon: Icon(Icons.receipt_long, size: 18),
+                              text: 'My Enquiries',
+                            ),
+                            Tab(
+                              icon: Icon(Icons.person_outline, size: 18),
+                              text: 'My Profile',
+                            ),
+                            Tab(
+                              icon: Icon(Icons.shield_outlined, size: 18),
+                              text: 'Identity Verification',
+                            ),
                           ],
                         ),
                       ),
@@ -276,7 +305,9 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                         padding: const EdgeInsets.all(24),
                         decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(12),
+                          ),
                           border: Border(
                             left: BorderSide(color: AppColors.border),
                             right: BorderSide(color: AppColors.border),
@@ -320,10 +351,14 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
             decoration: InputDecoration(
               hintText: 'Search by reference or title...',
               prefixIcon: const Icon(Icons.search, size: 18),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 10,
+              ),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.arrow_forward, size: 16),
-                onPressed: () => leadProv.setSearchQuery(_searchController.text),
+                onPressed: () =>
+                    leadProv.setSearchQuery(_searchController.text),
               ),
             ),
           ),
@@ -333,11 +368,16 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
             initialValue: leadProv.statusFilter,
             decoration: const InputDecoration(
               labelText: 'Filter Status',
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
             ),
             items: [
               const DropdownMenuItem(value: null, child: Text('All Statuses')),
-              ...AppConstants.leadStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s))),
+              ...AppConstants.leadStatuses.map(
+                (s) => DropdownMenuItem(value: s, child: Text(s)),
+              ),
             ],
             onChanged: (v) => leadProv.setStatusFilter(v),
           ),
@@ -349,12 +389,17 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                   controller: _searchController,
                   onSubmitted: (v) => leadProv.setSearchQuery(v),
                   decoration: InputDecoration(
-                    hintText: 'Search by reference (e.g. FH-2026-0001) or title...',
+                    hintText:
+                        'Search by reference (e.g. FH-2026-0001) or title...',
                     prefixIcon: const Icon(Icons.search, size: 18),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.arrow_forward, size: 16),
-                      onPressed: () => leadProv.setSearchQuery(_searchController.text),
+                      onPressed: () =>
+                          leadProv.setSearchQuery(_searchController.text),
                     ),
                   ),
                 ),
@@ -366,11 +411,19 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                   isExpanded: true,
                   initialValue: leadProv.statusFilter,
                   decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                   ),
                   items: [
-                    const DropdownMenuItem(value: null, child: Text('All Statuses')),
-                    ...AppConstants.leadStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s))),
+                    const DropdownMenuItem(
+                      value: null,
+                      child: Text('All Statuses'),
+                    ),
+                    ...AppConstants.leadStatuses.map(
+                      (s) => DropdownMenuItem(value: s, child: Text(s)),
+                    ),
                   ],
                   onChanged: (v) => leadProv.setStatusFilter(v),
                 ),
@@ -386,73 +439,113 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
           child: leadProv.isLoading
               ? const Center(child: CircularProgressIndicator())
               : leadProv.myLeads.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.inbox_outlined, size: 48, color: AppColors.textSecondary),
-                          const SizedBox(height: 12),
-                          const Text('No enquiries found', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
-                          const SizedBox(height: 4),
-                          const Text('Submit your first service or housing enquiry above.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-                          const SizedBox(height: 16),
-                          ElevatedButton.icon(
-                            onPressed: _openCreateEnquiry,
-                            icon: const Icon(Icons.add, size: 16),
-                            label: const Text('Create Enquiry'),
-                          ),
-                        ],
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.inbox_outlined,
+                        size: 48,
+                        color: AppColors.textSecondary,
                       ),
-                    )
-                  : ListView.separated(
-                      itemCount: leadProv.myLeads.length,
-                      separatorBuilder: (_, _) => const Divider(height: 1),
-                      itemBuilder: (ctx, i) {
-                        final l = leadProv.myLeads[i];
-                        return Material(
-                          color: Colors.transparent,
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: AppColors.sage,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(Icons.build_outlined, color: AppColors.primary, size: 20),
-                            ),
-                            title: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              spacing: 8,
-                              runSpacing: 4,
-                              children: [
-                                Text(
-                                  l.reference,
-                                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
-                                ),
-                                StatusBadge(status: l.status, compact: true),
-                              ],
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 4),
-                                Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '${l.categoryName ?? 'Service'} • Provider: ${l.providerName ?? 'Open Request'} • ${dateFormat.format(l.createdAt.toLocal())}',
-                                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                                ),
-                              ],
-                            ),
-                            trailing: OutlinedButton(
-                              onPressed: () => _openLeadDetail(l),
-                              child: const Text('View Timeline', style: TextStyle(fontSize: 12)),
-                            ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'No enquiries found',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Submit your first service or housing enquiry above.',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        onPressed: _openCreateEnquiry,
+                        icon: const Icon(Icons.add, size: 16),
+                        label: const Text('Create Enquiry'),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.separated(
+                  itemCount: leadProv.myLeads.length,
+                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  itemBuilder: (ctx, i) {
+                    final l = leadProv.myLeads[i];
+                    return Material(
+                      color: Colors.transparent,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.sage,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        );
-                      },
-                    ),
+                          child: const Icon(
+                            Icons.build_outlined,
+                            color: AppColors.primary,
+                            size: 20,
+                          ),
+                        ),
+                        title: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: [
+                            Text(
+                              l.reference,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            StatusBadge(status: l.status, compact: true),
+                          ],
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(
+                              l.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '${l.categoryName ?? 'Service'} • Provider: ${l.providerName ?? 'Open Request'} • ${dateFormat.format(l.createdAt.toLocal())}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: OutlinedButton(
+                          onPressed: () => _openLeadDetail(l),
+                          child: const Text(
+                            'View Timeline',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
         ),
       ],
     );
@@ -467,9 +560,15 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Manage Customer Profile', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            const Text(
+              'Manage Customer Profile',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 4),
-            const Text('Update your personal and contact details for incoming provider responses.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+            const Text(
+              'Update your personal and contact details for incoming provider responses.',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+            ),
             const SizedBox(height: 20),
             Row(
               children: [
@@ -477,11 +576,19 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Full Name', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'Full Name',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       TextFormField(
                         controller: _nameController,
-                        validator: (v) => (v == null || v.trim().length < 2) ? 'Required' : null,
+                        validator: (v) => (v == null || v.trim().length < 2)
+                            ? 'Required'
+                            : null,
                       ),
                     ],
                   ),
@@ -491,11 +598,19 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Phone Number (Synthetic)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'Phone Number (Synthetic)',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       TextFormField(
                         controller: _phoneController,
-                        validator: (v) => (v == null || v.trim().length < 7) ? 'Required' : null,
+                        validator: (v) => (v == null || v.trim().length < 7)
+                            ? 'Required'
+                            : null,
                       ),
                     ],
                   ),
@@ -509,17 +624,27 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('State', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'State',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<String>(
                         initialValue: _selectedState,
                         items: AppConstants.nigerianStates
-                            .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                            .map(
+                              (s) => DropdownMenuItem(value: s, child: Text(s)),
+                            )
                             .toList(),
                         onChanged: (v) {
                           setState(() {
                             _selectedState = v;
-                            _selectedCity = (AppConstants.stateCities[v] ?? ['General']).first;
+                            _selectedCity =
+                                (AppConstants.stateCities[v] ?? ['General'])
+                                    .first;
                           });
                         },
                       ),
@@ -531,11 +656,23 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('City', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'City',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       DropdownButtonFormField<String>(
-                        initialValue: cities.contains(_selectedCity) ? _selectedCity : cities.first,
-                        items: cities.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                        initialValue: cities.contains(_selectedCity)
+                            ? _selectedCity
+                            : cities.first,
+                        items: cities
+                            .map(
+                              (c) => DropdownMenuItem(value: c, child: Text(c)),
+                            )
+                            .toList(),
                         onChanged: (v) => setState(() => _selectedCity = v),
                       ),
                     ],
@@ -547,7 +684,10 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Preferred Contact Method', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Preferred Contact Method',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
                   initialValue: _contactPref,
@@ -580,24 +720,20 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
           LayoutBuilder(
             builder: (context, constraints) {
               final isNarrow = constraints.maxWidth < 500;
-              final label = const Text('Identity Verification', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700));
+              final label = const Text(
+                'Identity Verification',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              );
               final badge = VerificationBadge(status: status);
 
               return isNarrow
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        label,
-                        const SizedBox(height: 8),
-                        badge,
-                      ],
+                      children: [label, const SizedBox(height: 8), badge],
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        label,
-                        badge,
-                      ],
+                      children: [label, badge],
                     );
             },
           ),
@@ -611,12 +747,20 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
             ),
             child: Row(
               children: const [
-                Icon(Icons.privacy_tip_outlined, color: AppColors.primary, size: 20),
+                Icon(
+                  Icons.privacy_tip_outlined,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     'FirstHome Nigeria verifies customer identities to keep our service community secure and trustworthy.',
-                    style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.4),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                      height: 1.4,
+                    ),
                   ),
                 ),
               ],
@@ -632,9 +776,12 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
             status == 'Verified'
                 ? 'Your identity profile is verified. Service providers see this badge on your enquiries.'
                 : status == 'Pending'
-                    ? 'Your verification request is currently pending review by an administrator.'
-                    : 'Submit your profile for verification to build trust with service providers.',
-            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                ? 'Your verification request is currently pending review by an administrator.'
+                : 'Submit your profile for verification to build trust with service providers.',
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+            ),
           ),
           const SizedBox(height: 20),
           if (status == 'NotStarted' || status == 'Rejected') ...[
@@ -646,7 +793,9 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen> with 
                       if (ok && mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Verification request submitted! Status is now Pending.'),
+                            content: Text(
+                              'Verification request submitted! Status is now Pending.',
+                            ),
                             backgroundColor: AppColors.success,
                           ),
                         );

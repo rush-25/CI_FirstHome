@@ -22,12 +22,15 @@ class AdminDashboardScreen extends StatefulWidget {
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
-class _AdminDashboardScreenState extends State<AdminDashboardScreen> with SingleTickerProviderStateMixin {
+class _AdminDashboardScreenState extends State<AdminDashboardScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   final TextEditingController _leadSearchController = TextEditingController();
-  final TextEditingController _customerSearchController = TextEditingController();
-  final TextEditingController _providerSearchController = TextEditingController();
+  final TextEditingController _customerSearchController =
+      TextEditingController();
+  final TextEditingController _providerSearchController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -78,10 +81,23 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
     }
 
     if (validNextStatuses.isEmpty) {
-      ScquiryDialog(
+      showDialog(
         context: context,
-        title: 'Lead Already Closed',
-        message: 'This lead is already closed and has reached its final state.',
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          title: const Text('Lead Already Closed'),
+          content: const Text(
+            'This lead is already closed and has reached its final state.',
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
       );
       return;
     }
@@ -92,7 +108,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setModalState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Row(
             children: [
               const Icon(Icons.edit_note, color: AppColors.primary),
@@ -106,14 +124,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
             children: [
               Text(
                 'Current Status: ${lead.status}',
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
               const SizedBox(height: 12),
-              const Text('Select New Valid Status:', style: TextStyle(fontSize: 13)),
+              const Text(
+                'Select New Valid Status:',
+                style: TextStyle(fontSize: 13),
+              ),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
                 initialValue: selectedNewStatus,
-                items: validNextStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                items: validNextStatuses
+                    .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                    .toList(),
                 onChanged: (v) => setModalState(() => selectedNewStatus = v),
               ),
               const SizedBox(height: 16),
@@ -134,11 +160,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                 if (selectedNewStatus != null) {
                   final admin = context.read<AdminProvider>();
                   final messenger = ScaffoldMessenger.of(context);
-                  final ok = await admin.updateLeadStatus(lead.id, selectedNewStatus!);
+                  final ok = await admin.updateLeadStatus(
+                    lead.id,
+                    selectedNewStatus!,
+                  );
                   if (ok && mounted) {
                     messenger.showSnackBar(
                       SnackBar(
-                        content: Text('Lead status updated to $selectedNewStatus!'),
+                        content: Text(
+                          'Lead status updated to $selectedNewStatus!',
+                        ),
                         backgroundColor: AppColors.success,
                       ),
                     );
@@ -154,14 +185,20 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
   }
 
   void _openVerificationModal(int userId, String name, String currentStatus) {
-    String selectedStatus = currentStatus == 'Verified' ? 'Rejected' : 'Verified';
-    final noteController = TextEditingController(text: 'Admin verification update.');
+    String selectedStatus = currentStatus == 'Verified'
+        ? 'Rejected'
+        : 'Verified';
+    final noteController = TextEditingController(
+      text: 'Admin verification update.',
+    );
 
     showDialog(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setModalState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Row(
             children: const [
               Icon(Icons.shield_outlined, color: AppColors.gold),
@@ -175,12 +212,24 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
             children: [
               Text(
                 'Target User: $name (ID #$userId)',
-                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
               ),
               const SizedBox(height: 4),
-              Text('Current Status: $currentStatus', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+              Text(
+                'Current Status: $currentStatus',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
+              ),
               const SizedBox(height: 16),
-              const Text('Select Status:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              const Text(
+                'Select Status:',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
                 initialValue: selectedStatus,
@@ -189,14 +238,20 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                   DropdownMenuItem(value: 'Verified', child: Text('Verified')),
                   DropdownMenuItem(value: 'Rejected', child: Text('Rejected')),
                 ],
-                onChanged: (v) => setModalState(() => selectedStatus = v ?? 'Verified'),
+                onChanged: (v) =>
+                    setModalState(() => selectedStatus = v ?? 'Verified'),
               ),
               const SizedBox(height: 12),
-              const Text('Audit Note:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              const Text(
+                'Audit Note:',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               TextField(
                 controller: noteController,
-                decoration: const InputDecoration(hintText: 'Enter reason or note...'),
+                decoration: const InputDecoration(
+                  hintText: 'Enter reason or note...',
+                ),
               ),
               const SizedBox(height: 14),
               Container(
@@ -207,7 +262,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                 ),
                 child: const Text(
                   'Update user verification credential and audit state.',
-                  style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ),
             ],
@@ -230,7 +288,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                 if (ok && mounted) {
                   messenger.showSnackBar(
                     SnackBar(
-                      content: Text('Verification updated to $selectedStatus for $name!'),
+                      content: Text(
+                        'Verification updated to $selectedStatus for $name!',
+                      ),
                       backgroundColor: AppColors.success,
                     ),
                   );
@@ -257,7 +317,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
             Navbar(onNavigate: widget.onNavigate),
             Container(
               color: AppColors.background,
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: isMobile ? 24 : 40),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16 : 24,
+                vertical: isMobile ? 24 : 40,
+              ),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1400),
@@ -282,7 +345,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                               SizedBox(height: 4),
                               Text(
                                 'Database-driven metrics, lead status orchestration, and verification management.',
-                                style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 14,
+                                ),
                               ),
                             ],
                           );
@@ -309,7 +375,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                                   ],
                                 )
                               : Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(child: infoCol),
                                     const SizedBox(width: 16),
@@ -327,14 +394,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                               children: [
                                 StatCard(
                                   title: 'Total Customers',
-                                  value: summary?.totalCustomers.toString() ?? '10',
+                                  value:
+                                      summary?.totalCustomers.toString() ??
+                                      '10',
                                   icon: Icons.people_outline,
                                   color: AppColors.primary,
                                 ),
                                 const SizedBox(height: 12),
                                 StatCard(
                                   title: 'Total Providers',
-                                  value: '${summary?.activeProviders ?? 8} / ${summary?.totalProviders ?? 8}',
+                                  value:
+                                      '${summary?.activeProviders ?? 8} / ${summary?.totalProviders ?? 8}',
                                   icon: Icons.business_outlined,
                                   subtitle: 'Active in directory',
                                   color: AppColors.gold,
@@ -349,7 +419,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                                 const SizedBox(height: 12),
                                 StatCard(
                                   title: 'Qualified / Closed',
-                                  value: '${(summary?.leadsByStatus['Qualified'] ?? 0) + (summary?.leadsByStatus['Closed'] ?? 0)}',
+                                  value:
+                                      '${(summary?.leadsByStatus['Qualified'] ?? 0) + (summary?.leadsByStatus['Closed'] ?? 0)}',
                                   icon: Icons.check_circle_outline,
                                   color: AppColors.success,
                                 ),
@@ -360,7 +431,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                                 Expanded(
                                   child: StatCard(
                                     title: 'Total Customers',
-                                    value: summary?.totalCustomers.toString() ?? '10',
+                                    value:
+                                        summary?.totalCustomers.toString() ??
+                                        '10',
                                     icon: Icons.people_outline,
                                     color: AppColors.primary,
                                   ),
@@ -369,7 +442,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                                 Expanded(
                                   child: StatCard(
                                     title: 'Total Providers',
-                                    value: '${summary?.activeProviders ?? 8} / ${summary?.totalProviders ?? 8}',
+                                    value:
+                                        '${summary?.activeProviders ?? 8} / ${summary?.totalProviders ?? 8}',
                                     icon: Icons.business_outlined,
                                     subtitle: 'Active in directory',
                                     color: AppColors.gold,
@@ -379,7 +453,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                                 Expanded(
                                   child: StatCard(
                                     title: 'Total Leads Generated',
-                                    value: summary?.totalLeads.toString() ?? '15',
+                                    value:
+                                        summary?.totalLeads.toString() ?? '15',
                                     icon: Icons.receipt_long_outlined,
                                     color: AppColors.statusNewText,
                                   ),
@@ -388,7 +463,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                                 Expanded(
                                   child: StatCard(
                                     title: 'Qualified / Closed',
-                                    value: '${(summary?.leadsByStatus['Qualified'] ?? 0) + (summary?.leadsByStatus['Closed'] ?? 0)}',
+                                    value:
+                                        '${(summary?.leadsByStatus['Qualified'] ?? 0) + (summary?.leadsByStatus['Closed'] ?? 0)}',
                                     icon: Icons.check_circle_outline,
                                     color: AppColors.success,
                                   ),
@@ -402,8 +478,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                       Container(
                         decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                          border: Border(bottom: BorderSide(color: AppColors.border)),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(12),
+                          ),
+                          border: Border(
+                            bottom: BorderSide(color: AppColors.border),
+                          ),
                         ),
                         child: TabBar(
                           controller: _tabController,
@@ -411,12 +491,27 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                           unselectedLabelColor: AppColors.textSecondary,
                           indicatorColor: AppColors.primary,
                           indicatorWeight: 3,
-                          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                          labelStyle: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                          ),
                           tabs: const [
-                            Tab(icon: Icon(Icons.receipt_long, size: 18), text: 'Leads Management'),
-                            Tab(icon: Icon(Icons.people_outline, size: 18), text: 'Customers'),
-                            Tab(icon: Icon(Icons.business_outlined, size: 18), text: 'Providers Directory'),
-                            Tab(icon: Icon(Icons.shield_outlined, size: 18), text: 'Verification Events'),
+                            Tab(
+                              icon: Icon(Icons.receipt_long, size: 18),
+                              text: 'Leads Management',
+                            ),
+                            Tab(
+                              icon: Icon(Icons.people_outline, size: 18),
+                              text: 'Customers',
+                            ),
+                            Tab(
+                              icon: Icon(Icons.business_outlined, size: 18),
+                              text: 'Providers Directory',
+                            ),
+                            Tab(
+                              icon: Icon(Icons.shield_outlined, size: 18),
+                              text: 'Verification Events',
+                            ),
                           ],
                         ),
                       ),
@@ -426,7 +521,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                         padding: const EdgeInsets.all(24),
                         decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(12),
+                          ),
                           border: Border(
                             left: BorderSide(color: AppColors.border),
                             right: BorderSide(color: AppColors.border),
@@ -473,10 +570,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                 decoration: InputDecoration(
                   hintText: 'Search by reference, customer name, title...',
                   prefixIcon: const Icon(Icons.search, size: 18),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.arrow_forward, size: 16),
-                    onPressed: () => admin.searchLeads(_leadSearchController.text),
+                    onPressed: () =>
+                        admin.searchLeads(_leadSearchController.text),
                   ),
                 ),
               ),
@@ -487,11 +588,19 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
               child: DropdownButtonFormField<String?>(
                 initialValue: admin.leadStatusFilter,
                 decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                 ),
                 items: [
-                  const DropdownMenuItem(value: null, child: Text('All Statuses')),
-                  ...AppConstants.leadStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s))),
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('All Statuses'),
+                  ),
+                  ...AppConstants.leadStatuses.map(
+                    (s) => DropdownMenuItem(value: s, child: Text(s)),
+                  ),
                 ],
                 onChanged: (v) => admin.filterLeadsByStatus(v),
               ),
@@ -505,71 +614,107 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
           child: admin.isLoading
               ? const Center(child: CircularProgressIndicator())
               : admin.leads.isEmpty
-                  ? const Center(child: Text('No leads match the specified criteria.'))
-                  : ListView.separated(
-                      itemCount: admin.leads.length,
-                      separatorBuilder: (_, _) => const Divider(height: 1),
-                      itemBuilder: (ctx, i) {
-                        final l = admin.leads[i];
-                        return Material(
-                          color: Colors.transparent,
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                            title: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              spacing: 8,
-                              runSpacing: 4,
-                              children: [
-                                Text(
-                                  l.reference,
-                                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primary),
-                                ),
-                                StatusBadge(status: l.status, compact: true),
-                                Text('•  ${l.categoryName ?? 'Category'}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                              ],
+              ? const Center(
+                  child: Text('No leads match the specified criteria.'),
+                )
+              : ListView.separated(
+                  itemCount: admin.leads.length,
+                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  itemBuilder: (ctx, i) {
+                    final l = admin.leads[i];
+                    return Material(
+                      color: Colors.transparent,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 6,
+                        ),
+                        title: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: [
+                            Text(
+                              l.reference,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                color: AppColors.primary,
+                              ),
                             ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 4),
-                                Text(l.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                                const SizedBox(height: 2),
-                                Text(
-                                  'Customer: ${l.customerName} (${l.customerEmail}) • Provider: ${l.providerName ?? 'Unassigned'} • ${dateFormat.format(l.createdAt.toLocal())}',
-                                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
-                                ),
-                              ],
+                            StatusBadge(status: l.status, compact: true),
+                            Text(
+                              'â€¢  ${l.categoryName ?? 'Category'}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
                             ),
-                            trailing: Wrap(
-                              spacing: 8,
-                              runSpacing: 4,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                OutlinedButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (c) => LeadDetailDialog(lead: l),
-                                    );
-                                  },
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                  ),
-                                  child: const Text('History', style: TextStyle(fontSize: 11)),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () => _openStatusChangeModal(l),
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                  ),
-                                  child: const Text('Change Status', style: TextStyle(fontSize: 11)),
-                                ),
-                              ],
+                          ],
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(
+                              l.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Customer: ${l.customerName} (${l.customerEmail}) â€¢ Provider: ${l.providerName ?? 'Unassigned'} â€¢ ${dateFormat.format(l.createdAt.toLocal())}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            OutlinedButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (c) => LeadDetailDialog(lead: l),
+                                );
+                              },
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                              ),
+                              child: const Text(
+                                'History',
+                                style: TextStyle(fontSize: 11),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => _openStatusChangeModal(l),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                              ),
+                              child: const Text(
+                                'Change Status',
+                                style: TextStyle(fontSize: 11),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
         ),
       ],
     );
@@ -586,10 +731,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
           decoration: InputDecoration(
             hintText: 'Search customer name or email...',
             prefixIcon: const Icon(Icons.search, size: 18),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 10,
+            ),
             suffixIcon: IconButton(
               icon: const Icon(Icons.arrow_forward, size: 16),
-              onPressed: () => admin.searchCustomers(_customerSearchController.text),
+              onPressed: () =>
+                  admin.searchCustomers(_customerSearchController.text),
             ),
           ),
         ),
@@ -605,27 +754,55 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                     return Material(
                       color: Colors.transparent,
                       child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 6,
+                        ),
                         leading: CircleAvatar(
                           backgroundColor: AppColors.sage,
-                          child: Text(c.fullName.isNotEmpty ? c.fullName[0] : 'C', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            c.fullName.isNotEmpty ? c.fullName[0] : 'C',
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         title: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           spacing: 8,
                           runSpacing: 4,
                           children: [
-                            Text(c.fullName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                            VerificationBadge(status: c.verificationStatus, compact: true),
+                            Text(
+                              c.fullName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                              ),
+                            ),
+                            VerificationBadge(
+                              status: c.verificationStatus,
+                              compact: true,
+                            ),
                           ],
                         ),
                         subtitle: Text(
-                          '${c.email} • ${c.phone} • Location: ${c.city ?? ''}, ${c.state ?? ''} • Enquiries: ${c.leadCount} • Joined ${dateFormat.format(c.createdAt.toLocal())}',
-                          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          '${c.email} â€¢ ${c.phone} â€¢ Location: ${c.city ?? ''}, ${c.state ?? ''} â€¢ Enquiries: ${c.leadCount} â€¢ Joined ${dateFormat.format(c.createdAt.toLocal())}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         trailing: OutlinedButton(
-                          onPressed: () => _openVerificationModal(c.id, c.fullName, c.verificationStatus),
-                          child: const Text('Verify User', style: TextStyle(fontSize: 11)),
+                          onPressed: () => _openVerificationModal(
+                            c.id,
+                            c.fullName,
+                            c.verificationStatus,
+                          ),
+                          child: const Text(
+                            'Verify User',
+                            style: TextStyle(fontSize: 11),
+                          ),
                         ),
                       ),
                     );
@@ -645,10 +822,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
           decoration: InputDecoration(
             hintText: 'Search provider name, owner, or email...',
             prefixIcon: const Icon(Icons.search, size: 18),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 10,
+            ),
             suffixIcon: IconButton(
               icon: const Icon(Icons.arrow_forward, size: 16),
-              onPressed: () => admin.searchProviders(_providerSearchController.text),
+              onPressed: () =>
+                  admin.searchProviders(_providerSearchController.text),
             ),
           ),
         ),
@@ -664,23 +845,44 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                     return Material(
                       color: Colors.transparent,
                       child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 6,
+                        ),
                         leading: CircleAvatar(
                           backgroundColor: AppColors.sage,
-                          child: Text(p.displayName.isNotEmpty ? p.displayName[0] : 'P', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            p.displayName.isNotEmpty ? p.displayName[0] : 'P',
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         title: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           spacing: 8,
                           runSpacing: 4,
                           children: [
-                            Text(p.displayName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-                            VerificationBadge(status: p.verificationStatus, compact: true),
+                            Text(
+                              p.displayName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                              ),
+                            ),
+                            VerificationBadge(
+                              status: p.verificationStatus,
+                              compact: true,
+                            ),
                           ],
                         ),
                         subtitle: Text(
-                          'Owner: ${p.ownerName} • ${p.categoryName} • ${p.city}, ${p.state} • ${p.email}',
-                          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          'Owner: ${p.ownerName} â€¢ ${p.categoryName} â€¢ ${p.city}, ${p.state} â€¢ ${p.email}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         trailing: Wrap(
                           spacing: 8,
@@ -695,20 +897,30 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                                   p.isActive ? 'Active' : 'Hidden',
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: p.isActive ? AppColors.success : AppColors.error,
+                                    color: p.isActive
+                                        ? AppColors.success
+                                        : AppColors.error,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Switch(
                                   value: p.isActive,
                                   activeThumbColor: AppColors.success,
-                                  onChanged: (val) => admin.toggleProviderActive(p.id, p.isActive),
+                                  onChanged: (val) => admin
+                                      .toggleProviderActive(p.id, p.isActive),
                                 ),
                               ],
                             ),
                             OutlinedButton(
-                              onPressed: () => _openVerificationModal(p.userId, p.displayName, p.verificationStatus),
-                              child: const Text('Verify Provider', style: TextStyle(fontSize: 11)),
+                              onPressed: () => _openVerificationModal(
+                                p.userId,
+                                p.displayName,
+                                p.verificationStatus,
+                              ),
+                              child: const Text(
+                                'Verify Provider',
+                                style: TextStyle(fontSize: 11),
+                              ),
                             ),
                           ],
                         ),
@@ -740,7 +952,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                 color: AppColors.sage,
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Text('Verification Engine', style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.bold)),
+              child: const Text(
+                'Verification Engine',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             );
 
             return isNarrow
@@ -754,17 +973,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      labelText,
-                      auditBadge,
-                    ],
+                    children: [labelText, auditBadge],
                   );
           },
         ),
         const SizedBox(height: 12),
         Expanded(
           child: admin.verificationEvents.isEmpty
-              ? const Center(child: Text('No verification audit events recorded.'))
+              ? const Center(
+                  child: Text('No verification audit events recorded.'),
+                )
               : ListView.separated(
                   itemCount: admin.verificationEvents.length,
                   separatorBuilder: (_, _) => const Divider(height: 1),
@@ -773,14 +991,21 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                     return Material(
                       color: Colors.transparent,
                       child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 6,
+                        ),
                         leading: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: AppColors.sage,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(Icons.history, color: AppColors.primary, size: 20),
+                          child: const Icon(
+                            Icons.history,
+                            color: AppColors.primary,
+                            size: 20,
+                          ),
                         ),
                         title: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
@@ -789,15 +1014,28 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
                           children: [
                             Text(
                               ev.simulatedReference,
-                              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.primary),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 12,
+                                color: AppColors.primary,
+                              ),
                             ),
                             VerificationBadge(status: ev.status, compact: true),
-                            Text('Target: ${ev.userName} (${ev.userRole})', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                            Text(
+                              'Target: ${ev.userName} (${ev.userRole})',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
                         subtitle: Text(
-                          'Note: ${ev.note ?? 'None'} • Timestamp: ${dateFormat.format(ev.createdAt.toLocal())}',
-                          style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                          'Note: ${ev.note ?? 'None'} â€¢ Timestamp: ${dateFormat.format(ev.createdAt.toLocal())}',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ),
                     );
@@ -814,7 +1052,12 @@ class ScquiryDialog extends StatelessWidget {
   final String title;
   final String message;
 
-  const ScquiryDialog({super.key, required this.context, required this.title, required this.message});
+  const ScquiryDialog({
+    super.key,
+    required this.context,
+    required this.title,
+    required this.message,
+  });
 
   @override
   Widget build(BuildContext context) {

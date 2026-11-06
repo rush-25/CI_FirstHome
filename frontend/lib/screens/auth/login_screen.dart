@@ -64,7 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Navbar(onNavigate: widget.onNavigate),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: isMobile ? 32 : 64),
+              padding: EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: isMobile ? 32 : 64,
+              ),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 520),
@@ -99,7 +102,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: AppColors.sage,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: const Icon(Icons.lock_outline, color: AppColors.primary, size: 20),
+                                    child: const Icon(
+                                      Icons.lock_outline,
+                                      color: AppColors.primary,
+                                      size: 20,
+                                    ),
                                   ),
                                   const SizedBox(width: 12),
                                   const Text(
@@ -115,7 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 8),
                               const Text(
                                 'Sign in to access your customer, provider, or administrator account.',
-                                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 13,
+                                ),
                               ),
 
                               const SizedBox(height: 24),
@@ -126,16 +136,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                   decoration: BoxDecoration(
                                     color: AppColors.verifRejectedBg,
                                     borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                                    border: Border.all(
+                                      color: AppColors.error.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                    ),
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.error_outline, color: AppColors.error, size: 18),
+                                      const Icon(
+                                        Icons.error_outline,
+                                        color: AppColors.error,
+                                        size: 18,
+                                      ),
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
                                           auth.errorMessage!,
-                                          style: const TextStyle(color: AppColors.error, fontSize: 13),
+                                          style: const TextStyle(
+                                            color: AppColors.error,
+                                            fontSize: 13,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -145,18 +166,29 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
 
                               // Email
-                              const Text('Email Address', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                              const Text(
+                                'Email Address',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                               const SizedBox(height: 6),
                               TextFormField(
                                 controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: const InputDecoration(
                                   hintText: 'e.g. adaeze@sample.firsthome.test',
-                                  prefixIcon: Icon(Icons.email_outlined, size: 18),
+                                  prefixIcon: Icon(
+                                    Icons.email_outlined,
+                                    size: 18,
+                                  ),
                                 ),
                                 validator: (v) {
-                                  if (v == null || v.trim().isEmpty) return 'Email is required';
-                                  if (!v.contains('@')) return 'Enter a valid email address';
+                                  if (v == null || v.trim().isEmpty)
+                                    return 'Email is required';
+                                  if (!v.contains('@'))
+                                    return 'Enter a valid email address';
                                   return null;
                                 },
                               ),
@@ -164,24 +196,39 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 18),
 
                               // Password
-                              const Text('Password', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                              const Text(
+                                'Password',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                               const SizedBox(height: 6),
                               TextFormField(
                                 controller: _passwordController,
                                 obscureText: _obscurePassword,
                                 decoration: InputDecoration(
                                   hintText: 'Enter your password',
-                                  prefixIcon: const Icon(Icons.lock_outline, size: 18),
+                                  prefixIcon: const Icon(
+                                    Icons.lock_outline,
+                                    size: 18,
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
-                                      _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                                      _obscurePassword
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
                                       size: 18,
                                     ),
-                                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                    onPressed: () => setState(
+                                      () =>
+                                          _obscurePassword = !_obscurePassword,
+                                    ),
                                   ),
                                 ),
                                 validator: (v) {
-                                  if (v == null || v.isEmpty) return 'Password is required';
+                                  if (v == null || v.isEmpty)
+                                    return 'Password is required';
                                   return null;
                                 },
                               ),
@@ -191,15 +238,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: auth.isLoading ? null : _handleLogin,
+                                  onPressed: auth.isLoading
+                                      ? null
+                                      : _handleLogin,
                                   style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                   ),
                                   child: auth.isLoading
                                       ? const SizedBox(
                                           width: 20,
                                           height: 20,
-                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
                                         )
                                       : const Text('Sign In'),
                                 ),
@@ -213,12 +267,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                 spacing: 6,
                                 runSpacing: 4,
                                 children: [
-                                  const Text('Don\'t have an account?', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                                  const Text(
+                                    'Don\'t have an account?',
+                                    style: TextStyle(
+                                      color: AppColors.textSecondary,
+                                      fontSize: 13,
+                                    ),
+                                  ),
                                   InkWell(
-                                    onTap: () => widget.onNavigate('register-customer'),
+                                    onTap: () =>
+                                        widget.onNavigate('register-customer'),
                                     child: const Text(
                                       'Register as Customer',
-                                      style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 13),
+                                      style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -226,10 +291,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 8),
                               Center(
                                 child: InkWell(
-                                  onTap: () => widget.onNavigate('register-provider'),
+                                  onTap: () =>
+                                      widget.onNavigate('register-provider'),
                                   child: const Text(
                                     'Register as Service Provider',
-                                    style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 13),
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -246,19 +316,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.sage.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                          border: Border.all(
+                            color: AppColors.primary.withValues(alpha: 0.2),
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: const [
-                                Icon(Icons.flash_on, color: AppColors.gold, size: 18),
+                                Icon(
+                                  Icons.flash_on,
+                                  color: AppColors.gold,
+                                  size: 18,
+                                ),
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     'Quick Demo Credentials (1-Click Fill)',
-                                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: AppColors.primary),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13,
+                                      color: AppColors.primary,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -268,21 +348,30 @@ class _LoginScreenState extends State<LoginScreen> {
                               role: 'Administrator',
                               label: 'FirstHome Admin (SAMPLE)',
                               email: 'admin@sample.firsthome.test',
-                              onTap: () => _fillCredentials('admin@sample.firsthome.test', 'Fh4212091d1df34b1051A1'),
+                              onTap: () => _fillCredentials(
+                                'admin@sample.firsthome.test',
+                                'Fh4212091d1df34b1051A1',
+                              ),
                             ),
                             const SizedBox(height: 8),
                             _DemoUserButton(
                               role: 'Customer',
                               label: 'Adaeze Okafor (Lagos)',
                               email: 'customer01@sample.firsthome.test',
-                              onTap: () => _fillCredentials('customer01@sample.firsthome.test', 'Fh9ae89105ef00edd81bA1'),
+                              onTap: () => _fillCredentials(
+                                'customer01@sample.firsthome.test',
+                                'Fh9ae89105ef00edd81bA1',
+                              ),
                             ),
                             const SizedBox(height: 8),
                             _DemoUserButton(
                               role: 'Provider',
                               label: 'Lagos Pipe Masters (Plumbing)',
                               email: 'provider01@sample.firsthome.test',
-                              onTap: () => _fillCredentials('provider01@sample.firsthome.test', 'Fh9ae89105ef00edd81bA1'),
+                              onTap: () => _fillCredentials(
+                                'provider01@sample.firsthome.test',
+                                'Fh9ae89105ef00edd81bA1',
+                              ),
                             ),
                           ],
                         ),
@@ -346,14 +435,30 @@ class _DemoUserButton extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
-                  Text(email, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                  Text(
+                    email,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
                 ],
               ),
             ),
             const Text(
               'Fill',
-              style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: AppColors.primary,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

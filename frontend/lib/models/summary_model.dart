@@ -134,8 +134,10 @@ class SummaryModel {
           .toList(),
       recentVerificationEvents:
           (json['recentVerificationEvents'] as List<dynamic>? ?? [])
-              .map((e) =>
-                  VerificationEventModel.fromJson(e as Map<String, dynamic>))
+              .map(
+                (e) =>
+                    VerificationEventModel.fromJson(e as Map<String, dynamic>),
+              )
               .toList(),
     );
   }
