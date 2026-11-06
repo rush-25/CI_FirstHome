@@ -54,6 +54,14 @@ String normalizeRoute(String raw) {
 void navigateTo(String route, {dynamic args}) {
   final navContext = rootNavigatorKey.currentContext;
 
+  if (route == 'home' || route == '/') {
+    if (navContext != null) {
+      Navigator.of(navContext, rootNavigator: true).popUntil((r) => r.isFirst);
+    }
+    appRouterDelegate.pushRoute('home');
+    return;
+  }
+
   if (route == 'create-lead') {
     if (navContext != null) {
       final auth = navContext.read<AuthProvider>();
@@ -154,6 +162,11 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
       _routeId++;
       notifyListeners();
     }
+    if (normalized == '/') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        homeScrollTrigger.value++;
+      });
+    }
   }
 
   @override
@@ -168,6 +181,11 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
       _currentPath = normalized;
       _routeId++;
       notifyListeners();
+    }
+    if (normalized == '/') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        homeScrollTrigger.value++;
+      });
     }
   }
 

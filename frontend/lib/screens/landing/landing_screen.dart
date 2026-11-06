@@ -15,6 +15,8 @@ const String _heroImage =
 const String _howImage =
     'https://images.unsplash.com/photo-1706164971309-fb4785fe6ceb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=82&w=1200';
 
+final ValueNotifier<int> homeScrollTrigger = ValueNotifier<int>(0);
+
 class LandingScreen extends StatefulWidget {
   final Function(String route, {dynamic args}) onNavigate;
 
@@ -33,6 +35,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
+    homeScrollTrigger.addListener(_onHomeScrollTriggered);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final dir = context.read<DirectoryProvider>();
       dir.loadCategories();
@@ -40,8 +43,21 @@ class _LandingScreenState extends State<LandingScreen> {
     });
   }
 
+  void _onHomeScrollTriggered() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients && _scrollController.offset > 0) {
+        _scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOutCubic,
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
+    homeScrollTrigger.removeListener(_onHomeScrollTriggered);
     _scrollController.dispose();
     _searchController.dispose();
     super.dispose();

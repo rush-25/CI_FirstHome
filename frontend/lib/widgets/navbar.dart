@@ -53,7 +53,12 @@ class _NavbarState extends State<Navbar> {
                         children: [
                       // Brand Logo
                       BrandLogo(
-                        onTap: () => widget.onNavigate?.call('home'),
+                        onTap: () {
+                          if (_mobileMenuOpen) {
+                            setState(() => _mobileMenuOpen = false);
+                          }
+                          widget.onNavigate?.call('home');
+                        },
                       ),
 
                       // Desktop Navigation Links
