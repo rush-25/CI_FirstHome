@@ -34,11 +34,11 @@ class Footer extends StatelessWidget {
                         _buildLinksCol('Explore', [
                           ('Find Providers', () => onNavigate?.call('directory')),
                           ('Become a Provider', () => onNavigate?.call('register-provider')),
-                          ('How It Works', () => onNavigate?.call('home')),
+                          ('How It Works', () => onNavigate?.call('how-it-works')),
                         ]),
                         const SizedBox(height: 28),
                         _buildLinksCol('Company', [
-                          ('About FirstHome', () => onNavigate?.call('home')),
+                          ('About FirstHome', () => onNavigate?.call('about')),
                           ('Contact', () {}),
                           ('Careers', () {}),
                         ]),
@@ -61,14 +61,14 @@ class Footer extends StatelessWidget {
                           child: _buildLinksCol('Explore', [
                             ('Find Providers', () => onNavigate?.call('directory')),
                             ('Become a Provider', () => onNavigate?.call('register-provider')),
-                            ('How It Works', () => onNavigate?.call('home')),
+                            ('How It Works', () => onNavigate?.call('how-it-works')),
                           ]),
                         ),
                         const SizedBox(width: 24),
                         Expanded(
                           flex: 2,
                           child: _buildLinksCol('Company', [
-                            ('About FirstHome', () => onNavigate?.call('home')),
+                            ('About FirstHome', () => onNavigate?.call('about')),
                             ('Contact', () {}),
                             ('Careers', () {}),
                           ]),

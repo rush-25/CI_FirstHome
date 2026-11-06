@@ -8,6 +8,8 @@ import 'providers/directory_provider.dart';
 import 'providers/lead_provider.dart';
 import 'providers/admin_provider.dart';
 import 'screens/landing/landing_screen.dart';
+import 'screens/landing/how_it_works_screen.dart';
+import 'screens/landing/about_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/directory/directory_screen.dart';
@@ -101,11 +103,6 @@ void navigateTo(String route, {dynamic args}) {
     return;
   }
 
-  if (route == 'how-it-works') {
-    navigateTo('home');
-    return;
-  }
-
   appRouterDelegate.pushRoute(route);
 }
 
@@ -178,6 +175,18 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
             key: const ValueKey('directory-page'),
             name: '/directory',
             child: DirectoryScreen(onNavigate: navigateTo),
+          )
+        else if (_currentPath == '/how-it-works')
+          MaterialPage(
+            key: const ValueKey('how-it-works-page'),
+            name: '/how-it-works',
+            child: HowItWorksScreen(onNavigate: navigateTo),
+          )
+        else if (_currentPath == '/about')
+          MaterialPage(
+            key: const ValueKey('about-page'),
+            name: '/about',
+            child: AboutScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/login')
           MaterialPage(

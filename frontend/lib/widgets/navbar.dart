@@ -61,9 +61,9 @@ class _NavbarState extends State<Navbar> {
                             const SizedBox(width: 28),
                             _buildNavLink('Find Providers', () => widget.onNavigate?.call('directory')),
                             const SizedBox(width: 28),
-                            _buildNavLink('How It Works', () => widget.onNavigate?.call('home')),
+                            _buildNavLink('How It Works', () => widget.onNavigate?.call('how-it-works')),
                             const SizedBox(width: 28),
-                            _buildNavLink('About', () => widget.onNavigate?.call('home')),
+                            _buildNavLink('About', () => widget.onNavigate?.call('about')),
                           ],
                         ),
 
@@ -217,11 +217,11 @@ class _NavbarState extends State<Navbar> {
                     }),
                     _buildMobileNavItem('How It Works', () {
                       setState(() => _mobileMenuOpen = false);
-                      widget.onNavigate?.call('home');
+                      widget.onNavigate?.call('how-it-works');
                     }),
                     _buildMobileNavItem('About', () {
                       setState(() => _mobileMenuOpen = false);
-                      widget.onNavigate?.call('home');
+                      widget.onNavigate?.call('about');
                     }),
                     const Divider(height: 24),
                     if (!auth.isAuthenticated) ...[
