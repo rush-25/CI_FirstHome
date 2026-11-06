@@ -26,6 +26,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final ScrollController _scrollController = ScrollController();
   final _formKey = GlobalKey<FormState>();
 
   late String _role; // Customer or Provider
@@ -62,6 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _nameController.dispose();
     _businessNameController.dispose();
     _emailController.dispose();
@@ -332,6 +334,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Center(
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     padding: EdgeInsets.symmetric(
                       horizontal: screenWidth < 500 ? 24 : 48,
                       vertical: 48,

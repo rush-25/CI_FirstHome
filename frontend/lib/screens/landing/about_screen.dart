@@ -7,10 +7,23 @@ import '../../widgets/footer.dart';
 const String _aboutHeroImg =
     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=85&w=1600';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends StatefulWidget {
   final Function(String route, {dynamic args}) onNavigate;
 
   const AboutScreen({super.key, required this.onNavigate});
+
+  @override
+  State<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +35,7 @@ class AboutScreen extends StatelessWidget {
       body: Stack(
         children: [
           SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 const SizedBox(height: 82),
@@ -31,7 +45,7 @@ class AboutScreen extends StatelessWidget {
                 _buildPillars(isMobile),
                 _buildCoverageSection(isMobile),
                 _buildCta(isMobile),
-                Footer(onNavigate: onNavigate),
+                Footer(onNavigate: widget.onNavigate),
               ],
             ),
           ),
@@ -39,7 +53,7 @@ class AboutScreen extends StatelessWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: Navbar(onNavigate: onNavigate),
+            child: Navbar(onNavigate: widget.onNavigate),
           ),
         ],
       ),
@@ -661,7 +675,7 @@ class AboutScreen extends StatelessWidget {
               ),
               const SizedBox(width: 24),
               ElevatedButton(
-                onPressed: () => onNavigate('directory'),
+                onPressed: () => widget.onNavigate('directory'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: AppColors.navy,

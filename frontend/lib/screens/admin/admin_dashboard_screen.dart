@@ -25,6 +25,7 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     with SingleTickerProviderStateMixin {
+  final ScrollController _scrollController = ScrollController();
   late TabController _tabController;
 
   final TextEditingController _leadSearchController = TextEditingController();
@@ -55,6 +56,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _tabController.dispose();
     _leadSearchController.dispose();
     _customerSearchController.dispose();
@@ -315,6 +317,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
       body: Stack(
         children: [
           SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 const SizedBox(height: 82),

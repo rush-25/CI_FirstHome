@@ -25,6 +25,7 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   String? _selectedState;
   String? _selectedCity;
@@ -41,6 +42,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -59,6 +61,7 @@ class _LandingScreenState extends State<LandingScreen> {
       body: Stack(
         children: [
           SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 const SizedBox(height: 82),

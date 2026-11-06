@@ -27,6 +27,7 @@ class CustomerDashboardScreen extends StatefulWidget {
 
 class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
     with SingleTickerProviderStateMixin {
+  final ScrollController _scrollController = ScrollController();
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
 
@@ -63,6 +64,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _tabController.dispose();
     _searchController.dispose();
     _nameController.dispose();
@@ -114,6 +116,7 @@ class _CustomerDashboardScreenState extends State<CustomerDashboardScreen>
       body: Stack(
         children: [
           SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 const SizedBox(height: 82),

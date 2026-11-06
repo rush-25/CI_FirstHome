@@ -27,6 +27,7 @@ class ProviderDashboardScreen extends StatefulWidget {
 
 class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
     with SingleTickerProviderStateMixin {
+  final ScrollController _scrollController = ScrollController();
   late TabController _tabController;
   final ApiService _api = ApiService();
 
@@ -60,6 +61,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _tabController.dispose();
     _businessNameController.dispose();
     _emailController.dispose();
@@ -135,6 +137,7 @@ class _ProviderDashboardScreenState extends State<ProviderDashboardScreen>
       body: Stack(
         children: [
           SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 const SizedBox(height: 82),

@@ -14,11 +14,19 @@ class HowItWorksScreen extends StatefulWidget {
 }
 
 class _HowItWorksScreenState extends State<HowItWorksScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   // 0 = For Homeowners, 1 = For Service Providers
   int _activeTab = 0;
 
   // FAQ expanded tracking
   final Set<int> _expandedFaqs = {0};
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +38,7 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> {
       body: Stack(
         children: [
           SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               children: [
                 const SizedBox(height: 82),

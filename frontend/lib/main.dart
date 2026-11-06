@@ -104,6 +104,12 @@ void navigateTo(String route, {dynamic args}) {
   }
 
   appRouterDelegate.pushRoute(route);
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final ctx = rootNavigatorKey.currentContext;
+    if (ctx != null) {
+      PrimaryScrollController.maybeOf(ctx)?.jumpTo(0.0);
+    }
+  });
 }
 
 class AppRouteInformationParser
@@ -129,6 +135,7 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
   final GlobalKey<NavigatorState> navigatorKey;
 
   String _currentPath = '/';
+  int _routeId = 0;
 
   AppRouterDelegate({required this.navigatorKey});
 
@@ -136,12 +143,15 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
 
   void reset() {
     _currentPath = '/';
+    _routeId++;
+    notifyListeners();
   }
 
   void pushRoute(String path) {
     final normalized = normalizeRoute(path);
     if (_currentPath != normalized) {
       _currentPath = normalized;
+      _routeId++;
       notifyListeners();
     }
   }
@@ -156,6 +166,7 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
     final normalized = normalizeRoute(path);
     if (_currentPath != normalized) {
       _currentPath = normalized;
+      _routeId++;
       notifyListeners();
     }
   }
@@ -166,68 +177,68 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
       key: navigatorKey,
       pages: [
         MaterialPage(
-          key: const ValueKey('landing-page'),
+          key: ValueKey('landing-page-$_routeId'),
           name: '/',
           child: LandingScreen(onNavigate: navigateTo),
         ),
         if (_currentPath == '/directory')
           MaterialPage(
-            key: const ValueKey('directory-page'),
+            key: ValueKey('directory-page-$_routeId'),
             name: '/directory',
             child: DirectoryScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/how-it-works')
           MaterialPage(
-            key: const ValueKey('how-it-works-page'),
+            key: ValueKey('how-it-works-page-$_routeId'),
             name: '/how-it-works',
             child: HowItWorksScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/about')
           MaterialPage(
-            key: const ValueKey('about-page'),
+            key: ValueKey('about-page-$_routeId'),
             name: '/about',
             child: AboutScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/login')
           MaterialPage(
-            key: const ValueKey('login-page'),
+            key: ValueKey('login-page-$_routeId'),
             name: '/login',
             child: LoginScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/register' ||
             _currentPath == '/register-customer')
-          const MaterialPage(
-            key: ValueKey('register-customer-page'),
+          MaterialPage(
+            key: ValueKey('register-customer-page-$_routeId'),
             name: '/register-customer',
-            child: RegisterScreen(
+            child: const RegisterScreen(
               initialRole: 'Customer',
               onNavigate: navigateTo,
             ),
           )
         else if (_currentPath == '/register-provider')
-          const MaterialPage(
-            key: ValueKey('register-provider-page'),
+          MaterialPage(
+            key: ValueKey('register-provider-page-$_routeId'),
             name: '/register-provider',
-            child: RegisterScreen(
+            child: const RegisterScreen(
               initialRole: 'Provider',
               onNavigate: navigateTo,
             ),
           )
         else if (_currentPath == '/customer-dashboard')
           MaterialPage(
-            key: const ValueKey('customer-dashboard-page'),
+            key: ValueKey('customer-dashboard-page-$_routeId'),
             name: '/customer-dashboard',
             child: CustomerDashboardScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/provider-dashboard')
           MaterialPage(
-            key: const ValueKey('provider-dashboard-page'),
+            key: ValueKey('provider-dashboard-page-$_routeId'),
             name: '/provider-dashboard',
             child: ProviderDashboardScreen(onNavigate: navigateTo),
           )
         else if (_currentPath == '/admin-dashboard')
           MaterialPage(
-            key: const ValueKey('admin-dashboard-page'),
+            key: ValueKey('admin-dashboard-page-$_routeId'),
             name: '/admin-dashboard',
             child: AdminDashboardScreen(onNavigate: navigateTo),
           ),
@@ -235,6 +246,7 @@ class AppRouterDelegate extends RouterDelegate<RouteInformation>
       onDidRemovePage: (page) {
         if (_currentPath != '/') {
           _currentPath = '/';
+          _routeId++;
           notifyListeners();
         }
       },

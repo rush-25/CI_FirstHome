@@ -18,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final ScrollController _scrollController = ScrollController();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -26,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -154,6 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Center(
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     padding: EdgeInsets.symmetric(
                       horizontal: screenWidth < 500 ? 24 : 48,
                       vertical: 48,
