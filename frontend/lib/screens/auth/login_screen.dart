@@ -424,9 +424,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 36),
 
-                            // Quick Fill Demo Credentials (matching Figma prototype shortcuts)
+                            // Quick Fill Demo Credentials
                             Container(
-                              padding: const EdgeInsets.all(14),
+                              padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 color: AppColors.ivory,
                                 borderRadius: BorderRadius.circular(4),
@@ -438,15 +438,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Row(
                                     children: [
                                       const Icon(
-                                        Icons.touch_app_outlined,
+                                        Icons.flash_on,
                                         size: 15,
-                                        color: AppColors.slate,
+                                        color: AppColors.gold,
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        'PROTOTYPE QUICK LOGIN',
+                                        'PROTOTYPE QUICK LOGIN SHORTCUTS',
                                         style: GoogleFonts.manrope(
-                                          fontSize: 9.5,
+                                          fontSize: 10,
                                           fontWeight: FontWeight.w700,
                                           letterSpacing: 0.8,
                                           color: AppColors.slate,
@@ -454,27 +454,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
-                                  Wrap(
-                                    spacing: 8,
-                                    runSpacing: 8,
-                                    children: [
-                                      _buildQuickLoginButton(
-                                        'Customer',
-                                        'customer01@sample.firsthome.test',
-                                        'Fh9ae89105ef00edd81bA1',
-                                      ),
-                                      _buildQuickLoginButton(
-                                        'Provider',
-                                        'provider01@sample.firsthome.test',
-                                        'Fh9ae89105ef00edd81bA1',
-                                      ),
-                                      _buildQuickLoginButton(
-                                        'Admin',
-                                        'admin@sample.firsthome.test',
-                                        'Fh4212091d1df34b1051A1',
-                                      ),
-                                    ],
+                                  const SizedBox(height: 12),
+                                  _buildQuickLoginCard(
+                                    role: 'Admin',
+                                    email: 'admin@sample.firsthome.test',
+                                    password: 'Fh4212091d1df34b1051A1',
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildQuickLoginCard(
+                                    role: 'Customer',
+                                    email: 'customer01@sample.firsthome.test',
+                                    password: 'Fh9ae89105ef00edd81bA1',
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildQuickLoginCard(
+                                    role: 'Provider',
+                                    email: 'provider01@sample.firsthome.test',
+                                    password: 'Fh9ae89105ef00edd81bA1',
                                   ),
                                 ],
                               ),
@@ -493,29 +489,88 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildQuickLoginButton(String label, String email, String password) {
+  Widget _buildQuickLoginCard({
+    required String role,
+    required String email,
+    required String password,
+  }) {
     return InkWell(
       onTap: () => _fillCredentials(email, password),
+      borderRadius: BorderRadius.circular(4),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: AppColors.border),
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(Icons.flash_on, size: 13, color: AppColors.gold),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: GoogleFonts.manrope(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                color: AppColors.navy,
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: AppColors.ivory,
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: const Icon(Icons.flash_on, size: 14, color: AppColors.gold),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        role,
+                        style: GoogleFonts.manrope(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.navy,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                        decoration: BoxDecoration(
+                          color: AppColors.ivory,
+                          borderRadius: BorderRadius.circular(3),
+                          border: Border.all(color: AppColors.border, width: 0.8),
+                        ),
+                        child: Text(
+                          'Fill credentials',
+                          style: GoogleFonts.inter(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.slate,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    email,
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: AppColors.slate,
+                    ),
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    'Password: $password',
+                    style: GoogleFonts.inter(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.navy.withValues(alpha: 0.75),
+                    ),
+                  ),
+                ],
               ),
             ),
+            const Icon(Icons.arrow_forward_ios, size: 11, color: AppColors.slate),
           ],
         ),
       ),
